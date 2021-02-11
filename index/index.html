@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<!-- <script src="slider.js"></script> -->
+<style>
+@import "index.css";
+
+.background {
+  fill: #eee;
+}
+
+line {
+  stroke: #fff;
+}
+
+text.active {
+  fill: red;
+}
+
+</style>
+
+
+<body>
+  <head>
+    <title>D3 Sample</title>
+  </head>
+  <body>
+    <!--<h3 style="text-align: center;">PROGETTO VA!</h3>-->
+
+    <!-- <div class="dropdown2">
+      <button onclick="myFunction2()" class="dropbtn2">Dropdown</button>
+      <div id="myDropdown2" class="dropdown-content2">
+      </div>
+    </div> -->
+
+    <!-- This will serve as a container for our chart. This does not have to be a div, and can in fact, just be the body if you want. -->
+    <!--<div style="position: relative"><div id="my-chart"></div></div>-->
+    <!-- slider -->
+    <div style="background-color: rgb(53, 53, 53); background-position: 100%;"  class="slidecontainer">
+      <input type="range" min="1" max="100" value="10" class="slider" id="myRange">
+      <div style="float: left;">Value: <span id="demo"></span></div>
+      <!-- matrix order -->
+      <button type="button" style="position: absoulte; margin-left: 300px; " id="myBtn">Click Me!</button>
+      <div style="position: absoulte; margin-left: 700px; color: white; display: inline;">
+        Matrix order:
+        <select id="order">
+          <option value="name">by Name</option>
+          <option value="count">by Frequency</option>
+        </select>
+      </p>
+    </div>
+
+    <div id="my_dataviz" data-refresh-interval="500">
+        <!-- <button onclick="myFunction()" class="dropbtn">Dropdown</button>
+        <div id="myDropdown" class="dropdown-content">
+        </div> -->
+      </div>
+
+
+</body>
+
+<!-- <script>
+
+/* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+// function myFunction2() {
+//   document.getElementById("myDropdown2").classList.toggle("show");
+// }
+
+
+// Close the dropdown if the user clicks outside of it
+window.onclick = function(event) {
+  if (!event.target.matches('.dropbtn')) {
+    var dropdowns = document.getElementsByClassName("dropdown-content");
+    var i;
+    for (i = 0; i < dropdowns.length; i++) {
+      var openDropdown = dropdowns[i];
+      if (openDropdown.classList.contains('show')) {
+        openDropdown.classList.remove('show');
+      }
+    }
+  }
+}
+</script> -->
+
+
+<!-- TO USE V3 as d3v3 INSIDE d3 WITH v4-->
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script> console.log(d3.version) ; d3v3 = d3; window.d3=null</script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<script src="graph.js" defer ></script>
+<script src="chart.js" defer ></script>
+<script src="matrix.js" defer ></script>
+
+<!-- <script src="app.js" defer></script>-->

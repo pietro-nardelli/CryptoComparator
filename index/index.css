@@ -1,0 +1,289 @@
+.link {
+    stroke: rgba(247, 243, 0, 0.61);
+    stroke-width:2px;
+  }
+
+  .node text {
+  fill: rgb(255, 255, 255);
+  cursor:pointer;
+  font-size: 30px;
+  }
+
+  .node circle{
+  cursor:pointer;
+  stroke:rgb(255, 0, 0);
+  stroke-width:0px;
+  fill:rgb(255, 102, 0);
+  }
+
+  #svg_graph {
+      background-color: rgb(53, 53, 53);
+      zoom: 0.3;
+      border: 5px solid rgb(255, 153, 0);
+      postion: absolute;
+      float: left;
+  }
+
+  .input {
+          line-height: 20px;
+          font-size: 20px;
+          color: #ff0000;
+      }
+      /* Copyright 2013 Michael Bostock. All rights reserved. Do not copy. */
+
+
+      html {
+        min-width: 1040px;
+      }
+
+      body {
+        background-color: rgb(53, 53, 53);
+        font-family: "PT Serif", serif;
+        /*margin: 1em auto 4em auto;*/
+        position: relative;
+        width: 100%;
+        overflow-x: hidden;
+      }
+
+      header, footer, aside, h1, h2, h3, h4 {
+        font-family: "PT Sans", sans-serif;
+      }
+
+      h1, h2, h3, h4 {
+        color: #000;
+      }
+
+      header,
+      footer {
+        color: #636363;
+      }
+
+      h1 {
+        font-size: 64px;
+        font-weight: 300;
+        letter-spacing: -2px;
+        margin: .3em 0 .1em 0;
+      }
+
+      h2 {
+        margin-top: 2em;
+      }
+
+      h1, h2 {
+        text-rendering: optimizeLegibility;
+      }
+
+      h2 a[name],
+      h2 a[id] {
+        color: #ccc;
+        right: 100%;
+        padding: 0 .3em;
+        position: absolute;
+      }
+
+      h1 ~ aside {
+        font-size: small;
+        right: 0;
+        position: absolute;
+        width: 180px;
+      }
+
+      body > p, li > p {
+        line-height: 1.5em;
+      }
+
+      body > p {
+        width: 720px;
+      }
+
+      body > blockquote {
+        width: 640px;
+      }
+
+      blockquote q {
+        display: block;
+        font-style: oblique;
+      }
+
+      ul {
+        padding: 0;
+      }
+
+      li {
+        width: 690px;
+        margin-left: 30px;
+      }
+
+      a {
+        color: steelblue;
+      }
+
+      a:not(:hover) {
+        text-decoration: none;
+      }
+
+      pre, code, textarea {
+        font-family: "Menlo", monospace;
+      }
+
+      code {
+        line-height: 1em;
+      }
+
+      textarea {
+        font-size: 100%;
+      }
+
+      body > pre {
+        border-left: solid 2px #ccc;
+        padding-left: 18px;
+        margin: 2em 0 2em -20px;
+      }
+
+      .html .value,
+      .javascript .string,
+      .javascript .regexp {
+        color: #756bb1;
+      }
+
+      .html .tag,
+      .css .tag,
+      .javascript .keyword {
+        color: #3182bd;
+      }
+
+      .comment {
+        color: #636363;
+      }
+
+      .html .doctype,
+      .javascript .number {
+        color: #31a354;
+      }
+
+      .html .attribute,
+      .css .attribute,
+      .javascript .class,
+      .javascript .special {
+        color: #e6550d;
+      }
+
+      #svg_matrix {
+        font: 10px sans-serif;
+        margin-right: 50px;
+        float: right;
+      }
+
+      .axis path, .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+      }
+
+      sup, sub {
+        line-height: 0;
+      }
+
+      q:before {
+        content: "“";
+      }
+
+      q:after {
+        content: "”";
+      }
+
+      blockquote q {
+        line-height: 1.5em;
+        display: inline;
+      }
+
+      blockquote q:before,
+      blockquote q:after {
+        content: "";
+      }
+
+
+      /* DROPDOWN MENU temporaneo*/
+      .dropbtn2 {
+        margin-right: 300px;
+        background-color: #3498DB;
+        color: white;
+        padding: 16px;
+        font-size: 16px;
+        border: none;
+        cursor: pointer;
+      }
+
+      .dropbtn2:hover, .dropbtn2:focus {
+        background-color: #2980B9;
+      }
+
+      .dropdown2 {
+        position: relative;
+        display: inline-block;
+      }
+
+      .dropdown-content2 {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 160px;
+        overflow: auto;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+      }
+
+      .dropdown-content2 a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+
+      .dropdown2 a:hover {background-color: #ddd;}
+
+      .show {display: block;}
+
+
+      /* Dropdown button on hover & focus */
+      .dropbtn2:hover, .dropbtn2:focus {
+        background-color: #2980B9;
+      }
+
+      /****************************** MATTEO */
+    #my_dataviz {
+      position:absolute;
+      float: left;
+      margin-top: 450px;
+    }
+      /* The container <div> - needed to position the dropdown content */
+      .dropdown {
+        position: relative;
+        display: inline-block;
+      }
+
+      /* Dropdown Content (Hidden by Default) */
+      .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #f1f1f1;
+        min-width: 160px;
+        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+        z-index: 1;
+        height: 300px;
+        overflow: auto;
+      }
+
+      /* Links inside the dropdown */
+      .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+      }
+
+      /* Change color of dropdown links on hover */
+      .dropdown-content a:hover {background-color: #ddd}
+
+      /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+      .show {display:block;}
