@@ -48,7 +48,8 @@ def import_data (path:str):
                     temp_dict[csv_headings[i]] = temp
             # {"#": "1", "Name": "Bitcoin", "Market Cap": "60219183594", "Price": "3631.72", "Circulating Supply": "16581450", "Volume (24h)": "1226800000", "% Change (24h)": "-0.84"}
             dictionary['nodes'].append(temp_dict)
-    return dictionary
+    return dictionaryfor dataset in datasets:
+
 
 
 # Preprocess data and compute MDS
@@ -179,9 +180,10 @@ with open('market_cap.json', 'w') as f:
 '''
 
 final_dict = import_data ('dataset/100List.csv')
-standard_input_list = ...
-pos = 0
-final_dict = compute_distance(pos, standard_input_list, final_dict, dim_red_flag=False)
+nodes_id, pos, standard_input_list = mds_computation(final_dict)
+plot_mds(nodes_id, pos)
+final_dict = compute_distance(pos, standard_input_list, final_dict, dim_red_flag=True)
+
 
 
 with open('data.json', 'w') as f:
