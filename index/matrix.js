@@ -6,7 +6,7 @@ var margin = {top: 80, right: 0, bottom: 10, left: 80},
 
 var x_m = d3.scaleBand().range([0, width]),
     //z = d3.scaleLinear().domain([0, 4]).clamp(true),
-    z = d3.scaleLinear().domain([0, 16]).clamp(true),
+    z = d3.scaleLinear().domain([0, 1]).clamp(true),
     c = d3.scaleOrdinal(d3.schemeCategory10);
     //c = d3.scalePow().exponent(1.09).range(["yellow", "red"])
 
@@ -128,7 +128,7 @@ function fullMatrix() {
 
     function row(row) {
       var cell = d3.select(this).selectAll(".cell")
-          .data(row.filter(function(d) { return d.z; }))
+          .data(row.filter(function(d) { return d.z>=0; }))
         .enter().append("rect")
           .attr("class", "cell")
           .attr("x", function(d) { return x_m(d.x); })
@@ -187,9 +187,7 @@ function matrixReduction(node_name) {
     var matrix = [],
         nodes = crypto_top_100.nodes,
         n = nodes.length;
-    //console.log(nodes[id]);
 
-    /*Da aggiungere con node_name in ingresso alla funzione per il MERGE*/
     for (var i = 0; i < nodes.length; i++){
       if (nodes[i].Name == node_name){
         var id = i;
@@ -197,17 +195,16 @@ function matrixReduction(node_name) {
       }
     }
 
-    // Compute index per node.
+    // Compute index per node
     nodes.forEach(function(node, i) {
         node.index = i;     // Initialize attribute "index"
         node.count = 0;     // Initialize attribute "count"
-        // Each row of the matrix contains an array in range n ([0,...,99])
+        // Each column of the matrix contains an array in range n ([0,...,99])
         // and "map" will access this value and return an object {x,y,z}
         // In the end we have matrix[i][j]{x,y,z}
         matrix[i] = d3.range(n).map(function(j) { return {x: j, y: i, z: 0}; });
-
     });
-    // Convert links to matrix; count character occurrences.
+    // Convert links to matrix; count sum of the value
     crypto_top_100.links.forEach(function(link, i) {
         // Between source and target (symmetric matrix)
         matrix[link.source][link.target].z = link.value;
@@ -222,17 +219,16 @@ function matrixReduction(node_name) {
 
         nodes[link.source].count += link.value;
         nodes[link.target].count += link.value;
-
-
     });
 
     var order_distance = new Array(n).fill(0);
     for (var j=0; j < n; j++){
-      order_distance [j] = matrix[j][id]; // Select the row of ID and loop in all the columns
+      order_distance [j] = matrix[id][j]; // Select the column of ID and loop in all the rows
     }
+    //console.log(order_distance);
     // Sort the columns for row ID wrt Z in ascending order
     order_distance = order_distance.sort(function(a, b) { return a.z - b.z; });
-
+    //console.log(order_distance);
 
     n = 10;
 
@@ -241,18 +237,17 @@ function matrixReduction(node_name) {
     for (var col = 0; col < n; col++) {
       for (var r = 0; r < n; r++){
         // E.g. matrix[0][9] -> x=9, y=0;
-        matrix2[col][r] = matrix[order_distance[col].y][order_distance[r].y];
+        matrix2[col][r] = matrix[order_distance[col].x][order_distance[r].x];
       }
       //matrix2[c] = matrix[c].slice(0,n);
     }
     var nodes2 = new Array(100).fill(0);
     // Before i<n... commentare fill color che da problemi con n=10
     for (var i = 0; i < n; i++){
-      nodes2[i] = nodes[order_distance[i].y]
+      nodes2[i] = nodes[order_distance[i].x]
     }
 
     nodes = nodes2;
-    console.log(matrix2);
     //nodes = nodes.slice(0,n);
     matrix = matrix2;
     // Precompute the orders.
@@ -262,10 +257,8 @@ function matrixReduction(node_name) {
       //group: d3.range(n).sort(function(a, b) { return nodes[b].group - nodes[a].group; })
     };
 
-
     // The default sort order.
     x_m.domain(orders.name);
-
 
     // Generation of the matrix on the webpage
     // Rectangle background
@@ -315,7 +308,7 @@ function matrixReduction(node_name) {
 
     function row(row) {
       var cell = d3.select(this).selectAll(".cell")
-          .data(row.filter(function(d) { return d.z; }))
+          .data(row.filter(function(d) { return d.z>=0; }))
         .enter().append("rect")
           .attr("class", "cell")
           .attr("x", function(d) { return x_m(d.x); })
@@ -328,7 +321,7 @@ function matrixReduction(node_name) {
     }
 
     function mouseover(p) {
-      d3.selectAll(".row text").classed("active", function(d, i) { return i == p.y; });
+      d3.selectAll(".row text").classed("active", function(d, i) {  return i == p.y; });
       d3.selectAll(".column text").classed("active", function(d, i) { return i == p.x; });
     }
 
