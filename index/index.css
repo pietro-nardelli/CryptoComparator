@@ -1,26 +1,29 @@
 .link {
-    stroke: rgba(247, 243, 0, 0.61);
-    stroke-width:2px;
+    stroke: rgb(255, 0, 0);
+    stroke-width:1px;
   }
 
   .node text {
-  fill: rgb(255, 255, 255);
   cursor:pointer;
   font-size: 30px;
+  -webkit-text-stroke-width: 2px;
+  -webkit-text-stroke-color: rgb(255, 0, 0);
+  /* 
+  text-stroke: 10px;
+  text-shadow: #000 0px 0px 1px; */
   }
 
   .node circle{
-  cursor:pointer;
-  stroke:rgb(255, 0, 0);
-  stroke-width:0px;
-  fill:rgb(255, 102, 0);
+    cursor:pointer;
+    stroke:rgb(255, 0, 0);
+    stroke-width:0px;
+    fill:rgb(255, 102, 0);
   }
 
   #svg_graph {
       background-color: rgb(53, 53, 53);
-      zoom: 0.3;
+      zoom: 0.32;
       border: 5px solid rgb(255, 153, 0);
-      postion: absolute;
       float: left;
   }
 
