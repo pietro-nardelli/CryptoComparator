@@ -6,7 +6,7 @@ var margin = {top: 80, right: 0, bottom: 10, left: 80},
 
 var x_m = d3.scaleBand().range([0, width]),
     //z = d3.scaleLinear().domain([0, 4]).clamp(true),
-    z = d3.scaleLinear().domain([0, 16]).clamp(true),
+    z = d3.scaleLinear().domain([0, 1]).clamp(true),
     c = d3.scaleOrdinal(d3.schemeCategory10);
     //c = d3.scalePow().exponent(1.09).range(["yellow", "red"])
 

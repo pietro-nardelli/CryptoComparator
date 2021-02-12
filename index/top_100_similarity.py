@@ -105,7 +105,7 @@ Output:
 '''
 def compute_distance(pos, standard_input_list, final_dict, dim_red_flag):
     final_dict['links'] = []
-
+    max = 0
     # Compute distance with MDS
     if (dim_red_flag):
         for i in range(len(pos)):
@@ -113,19 +113,29 @@ def compute_distance(pos, standard_input_list, final_dict, dim_red_flag):
             for j in range(i, len(pos)):
                 v_j = pos[j]
                 val = np.linalg.norm(v_i - v_j)
-
+                # Compute max value for normalization
+                if (max < val):
+                    max = val
                 final_dict['links'].append( {"source": i, "target": j, "value": val} )
+        # Normalization w.r.t. max
+        for link in final_dict['links']:
+            link['value'] = link['value']/max
 
     # Compute simple Euclidean distance
     else:
+        max = 0
         for i in range(len(standard_input_list)):
             v_i = standard_input_list[i]
             for j in range(i, len(standard_input_list)):
                 v_j = standard_input_list[j]
                 val = np.linalg.norm(v_i - v_j)
-                val= val/len(v_i)
-                print(val)
+                if (max < val):
+                    max = val
+
                 final_dict['links'].append( {"source": i, "target": j, "value": val} )
+        # Normalization w.r.t. max
+        for link in final_dict['links']:
+            link['value'] = link['value']/max
 
     return final_dict
 
@@ -169,10 +179,9 @@ with open('market_cap.json', 'w') as f:
 '''
 
 final_dict = import_data ('dataset/100List.csv')
-nodes_id, pos, standard_input_list = mds_computation(final_dict)
-plot_mds(nodes_id, pos)
-final_dict = compute_distance(pos, standard_input_list, final_dict, dim_red_flag=True)
-
+standard_input_list = ...
+pos = 0
+final_dict = compute_distance(pos, standard_input_list, final_dict, dim_red_flag=False)
 
 
 with open('data.json', 'w') as f:
