@@ -258,11 +258,11 @@ function matrixReduction(node_name) {
     var orders = {
       name: d3.range(n).sort(function(a, b) { return d3.ascending(ordered_nodes[a].Name, ordered_nodes[b].Name); }),
       count: d3.range(n).sort(function(a, b) { return ordered_nodes[b].count - ordered_nodes[a].count; }),
-      //group: d3.range(n).sort(function(a, b) { return nodes[b].group - nodes[a].group; })
     };
 
     // The default sort order.
-    x_m.domain(orders.name);
+    var ord_val = document.getElementById("order").value;
+    x_m.domain(orders[ord_val]);
 
     // Generation of the matrix on the webpage
     // Rectangle background
