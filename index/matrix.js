@@ -184,6 +184,12 @@ function matrixReduction(node_name) {
   //var id = this.id;
 
   d3.json("data.json", function(crypto_top_100) {
+    var x_m = d3.scaleBand().range([0, width]),
+        //z = d3.scaleLinear().domain([0, 4]).clamp(true),
+        z = d3.scaleLinear().domain([0, 1]).clamp(true),
+        c = d3.scaleOrdinal(d3.schemeCategory10);
+        //c = d3.scalePow().exponent(1.09).range(["yellow", "red"])
+
     var matrix = [],
         nodes = crypto_top_100.nodes,
         n = nodes.length;
@@ -230,7 +236,12 @@ function matrixReduction(node_name) {
     order_distance = order_distance.sort(function(a, b) { return a.z - b.z; });
     //console.log(order_distance);
 
+
     n = 10;
+    order_distance = order_distance.slice(0,n);
+
+    // Aggiunto per avere i nodi ordinati secondo index, una volta scelti i 10 piu simili
+    //order_distance = order_distance.sort(function(a, b) { return a.x - b.x; });
 
     // Reorder the matrix based on the selected element
     var matrix2 = new Array(n).fill(0).map(() => new Array(n).fill(0));
@@ -239,21 +250,20 @@ function matrixReduction(node_name) {
         // E.g. matrix[0][9] -> x=9, y=0;
         matrix2[col][r] = matrix[order_distance[col].x][order_distance[r].x];
       }
-      //matrix2[c] = matrix[c].slice(0,n);
     }
-    var nodes2 = new Array(100).fill(0);
+    var ordered_nodes = new Array(n).fill(0);
     // Before i<n... commentare fill color che da problemi con n=10
     for (var i = 0; i < n; i++){
-      nodes2[i] = nodes[order_distance[i].x]
+      ordered_nodes[i] = nodes[order_distance[i].x];
     }
 
-    nodes = nodes2;
+    //nodes = ordered_nodes; NON FUNZIONAVA.
     //nodes = nodes.slice(0,n);
     matrix = matrix2;
     // Precompute the orders.
     var orders = {
-      name: d3.range(n).sort(function(a, b) { return d3.ascending(nodes[a].Name, nodes[b].Name); }),
-      count: d3.range(n).sort(function(a, b) { return nodes[b].count - nodes[a].count; }),
+      name: d3.range(n).sort(function(a, b) { return d3.ascending(ordered_nodes[a].Name, ordered_nodes[b].Name); }),
+      count: d3.range(n).sort(function(a, b) { return ordered_nodes[b].count - ordered_nodes[a].count; }),
       //group: d3.range(n).sort(function(a, b) { return nodes[b].group - nodes[a].group; })
     };
 
@@ -285,7 +295,7 @@ function matrixReduction(node_name) {
         .attr("y", x_m.bandwidth() / 2)
         .attr("dy", ".32em")
         .attr("text-anchor", "end")
-        .text(function(d, i) {return nodes[i].Name; });
+        .text(function(d, i) {return ordered_nodes[i].Name; });
 
     // Columns
     var column = svg_matrix.selectAll(".column")
@@ -304,18 +314,19 @@ function matrixReduction(node_name) {
         .attr("y", x_m.bandwidth() / 2)
         .attr("dy", ".32em")
         .attr("text-anchor", "start")
-        .text(function(d, i) { return nodes[i].Name; });
+        .text(function(d, i) { return ordered_nodes[i].Name; });
 
     function row(row) {
       var cell = d3.select(this).selectAll(".cell")
           .data(row.filter(function(d) { return d.z>=0; }))
         .enter().append("rect")
           .attr("class", "cell")
-          .attr("x", function(d) { return x_m(d.x); })
+          //.attr("x", function(d) { return x_m(d.x); }) In this case, no symmetric matrix.
+          .attr("x", function(d,i) { return x_m(i); })
           .attr("width", x_m.bandwidth())
           .attr("height", x_m.bandwidth())
           .style("fill-opacity", function(d) { return z(d.z); })
-          .style("fill", function(d) { return nodes[d.x].group == nodes[d.y].group ? c(nodes[d.x].group) : null; }) // Da commentare con n = 10
+          //.style("fill", function(d) { return ordered_nodes[d.x].group == ordered_nodes[d.y].group ? c(ordered_nodes[d.x].group) : null; }) // Da commentare con n = 10
           .on("mouseover", mouseover)
           .on("mouseout", mouseout);
     }
@@ -342,8 +353,10 @@ function matrixReduction(node_name) {
           .delay(function(d, i) { return x_m(i) * 4; })
           .attr("transform", function(d, i) { return "translate(0," + x_m(i) + ")"; })
         .selectAll(".cell")
-          .delay(function(d) { return x_m(d.x) * 4; })
-          .attr("x", function(d) { return x_m(d.x); });
+          //.delay(function(d) { return x_m(d.x) * 4; })
+          .delay(function(d,i) { return x_m(i) * 4; })
+          //.attr("x", function(d) { return x_m(d.x); });
+          .attr("x", function(d,i) { return x_m(i); });
 
       t.selectAll(".column")
           .delay(function(d, i) { return x_m(i) * 4; })
