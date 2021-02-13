@@ -184,12 +184,6 @@ function matrixReduction(node_name) {
   //var id = this.id;
 
   d3.json("data.json", function(crypto_top_100) {
-    var x_m = d3.scaleBand().range([0, width]),
-        //z = d3.scaleLinear().domain([0, 4]).clamp(true),
-        z = d3.scaleLinear().domain([0, 1]).clamp(true),
-        c = d3.scaleOrdinal(d3.schemeCategory10);
-        //c = d3.scalePow().exponent(1.09).range(["yellow", "red"])
-
     var matrix = [],
         nodes = crypto_top_100.nodes,
         n = nodes.length;
@@ -257,7 +251,7 @@ function matrixReduction(node_name) {
       ordered_nodes[i] = nodes[order_distance[i].x];
     }
 
-    //nodes = ordered_nodes; NON FUNZIONAVA.
+    //nodes = ordered_nodes; NON FUNZIONAVA!
     //nodes = nodes.slice(0,n);
     matrix = matrix2;
     // Precompute the orders.
@@ -332,8 +326,11 @@ function matrixReduction(node_name) {
     }
 
     function mouseover(p) {
-      d3.selectAll(".row text").classed("active", function(d, i) {  return i == p.y; });
-      d3.selectAll(".column text").classed("active", function(d, i) { return i == p.x; });
+      // Each row text is ordered as d[k][i].x, given that d is now a list (instead of a matrix)
+      // we just need to select the correct row inside a range between 0 and n (number of rows)
+      // when the i-th x of d element is equal to p.y (or p.x) return true.
+      d3.selectAll(".row text").classed("active", function(d, i) { return d[i].x == p.y; });
+      d3.selectAll(".column text").classed("active", function(d, i) { return d[i].x == p.x; });
     }
 
     function mouseout() {
