@@ -190,189 +190,7 @@ function getThreshold(source,target,similarity_idx) {
   return ret
 }
 
-d3v3.csv("", function() {  // !
-  nodes = name_arr;
-  links = [];
-  for (var i = 0; i < name_arr.length; i++) {
-    namecoin=nodes[i]
-    link_to_add = data_reg[namecoin][2]
-
-    for(j=0;j<link_to_add.length;j++){
-      if(link_to_add[j]!=null){
-
-        tr = getThreshold(namecoin,link_to_add[j],0)
-
-        links.push({source:nodes.indexOf(namecoin) ,
-                    target:nodes.indexOf(link_to_add[j]),
-                    k:tr })// id:nodes.indexOf(namecoin) }
-
-        links.push({source:nodes.indexOf(link_to_add[j]) ,
-                    target:nodes.indexOf(namecoin),
-                    k:tr })}
-      }
-  }
-  nodes = nodes.map(function(n){return {name:n, fixed:true , x:getX(n) ,y:getY(n)}
-  })
-
-  force_graph
-      .nodes(nodes)
-      .links(links)
-      .start();
-
-  var link = svg.selectAll(".link")
-      .data(links)
-      .enter().append("line")
-      .attr("class", "link")
-      .attr("target", function(d) { return d.target.name; }) //per ora inutile
-      .style("stroke-width", function(d) { return stroke_width_links_mouseout; });
-
-  var node = svg.selectAll(".node")
-      .data(nodes)
-      .enter().append("g")
-      .attr("class", "node")
-      .call(force_graph.drag)
-      .on("mouseover", function (d) {  ///TO UPDATE con data_reg e non selectall, e d.source.name
-        //if(last_clicked=="101") return;
-        svg.selectAll(".node circle")
-        .data(nodes)
-        .filter(function(x) { return x.name != d.name })
-        .style('fill', 'rgb(100,100,100)') ;
-
-        svg.selectAll(".node text")
-        .data(nodes)
-        .filter(function(x) { return x.name != d.name })
-        .style('fill', 'rgb(100,100,100)');
-
-        svg.selectAll(".link")
-        .data(links)
-        .filter(function(x) { return x.source.name != d.name || x.k< actual_t}) //&& x.k< actual_t
-        .style('stroke', links_stroke_when_filtered_out);
-
-        var target_nodes = svg.selectAll(".link ")
-        .data(links)
-        .filter(function(x) {return x.source.name == d.name  && x.k>= actual_t}) //&& x.k>= actual_t
-        .style("stroke-width", stroke_width_links_mouseover)
-
-        n=target_nodes[0].length
-        target_name = "";
-        for(var a = 0; a <= n-1 ; a++){  //AFTER V3 NEED n-1 INSTEAD OF n
-          if ( target_nodes[0][a] != undefined)
-            target_name = target_nodes[0][a].getAttribute("target");
-          else console.log("[ERR]GETATTR. ON EMPTY LINKS"+ a)
-
-        svg.selectAll(".node circle")
-        .data(nodes)
-        .filter(function(x) {return x.name == target_name})
-        .style('fill', fill_node_circle) ;
-
-        svg.selectAll(".node text")
-        .data(nodes)
-        .filter(function(x) {return x.name == target_name})
-        .style('fill', fill_node_text) ;
-        }
-
-        test = d
-        console.log(test)
-      })
-      .on("mouseout", function (d) {
-        //if(last_clicked==d.name)return;
-          svg.selectAll(".node circle")
-          .data(nodes)
-          .style('fill', fill_node_circle) ;
-
-          svg.selectAll(".node text")
-          .data(nodes)
-          .style('fill', fill_node_text);
-
-          svg.selectAll(".link ")   //.filter(function(x) {return  x.k>= actual_t})
-          .data(links).filter(function(x) { return  x.k >= actual_t})
-          .style('stroke', color_links)
-          .style("stroke-width", stroke_width_links_mouseout) ;
-
-      })
-      .on('click', function(d){
-          //clicked(d.name);
-
-          // /|\TRANSITION HELL/|\
-          {
-          // svg.selectAll(".node circle")
-          // .data(nodes)
-          // .filter(function(x) {return x.name == d.name})
-          // .transition().duration(1000)
-          // .attr("transform","translate(1300,0)") 
-
-          // svg.selectAll(".link")
-          // .data(links)
-          // .filter(function(x) { return x.source.name == d.name })
-          // .attr("x1", function(d) { return  1300;})
-          // .attr("y1", function(d) { return 0; })
-
-          // svg.selectAll(".link").attr("x1","2")
-
-          // svg.selectAll(".node circle").transition().duration(1000).attr("transform","translate(1200,100)")
-
-          // svg.selectAll(".link ")
-          // .data(links).transition().duration(1000)
-          // .attr("x1", function(d) { return d.source.x; })
-          // .attr("y1", function(d) { return d.source.y; })
-          // .attr("x2", function(d) { return d.target.x; })
-          // .attr("y2", function(d) { return d.target.y; })
-          }
-
-          svg.selectAll(".node circle")
-          .data(nodes)
-          .style("stroke-width", "0px");
-          
-          svg.selectAll(".node text")
-          .data(nodes)
-          .style("stroke-width", "0px")
-          .style("font-size", size_node_text);
-
-          last_clicked=d;
-
-          matrixReduction(d.name);
-
-          svg.selectAll(".node circle")
-          .data(nodes)
-          .filter(function(x) {return x.name == d.name})
-          .style('fill', 'rgb(255, 220, 0)')
-          .style("stroke-width", stroke_width_node_circle)  //.attr("r", "15") ; per la dim
-          .style("z-index", '0');
-
-          svg.selectAll(".node text")
-          .data(nodes)
-          .filter(function(x) {return x.name == d.name})
-          .style('fill', fill_node_text_when_pressed) 
-          .style("font-size", size_node_text_when_pressed)
-          .style("z-index", '2');
-
-          createGraphsOfMyCrypto(d.name);
-      });
-
-
-  node.append("circle")
-      .attr("r","7");
-
-  node.append("text")
-      .attr("dx", 12) //function(d) { if(d.name=="Bitcoin") return 12;else return -30  })
-      .attr("dy", 3)
-      .attr("fill", fill_node_text)
-      .text(function(d) { return d.name });
-
-  force_graph.on("tick", function() {
-    link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; })
-        .attr("k", function(d) { return d.k;  });  //useless 4 now
-
-    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-
-
-  });
-
-  //slider_update(actual_t)
-});
+testa(0)
 
 // function clicked(node_name) {  //:(
   // console.log(node_name)
@@ -452,18 +270,6 @@ function ontick(n){
 
 
 
-function update_reg_links1(index_of_similarity_in_use) {
-  for (var i = 0; i < name_arr.length; i++) {
-    namecoin = name_arr[i]
-    data_reg[namecoin][2] = get_links(namecoin,index_of_similarity_in_use)
-  }
-}
-
-//SERVE data_reg con i nuovi links es data_reg["ATC Coin"][2] = new[]
-// ^ RELATIVI alla tr
-//
-
-
 
 document.getElementById("SIMIL1").addEventListener("click", function () {
   testa(1)  
@@ -489,161 +295,160 @@ function testa(ididix){
 
   
   console.log("SIMIL1!")
-  d3v3.csv("dataset/100List.csv", function(data) {
 
-  
-d3v3.csv("", function() {  // per ogni namecoin prendo i relativi link to add dal datareg 
-  nodes = name_arr;
-  links = [];
-  for (var i = 0; i < name_arr.length; i++) {
-    namecoin=nodes[i]
-    link_to_add = data_reg[namecoin][2]
+    
+  d3v3.csv("", function() {  // per ogni namecoin prendo i relativi link to add dal datareg 
+    nodes = name_arr;
+    links = [];
+    for (var i = 0; i < name_arr.length; i++) {
+      namecoin=nodes[i]
+      link_to_add = data_reg[namecoin][2]
 
-    for(j=0;j<link_to_add.length;j++){ //for each of them i eval. the tr. and push the link (s,t,tr)
-      if(link_to_add[j]!=null){
+      for(j=0;j<link_to_add.length;j++){ //for each of them i eval. the tr. and push the link (s,t,tr)
+        if(link_to_add[j]!=null){
 
-        tr = getThreshold(namecoin,link_to_add[j],index_of_similarity_in_use)
+          tr = getThreshold(namecoin,link_to_add[j],index_of_similarity_in_use)
 
-        links.push({source:nodes.indexOf(namecoin) ,
-                    target:nodes.indexOf(link_to_add[j]),
-                    k:tr })
+          links.push({source:nodes.indexOf(namecoin) ,
+                      target:nodes.indexOf(link_to_add[j]),
+                      k:tr })
 
-        links.push({source:nodes.indexOf(link_to_add[j]) ,
-                    target:nodes.indexOf(namecoin),
-                    k:tr })}
-      }
-  }
-  nodes = nodes.map(function(n){return {name:n, fixed:true , x:getX(n) ,y:getY(n)}
-  })
-
-  force_graph.nodes(nodes).links(links).start();
-
-  var link = svg.selectAll(".link")
-      .data(links)
-      .enter().append("line")
-      .attr("class", "link")
-      .attr("target", function(d) { return d.target.name; }) //per ora inutile
-      .style("stroke-width", function(d) { return stroke_width_links_mouseout; });
-
-  var node = svg.selectAll(".node")
-      .data(nodes)
-      .enter().append("g")
-      .attr("class", "node")
-      .call(force_graph.drag)
-      .on("mouseover", function (d) {  ///TO UPDATE con data_reg e non selectall, e d.source.name
-        svg.selectAll(".node circle")
-        .data(nodes)
-        .filter(function(x) { return x.name != d.name })
-        .style('fill', 'rgb(100,100,100)') ;
-
-        svg.selectAll(".node text")
-        .data(nodes)
-        .filter(function(x) { return x.name != d.name })
-        .style('fill', 'rgb(100,100,100)');
-
-        svg.selectAll(".link")
-        .data(links)
-        .filter(function(x) { return x.source.name != d.name || x.k< actual_t})
-        .style('stroke', links_stroke_when_filtered_out);
-
-        var target_nodes = svg.selectAll(".link ")
-        .data(links)
-        .filter(function(x) {return x.source.name == d.name  && x.k>= actual_t}) 
-        .style("stroke-width", stroke_width_links_mouseover)
-
-        n=target_nodes[0].length
-        target_name = "";
-        for(var a = 0; a <= n-1 ; a++){  
-          if ( target_nodes[0][a] != undefined)
-            target_name = target_nodes[0][a].getAttribute("target");
-          else console.log("[ERR]GETATTR. ON EMPTY LINKS"+ a)
-
-        svg.selectAll(".node circle")
-        .data(nodes)
-        .filter(function(x) {return x.name == target_name})
-        .style('fill', fill_node_circle) ;
-
-        svg.selectAll(".node text")
-        .data(nodes)
-        .filter(function(x) {return x.name == target_name})
-        .style('fill', fill_node_text) ;
+          links.push({source:nodes.indexOf(link_to_add[j]) ,
+                      target:nodes.indexOf(namecoin),
+                      k:tr })}
         }
+    }
+    nodes = nodes.map(function(n){return {name:n, fixed:true , x:getX(n) ,y:getY(n)}
+    })
 
-        test = d
-        console.log(test)
-      })
-      .on("mouseout", function (d) {
+    force_graph.nodes(nodes).links(links).start();
+
+    var link = svg.selectAll(".link")
+        .data(links)
+        .enter().append("line")
+        .attr("class", "link")
+        .attr("target", function(d) { return d.target.name; }) //per ora inutile
+        .style("stroke-width", function(d) { return stroke_width_links_mouseout; });
+
+    var node = svg.selectAll(".node")
+        .data(nodes)
+        .enter().append("g")
+        .attr("class", "node")
+        .call(force_graph.drag)
+        .on("mouseover", function (d) {  ///TO UPDATE con data_reg e non selectall, e d.source.name
           svg.selectAll(".node circle")
           .data(nodes)
+          .filter(function(x) { return x.name != d.name })
+          .style('fill', 'rgb(100,100,100)') ;
+
+          svg.selectAll(".node text")
+          .data(nodes)
+          .filter(function(x) { return x.name != d.name })
+          .style('fill', 'rgb(100,100,100)');
+
+          svg.selectAll(".link")
+          .data(links)
+          .filter(function(x) { return x.source.name != d.name || x.k< actual_t})
+          .style('stroke', links_stroke_when_filtered_out);
+
+          var target_nodes = svg.selectAll(".link ")
+          .data(links)
+          .filter(function(x) {return x.source.name == d.name  && x.k>= actual_t}) 
+          .style("stroke-width", stroke_width_links_mouseover)
+
+          n=target_nodes[0].length
+          target_name = "";
+          for(var a = 0; a <= n-1 ; a++){  
+            if ( target_nodes[0][a] != undefined)
+              target_name = target_nodes[0][a].getAttribute("target");
+            else console.log("[ERR]GETATTR. ON EMPTY LINKS"+ a)
+
+          svg.selectAll(".node circle")
+          .data(nodes)
+          .filter(function(x) {return x.name == target_name})
           .style('fill', fill_node_circle) ;
 
           svg.selectAll(".node text")
           .data(nodes)
-          .style('fill', fill_node_text);
+          .filter(function(x) {return x.name == target_name})
+          .style('fill', fill_node_text) ;
+          }
 
-          svg.selectAll(".link ")   //.filter(function(x) {return  x.k>= actual_t})
-          .data(links).filter(function(x) { return  x.k >= actual_t})
-          .style('stroke', color_links)
-          .style("stroke-width", stroke_width_links_mouseout) ;
+          test = d
+          console.log(test)
+        })
+        .on("mouseout", function (d) {
+            svg.selectAll(".node circle")
+            .data(nodes)
+            .style('fill', fill_node_circle) ;
 
-      })
-      .on('click', function(d){
+            svg.selectAll(".node text")
+            .data(nodes)
+            .style('fill', fill_node_text);
 
-          svg.selectAll(".node circle")
-          .data(nodes)
-          .style("stroke-width", "0px");
-          
-          svg.selectAll(".node text")
-          .data(nodes)
-          .style("stroke-width", "0px")
-          .style("font-size", size_node_text);
+            svg.selectAll(".link ")   //.filter(function(x) {return  x.k>= actual_t})
+            .data(links).filter(function(x) { return  x.k >= actual_t})
+            .style('stroke', color_links)
+            .style("stroke-width", stroke_width_links_mouseout) ;
 
-          last_clicked=d;
+        })
+        .on('click', function(d){
 
-          matrixReduction(d.name);
+            svg.selectAll(".node circle")
+            .data(nodes)
+            .style("stroke-width", "0px");
+            
+            svg.selectAll(".node text")
+            .data(nodes)
+            .style("stroke-width", "0px")
+            .style("font-size", size_node_text);
 
-          svg.selectAll(".node circle")
-          .data(nodes)
-          .filter(function(x) {return x.name == d.name})
-          .style('fill', 'rgb(255, 220, 0)')
-          .style("stroke-width", stroke_width_node_circle)  //.attr("r", "15") ; per la dim
-          .style("z-index", '0');
+            last_clicked=d;
 
-          svg.selectAll(".node text")
-          .data(nodes)
-          .filter(function(x) {return x.name == d.name})
-          .style('fill', fill_node_text_when_pressed) 
-          .style("font-size", size_node_text_when_pressed)
-          .style("z-index", '2');
+            matrixReduction(d.name);
 
-          createGraphsOfMyCrypto(d.name);
-      });
+            svg.selectAll(".node circle")
+            .data(nodes)
+            .filter(function(x) {return x.name == d.name})
+            .style('fill', 'rgb(255, 220, 0)')
+            .style("stroke-width", stroke_width_node_circle)  //.attr("r", "15") ; per la dim
+            .style("z-index", '0');
 
+            svg.selectAll(".node text")
+            .data(nodes)
+            .filter(function(x) {return x.name == d.name})
+            .style('fill', fill_node_text_when_pressed) 
+            .style("font-size", size_node_text_when_pressed)
+            .style("z-index", '2');
 
-      node.append("circle")
-          .attr("r","7");
-
-      node.append("text")
-          .attr("dx", 12) //function(d) { if(d.name=="Bitcoin") return 12;else return -30  })
-          .attr("dy", 3)
-          .attr("fill", fill_node_text)
-          .text(function(d) { return d.name });
-
-      force_graph.on("tick", function() {
-        link.attr("x1", function(d) { return d.source.x; })
-            .attr("y1", function(d) { return d.source.y; })
-            .attr("x2", function(d) { return d.target.x; })
-            .attr("y2", function(d) { return d.target.y; })
-            .attr("k", function(d) { return d.k;  });  //useless 4 now
-
-        node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+            createGraphsOfMyCrypto(d.name);
+        });
 
 
-      });
+        node.append("circle")
+            .attr("r","7");
 
-  //slider_update(actual_t)
-});
+        node.append("text")
+            .attr("dx", 12) //function(d) { if(d.name=="Bitcoin") return 12;else return -30  })
+            .attr("dy", 3)
+            .attr("fill", fill_node_text)
+            .text(function(d) { return d.name });
 
-})
+        force_graph.on("tick", function() {
+          link.attr("x1", function(d) { return d.source.x; })
+              .attr("y1", function(d) { return d.source.y; })
+              .attr("x2", function(d) { return d.target.x; })
+              .attr("y2", function(d) { return d.target.y; })
+              .attr("k", function(d) { return d.k;  });  //useless 4 now
+
+          node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+
+        });
+
+    //slider_update(actual_t)
+  });
+
+
 
 }
