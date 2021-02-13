@@ -1,3 +1,25 @@
+//TO THINK
+/*
+- potremmo graficare similarità particolari evidenziandole 
+  nel grafo e nella matrice nella sottorete creata
++ DOne rami in base alla similarità random YHEEAA done
+- TODO ricrea il grafo premendo il tasto con altri rami
+- TODO animationhell
+*/
+
+///DATABASE
+var data_reg = {}  //REG NAME ID ECC
+var name_arr = []  //ARR with names only
+
+//D3 OBJ
+var width = 2700;  //d3 object width
+var height = 1500; //d3 obj height
+
+//GRAPH VALUES
+var x_c= (width-150)/2;
+var y_c= height/2;
+var radius = 700;
+var theta = 2*Math.PI/100 //split 2pi into 2pi/n_nodes
 
 //CSS VAR NAMES 
 
@@ -18,14 +40,18 @@ fill_node_circle = 'rgb(255, 102, 0)'
 stroke_width_node_circle = '10px'
 
 ///SLIDER
+var initial_threshold = 0.9; //THRESHOLD MIN x creare il nodo!
+var initial_threshold_slider = 0.9; //THRESHOLD BASE OF THE SLIDER
 var slider = document.getElementById("myRange");
 var output = document.getElementById("demo");
-output.innerHTML = slider.value;
-actual_t = 1; //slider initial value is 1
+output.innerHTML =  rr(slider.value/1000+initial_threshold_slider);
+actual_t = 0.4; //slider initial value is ?  //NOT USED ANYMORE
+
+function rr(v){return Number(v.toFixed(3))} //3rd decimal n
 
 slider.oninput = function() {
-  output.innerHTML = this.value;
-  actual_t = Math.round(this.value/10); // slider range 0-100 rounded in 1 10
+  output.innerHTML = rr(this.value/1000+initial_threshold_slider);
+  actual_t = rr((this.value/1000)+initial_threshold_slider); // slider range 0-100 norm in 0 1
   slider_update(actual_t)
 }
 
@@ -40,19 +66,7 @@ function slider_update(t) {
   .filter(function(x) { return x.k >= t})
   .style("stroke", color_links)
 }
-///DATABASE
-var data_reg = {}  //REG NAME ID ECC
-var name_arr = []  //ARR with names only
 
-//D3 OBJ
-var width = 2700;  //d3 object width
-var height = 1500; //d3 obj height
-
-//GRAPH VALUES
-var x_c= (width-150)/2;
-var y_c= height/2;
-var radius = 700;
-var theta = 2*Math.PI/100 //split 2pi into 2pi/n_nodes
 
 //X Y to create a node
 function getX(n) {
@@ -69,7 +83,7 @@ function get_random_simmetric(n){
   for(var i=0; i<n; i++) {
       matrix[i] = [];
       for(var j=0; j<=i; j++) {
-          r = Math.random()
+          r=(i!=j?Number(Math.random().toFixed(3)):1)
           matrix[i][j] = r;
           matrix[j][i] = r;
       }
@@ -79,9 +93,9 @@ function get_random_simmetric(n){
 
 //N buttons of similarity we want to use, to give to each link
 n_similarities = 5
-arr_values_similarities = []
+arr_similarity_matrix = []
 for (var i = 0 ; i < n_similarities; i++){
-  arr_values_similarities[i] = get_random_simmetric(100);
+  arr_similarity_matrix[i] = get_random_simmetric(100);
 }
 
 //return top n values from arr, use concat instead of sPlice(0) which gave me an error(?)
@@ -91,13 +105,16 @@ function get_top_n(arr,n){
 
 //get n node from the hat and give them to node namecoin in datareg
 //if nodes are over a threshold from the(TODO each) similarity matrix we assign a link
-function get_links(namecoin,n_links) {
+function get_links(namecoin) {
   idx = name_arr.indexOf(namecoin)
   links = []
-  arr_values_similarities[0][idx] //
-  for (var i = 0; i < n_links; i++) {
-      namecoin = name_arr[i] //Math.round(Math.random()*100)]
-      links = links.concat(namecoin)
+  namecoin_similarity_arr = arr_similarity_matrix[0][idx] //
+  // console.log("l arr a cui collegarmi è!")
+  // console.log(namecoin_similarity_arr)
+  for (var i = 0; i < 100; i++) {   //was in n_links to keep n links max, now 100 coins
+      //namecoin = name_arr[i*4] //Math.round(Math.random()*100)]
+      if(namecoin_similarity_arr[i] > initial_threshold && i!=idx ) //!!! THRESHOLD MINIMA PER CREARE IL NODO
+        links = links.concat(name_arr[i])
     }
   return links
 }
@@ -106,7 +123,17 @@ function get_links(namecoin,n_links) {
 function update_reg_links() {
   for (var i = 0; i < name_arr.length; i++) {
     namecoin = name_arr[i]
-    data_reg[namecoin] = data_reg[namecoin].concat([get_links(namecoin,20)])
+    data_reg[namecoin] = data_reg[namecoin].concat([get_links(namecoin)])
+    if(false){ //ALL LINKS HAVE THRESHOLD OVER 0.9! TO VERIFY USE TRUE
+      console.log("----TEST!--- link, namecoin, value of their sim.")
+      console.log(get_links(namecoin))
+      console.log( namecoin)
+      console.log(arr_similarity_matrix[0][name_arr.indexOf(namecoin)][name_arr.indexOf(get_links(namecoin)[0])])
+      console.log(arr_similarity_matrix[0][name_arr.indexOf(namecoin)][name_arr.indexOf(get_links(namecoin)[1])])
+      console.log(arr_similarity_matrix[0][name_arr.indexOf(namecoin)][name_arr.indexOf(get_links(namecoin)[2])])
+      console.log(arr_similarity_matrix[0][name_arr.indexOf(namecoin)][name_arr.indexOf(get_links(namecoin)[3])])
+      console.log(arr_similarity_matrix[0][name_arr.indexOf(namecoin)][name_arr.indexOf(get_links(namecoin)[4])])
+    }
   }
 }
 
@@ -134,28 +161,7 @@ console.log(data_reg)
 
 var last_clicked="";
 
-function clicked(node_name) {  //:(
-  // console.log(node_name)
-  // console.log("dataset/"+node_name+".csv")
-  // d3v3.csv("dataset/"+node_name+".csv", function(json) {
-  //   console.log(json)
-  //   //TODO
-  // })
-  // //if(last_clicked == node_name){ last_clicked=""; return;}
-  // last_clicked=node_name;
 
-  // svg.selectAll(".node circle")
-  // .data(nodes)
-  // .filter(function(x) {return x.name == last_clicked})
-  // .style('fill', 'rgb(255, 0, 0)')
-  // .style("stroke-width", "15px") ; //.attr("r", "15") ; per la dim
-
-  // svg.selectAll(".node text")
-  // .data(nodes)
-  // .filter(function(x) {return x.name == last_clicked})
-  // .style('fill', 'rgb(255, 0, 0)') ;
-
-}
 
 //SVG OBJs from d3v3
 var svg = d3v3.select("body").append("svg")
@@ -174,6 +180,16 @@ var test =[],test;
 var links = [];
 var nodes = [];
 
+//could be better using only the simmMatrix to keep
+//info about who links with who 
+function getThreshold(source,target) { 
+  matrix = arr_similarity_matrix[0]
+  s_idx = name_arr.indexOf(source)
+  t_idx = name_arr.indexOf(target)
+  ret = matrix[s_idx][t_idx]
+  return ret
+}
+
 d3v3.csv("", function() {  // !
   nodes = name_arr;
   links = [];
@@ -183,7 +199,16 @@ d3v3.csv("", function() {  // !
 
     for(j=0;j<link_to_add.length;j++){
       if(link_to_add[j]!=null){
-        links.push({source:nodes.indexOf(namecoin) , target:nodes.indexOf(link_to_add[j]), k:j*2 })}// id:nodes.indexOf(namecoin) }
+
+        tr = getThreshold(namecoin,link_to_add[j])
+
+        links.push({source:nodes.indexOf(namecoin) ,
+                    target:nodes.indexOf(link_to_add[j]),
+                    k:tr })// id:nodes.indexOf(namecoin) }
+
+        links.push({source:nodes.indexOf(link_to_add[j]) ,
+                    target:nodes.indexOf(namecoin),
+                    k:tr })}
       }
   }
   nodes = nodes.map(function(n){return {name:n, fixed:true , x:getX(n) ,y:getY(n)}
@@ -346,9 +371,30 @@ d3v3.csv("", function() {  // !
 
   });
 
-  slider_update(actual_t)
+  //slider_update(actual_t)
 });
 
+// function clicked(node_name) {  //:(
+  // console.log(node_name)
+  // console.log("dataset/"+node_name+".csv")
+  // d3v3.csv("dataset/"+node_name+".csv", function(json) {
+  //   console.log(json)
+  //   //TODO
+  // })
+  // //if(last_clicked == node_name){ last_clicked=""; return;}
+  // last_clicked=node_name;
+
+  // svg.selectAll(".node circle")
+  // .data(nodes)
+  // .filter(function(x) {return x.name == last_clicked})
+  // .style('fill', 'rgb(255, 0, 0)')
+  // .style("stroke-width", "15px") ; //.attr("r", "15") ; per la dim
+
+  // svg.selectAll(".node text")
+  // .data(nodes)
+  // .filter(function(x) {return x.name == last_clicked})
+  // .style('fill', 'rgb(255, 0, 0)') ;
+// }
 
 function ontick(n){
   // link.attr("x1", function(d) { return d.source.x; })
@@ -386,8 +432,9 @@ function ontick(n){
 document.getElementById("SIMIL1").addEventListener("click",function(){
 
   svg.selectAll("*").remove()
-console.log("SSAD")
-d3v3.csv("dataset/100List.csv", function(data) {
+
+  console.log("SIMIL1!")
+  d3v3.csv("dataset/100List.csv", function(data) {
 
   for (var i = 0; i < data.length; i++) {
     name_arr = name_arr.concat(data[i].Name)  //fill name_arr with names

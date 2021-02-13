@@ -1,11 +1,11 @@
 .link {
-    stroke: rgb(255, 0, 0);
+    stroke: rgb(2, 200, 255);
     stroke-width:1px;
   }
 
   .node text {
   cursor:pointer;
-  font-size: 30px;
+  font-size: 35px;
   -webkit-text-stroke-width: 2px;
   -webkit-text-stroke-color: rgb(255, 0, 0);
   /* 
