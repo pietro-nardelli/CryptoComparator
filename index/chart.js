@@ -53,7 +53,7 @@ document.getElementById("MyBtn").addEventListener("click", function() {
 
 function functionOnClick(rel_or_abs){
 
-    let name1 = last_clicked
+    let name1 = last_clicked.name
     var path_1 = 'dataset/' + String(name1)+ '.csv';
     let name2 = 'Dogecoin'
     var path_2 = 'dataset/' + String(name2)+ '.csv';
