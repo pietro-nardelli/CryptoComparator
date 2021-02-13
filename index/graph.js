@@ -31,8 +31,8 @@ links_stroke_when_filtered_out = 'rgba(100,100,100,0.0)'
 
 ///NODE TEXT
 fill_node_text = 'rgb(255, 255, 255)'
-fill_node_text_when_pressed = 'orange'
-size_node_text_when_pressed = '40px'
+fill_node_text_when_pressed = 'rgb(255, 196, 0)'
+size_node_text_when_pressed = '60px'
 size_node_text = '35px'
 
 //NODES VALUES
@@ -190,102 +190,22 @@ function getThreshold(source,target,similarity_idx) {
   return ret
 }
 
-testa(0)
-
-// function clicked(node_name) {  //:(
-  // console.log(node_name)
-  // console.log("dataset/"+node_name+".csv")
-  // d3v3.csv("dataset/"+node_name+".csv", function(json) {
-  //   console.log(json)
-  //   //TODO
-  // })
-  // //if(last_clicked == node_name){ last_clicked=""; return;}
-  // last_clicked=node_name;
-
-  // svg.selectAll(".node circle")
-  // .data(nodes)
-  // .filter(function(x) {return x.name == last_clicked})
-  // .style('fill', 'rgb(255, 0, 0)')
-  // .style("stroke-width", "15px") ; //.attr("r", "15") ; per la dim
-
-  // svg.selectAll(".node text")
-  // .data(nodes)
-  // .filter(function(x) {return x.name == last_clicked})
-  // .style('fill', 'rgb(255, 0, 0)') ;
-// }
-
-function ontick(n){
-  // link.attr("x1", function(d) { return d.source.x; })
-  // .attr("y1", function(d) { return d.source.y; })
-  // .attr("x2", function(d) { return d.target.x; })
-  // .attr("y2", function(d) { return d.target.y; })
-  // .attr("k", function(d) { return d.k;  });  //useless 4 now
-
-  n.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-
-  svg.selectAll(".node").data(nodes)[0][50].transition()
-  .duration(100).setAttribute("transform","translate(100,100).transition()")
-
-  svg.selectAll(".node circle").transition().duration(1000).attr("transform","translate(1200,100)")
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+create_graph(0)
 
 document.getElementById("SIMIL1").addEventListener("click", function () {
-  testa(1)  
+  create_graph(1)  
 } )
 
 document.getElementById("SIMIL2").addEventListener("click", function () {
-  testa(2)  
+  create_graph(2)  
 } )
 
 document.getElementById("SIMIL3").addEventListener("click", function () {
-  testa(3)  
+  create_graph(3)  
 } )
 
 
-
-function testa(ididix){
+function create_graph(ididix){
 
   svg.selectAll("*").remove()
 
@@ -336,6 +256,16 @@ function testa(ididix){
         .attr("class", "node")
         .call(force_graph.drag)
         .on("mouseover", function (d) {  ///TO UPDATE con data_reg e non selectall, e d.source.name
+
+
+          svg.selectAll(".node text")
+            .data(nodes)
+            .filter(function(x) {return x.name == d.name})
+            .style('fill', fill_node_text_when_pressed) 
+            .style("font-size", size_node_text_when_pressed)
+            .style("z-index", '2');
+
+
           svg.selectAll(".node circle")
           .data(nodes)
           .filter(function(x) { return x.name != d.name })
@@ -385,6 +315,14 @@ function testa(ididix){
             svg.selectAll(".node text")
             .data(nodes)
             .style('fill', fill_node_text);
+
+            svg.selectAll(".node text")
+            .data(nodes)
+            .style("stroke-width", "0px")
+            .style("font-size", size_node_text);
+
+            
+
 
             svg.selectAll(".link ")   //.filter(function(x) {return  x.k>= actual_t})
             .data(links).filter(function(x) { return  x.k >= actual_t})
@@ -452,3 +390,48 @@ function testa(ididix){
 
 
 }
+
+
+
+// function clicked(node_name) {  //:(
+  // console.log(node_name)
+  // console.log("dataset/"+node_name+".csv")
+  // d3v3.csv("dataset/"+node_name+".csv", function(json) {
+  //   console.log(json)
+  //   //TODO
+  // })
+  // //if(last_clicked == node_name){ last_clicked=""; return;}
+  // last_clicked=node_name;
+
+  // svg.selectAll(".node circle")
+  // .data(nodes)
+  // .filter(function(x) {return x.name == last_clicked})
+  // .style('fill', 'rgb(255, 0, 0)')
+  // .style("stroke-width", "15px") ; //.attr("r", "15") ; per la dim
+
+  // svg.selectAll(".node text")
+  // .data(nodes)
+  // .filter(function(x) {return x.name == last_clicked})
+  // .style('fill', 'rgb(255, 0, 0)') ;
+// }
+
+function ontick(n){
+  // link.attr("x1", function(d) { return d.source.x; })
+  // .attr("y1", function(d) { return d.source.y; })
+  // .attr("x2", function(d) { return d.target.x; })
+  // .attr("y2", function(d) { return d.target.y; })
+  // .attr("k", function(d) { return d.k;  });  //useless 4 now
+
+  n.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+  svg.selectAll(".node").data(nodes)[0][50].transition()
+  .duration(100).setAttribute("transform","translate(100,100).transition()")
+
+  svg.selectAll(".node circle").transition().duration(1000).attr("transform","translate(1200,100)")
+}
+
+
+
+
+
+
