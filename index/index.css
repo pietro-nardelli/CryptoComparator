@@ -7,9 +7,10 @@
   cursor:pointer;
   font-size: 35px;
   -webkit-text-stroke-width: 2px;
-  -webkit-text-stroke-color: rgb(255, 0, 0);
+  -webkit-text-stroke-color: rgb(255, 196, 0);
+
   /* 
-  text-stroke: 10px;
+
   text-shadow: #000 0px 0px 1px; */
   }
 
