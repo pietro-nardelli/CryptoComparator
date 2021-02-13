@@ -44,7 +44,7 @@ var initial_threshold = 0.9; //THRESHOLD MIN x creare il nodo!
 var initial_threshold_slider = 0.9; //THRESHOLD BASE OF THE SLIDER
 var slider = document.getElementById("myRange");
 var output = document.getElementById("demo");
-output.innerHTML =  rr(slider.value/1000+initial_threshold_slider);
+output.innerHTML =  rr(slider.value/1000+initial_threshold_slider) ;
 actual_t = 0.4; //slider initial value is ?  //NOT USED ANYMORE
 
 function rr(v){return Number(v.toFixed(3))} //3rd decimal n
@@ -105,25 +105,25 @@ function get_top_n(arr,n){
 
 //get n node from the hat and give them to node namecoin in datareg
 //if nodes are over a threshold from the(TODO each) similarity matrix we assign a link
-function get_links(namecoin) {
-  idx = name_arr.indexOf(namecoin)
+function get_links(namecoin,similarity_idx) {
+  namecoin_idx = name_arr.indexOf(namecoin)
   links = []
-  namecoin_similarity_arr = arr_similarity_matrix[0][idx] //
+  namecoin_similarity_arr = arr_similarity_matrix[similarity_idx][namecoin_idx] //
   // console.log("l arr a cui collegarmi è!")
   // console.log(namecoin_similarity_arr)
   for (var i = 0; i < 100; i++) {   //was in n_links to keep n links max, now 100 coins
       //namecoin = name_arr[i*4] //Math.round(Math.random()*100)]
-      if(namecoin_similarity_arr[i] > initial_threshold && i!=idx ) //!!! THRESHOLD MINIMA PER CREARE IL NODO
+      if(namecoin_similarity_arr[i] > initial_threshold && i!=namecoin_idx ) //!!! THRESHOLD MINIMA PER CREARE IL NODO
         links = links.concat(name_arr[i])
     }
   return links
 }
 
 //UP DATAREG setting the links
-function update_reg_links() {
+function update_reg_links(index_of_similarity_in_use) {
   for (var i = 0; i < name_arr.length; i++) {
     namecoin = name_arr[i]
-    data_reg[namecoin] = data_reg[namecoin].concat([get_links(namecoin)])
+    data_reg[namecoin][2] =  get_links(namecoin,index_of_similarity_in_use)
     if(false){ //ALL LINKS HAVE THRESHOLD OVER 0.9! TO VERIFY USE TRUE
       console.log("----TEST!--- link, namecoin, value of their sim.")
       console.log(get_links(namecoin))
@@ -154,7 +154,7 @@ d3v3.csv("dataset/100List.csv", function(data) {
 
     data_reg[namecoin] = [[x,y],namecoin]
   }
-  update_reg_links(); //set in datareg all the links
+  update_reg_links(0); //set in datareg all the links
 });
 
 console.log(data_reg)
@@ -182,8 +182,8 @@ var nodes = [];
 
 //could be better using only the simmMatrix to keep
 //info about who links with who 
-function getThreshold(source,target) { 
-  matrix = arr_similarity_matrix[0]
+function getThreshold(source,target,similarity_idx) { 
+  matrix = arr_similarity_matrix[similarity_idx]
   s_idx = name_arr.indexOf(source)
   t_idx = name_arr.indexOf(target)
   ret = matrix[s_idx][t_idx]
@@ -200,7 +200,7 @@ d3v3.csv("", function() {  // !
     for(j=0;j<link_to_add.length;j++){
       if(link_to_add[j]!=null){
 
-        tr = getThreshold(namecoin,link_to_add[j])
+        tr = getThreshold(namecoin,link_to_add[j],0)
 
         links.push({source:nodes.indexOf(namecoin) ,
                     target:nodes.indexOf(link_to_add[j]),
@@ -429,50 +429,94 @@ function ontick(n){
 
 
 
-document.getElementById("SIMIL1").addEventListener("click",function(){
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function update_reg_links1(index_of_similarity_in_use) {
+  for (var i = 0; i < name_arr.length; i++) {
+    namecoin = name_arr[i]
+    data_reg[namecoin][2] = get_links(namecoin,index_of_similarity_in_use)
+  }
+}
+
+//SERVE data_reg con i nuovi links es data_reg["ATC Coin"][2] = new[]
+// ^ RELATIVI alla tr
+//
+
+
+
+document.getElementById("SIMIL1").addEventListener("click", function () {
+  testa(1)  
+} )
+
+document.getElementById("SIMIL2").addEventListener("click", function () {
+  testa(2)  
+} )
+
+document.getElementById("SIMIL3").addEventListener("click", function () {
+  testa(3)  
+} )
+
+
+
+function testa(ididix){
 
   svg.selectAll("*").remove()
 
+  index_of_similarity_in_use = ididix
+
+  update_reg_links(index_of_similarity_in_use)
+
+  
   console.log("SIMIL1!")
   d3v3.csv("dataset/100List.csv", function(data) {
 
-  for (var i = 0; i < data.length; i++) {
-    name_arr = name_arr.concat(data[i].Name)  //fill name_arr with names
-  }
-  name_arr.sort() //alphabetical order
-
-  for (var i = 0; i < name_arr.length; i++) {  //create in data reg[name] an entry with (x,y),name
-    namecoin = name_arr[i]
-    aux_radius = radius
-    if( i%2==0)aux_radius = radius * 1
-    x = x_c+Math.cos(theta*i)*aux_radius + 520*Math.cos(theta*i)
-    y = y_c+Math.sin(theta*i)*aux_radius //+ 400*Math.sin(theta*i)
-
-    data_reg[namecoin] = [[x,y],namecoin]
-  }
-  update_reg_links(); //set in datareg all the links
-});
-
-d3v3.csv("", function() {  // !
-  svg.selectAll("*").remove()
+  
+d3v3.csv("", function() {  // per ogni namecoin prendo i relativi link to add dal datareg 
   nodes = name_arr;
   links = [];
   for (var i = 0; i < name_arr.length; i++) {
     namecoin=nodes[i]
     link_to_add = data_reg[namecoin][2]
 
-    for(j=0;j<link_to_add.length;j++){
+    for(j=0;j<link_to_add.length;j++){ //for each of them i eval. the tr. and push the link (s,t,tr)
       if(link_to_add[j]!=null){
-        links.push({source:nodes.indexOf(namecoin) , target:nodes.indexOf(link_to_add[j]), k:j*2 })}// id:nodes.indexOf(namecoin) }
+
+        tr = getThreshold(namecoin,link_to_add[j],index_of_similarity_in_use)
+
+        links.push({source:nodes.indexOf(namecoin) ,
+                    target:nodes.indexOf(link_to_add[j]),
+                    k:tr })
+
+        links.push({source:nodes.indexOf(link_to_add[j]) ,
+                    target:nodes.indexOf(namecoin),
+                    k:tr })}
       }
   }
   nodes = nodes.map(function(n){return {name:n, fixed:true , x:getX(n) ,y:getY(n)}
   })
 
-  force_graph
-      .nodes(nodes)
-      .links(links)
-      .start();
+  force_graph.nodes(nodes).links(links).start();
 
   var link = svg.selectAll(".link")
       .data(links)
@@ -487,7 +531,6 @@ d3v3.csv("", function() {  // !
       .attr("class", "node")
       .call(force_graph.drag)
       .on("mouseover", function (d) {  ///TO UPDATE con data_reg e non selectall, e d.source.name
-        //if(last_clicked=="101") return;
         svg.selectAll(".node circle")
         .data(nodes)
         .filter(function(x) { return x.name != d.name })
@@ -500,17 +543,17 @@ d3v3.csv("", function() {  // !
 
         svg.selectAll(".link")
         .data(links)
-        .filter(function(x) { return x.source.name != d.name || x.k< actual_t}) //&& x.k< actual_t
+        .filter(function(x) { return x.source.name != d.name || x.k< actual_t})
         .style('stroke', links_stroke_when_filtered_out);
 
         var target_nodes = svg.selectAll(".link ")
         .data(links)
-        .filter(function(x) {return x.source.name == d.name  && x.k>= actual_t}) //&& x.k>= actual_t
+        .filter(function(x) {return x.source.name == d.name  && x.k>= actual_t}) 
         .style("stroke-width", stroke_width_links_mouseover)
 
         n=target_nodes[0].length
         target_name = "";
-        for(var a = 0; a <= n-1 ; a++){  //AFTER V3 NEED n-1 INSTEAD OF n
+        for(var a = 0; a <= n-1 ; a++){  
           if ( target_nodes[0][a] != undefined)
             target_name = target_nodes[0][a].getAttribute("target");
           else console.log("[ERR]GETATTR. ON EMPTY LINKS"+ a)
@@ -526,10 +569,10 @@ d3v3.csv("", function() {  // !
         .style('fill', fill_node_text) ;
         }
 
-        test = target_nodes
+        test = d
+        console.log(test)
       })
       .on("mouseout", function (d) {
-        //if(last_clicked==d.name)return;
           svg.selectAll(".node circle")
           .data(nodes)
           .style('fill', fill_node_circle) ;
@@ -545,7 +588,7 @@ d3v3.csv("", function() {  // !
 
       })
       .on('click', function(d){
-          //clicked(d.name);
+
           svg.selectAll(".node circle")
           .data(nodes)
           .style("stroke-width", "0px");
@@ -577,28 +620,30 @@ d3v3.csv("", function() {  // !
       });
 
 
-  node.append("circle")
-      .attr("r","7");
+      node.append("circle")
+          .attr("r","7");
 
-  node.append("text")
-      .attr("dx", 12) //function(d) { if(d.name=="Bitcoin") return 12;else return -30  })
-      .attr("dy", 3)
-      .attr("fill", fill_node_text)
-      .text(function(d) { return d.name });
+      node.append("text")
+          .attr("dx", 12) //function(d) { if(d.name=="Bitcoin") return 12;else return -30  })
+          .attr("dy", 3)
+          .attr("fill", fill_node_text)
+          .text(function(d) { return d.name });
 
-  force_graph.on("tick", function() {
-    link.attr("x1", function(d) { return d.source.x; })
-        .attr("y1", function(d) { return d.source.y; })
-        .attr("x2", function(d) { return d.target.x; })
-        .attr("y2", function(d) { return d.target.y; })
-        .attr("k", function(d) { return d.k;  });  //useless 4 now
+      force_graph.on("tick", function() {
+        link.attr("x1", function(d) { return d.source.x; })
+            .attr("y1", function(d) { return d.source.y; })
+            .attr("x2", function(d) { return d.target.x; })
+            .attr("y2", function(d) { return d.target.y; })
+            .attr("k", function(d) { return d.k;  });  //useless 4 now
 
-    node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+        node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 
 
-  });
+      });
 
-  slider_update(actual_t)
+  //slider_update(actual_t)
 });
 
 })
+
+}
