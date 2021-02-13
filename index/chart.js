@@ -1,34 +1,3 @@
-
-
-
-
-
-
-
-
-//function p(x) {console.log(x)}
-// var a,b
-// d3.csv("dataset/ZCoin.csv", function(data) {
-//   a = data[0].Low
-//   p("SONO IN ZCOIN  ----- ----- -----"); p(a)
-// })
-
-// d3.csv("dataset/Zcash.csv", function(data) {
-//   b = data[0].Low
-//   p("SONO IN ZCash  ----- ----- -----"); p(b)
-//   p("A qui vale");p(a)
-// })
-// d3.csv("", function(data) {
-//   p("NOMI VAR DALLA 3ZA CSV FUNZ  ----- ----- -----")
-//   p(a)
-//   p(b)
-// })
-// p("NOMI FUORI CSV  ----- ----- -----")
-// p(a)
-// p(b)
-
-
-
 //-----------SET DEI PARAMETRI NECESSARI PER DEFINIRE I VARI GRAFICI--------------------------------------------------
 
 var cryptonames = ["Bitcoin", "Ethereum", "Bitcoin Cash", "Ripple", "Dash", "Litecoin", "NEM", "IOTA", "Monero",
@@ -45,92 +14,534 @@ var cryptonames = ["Bitcoin", "Ethereum", "Bitcoin Cash", "Ripple", "Dash", "Lit
                 "Gambit", "E-coin", "SaluS", "Groestlcoin", "BlackCoin", "Golos", "GridCoin"]
 
 //-----------------dimensione dei grafici----------------
-var margin = {top: 10, right: 30, bottom: 30, left: 60};
-var width1 = 230 - margin.left - margin.right;
-var height1 = 200 - margin.top - margin.bottom;
+var margin1 = {top: 10, right: 30, bottom: 30, left: 60};
+var width1 = 230 - margin1.left - margin1.right;
+var height1 = 200 - margin1.top - margin1.bottom;
 //-------------------------------------------------------
 
 
 var need_candlestick = false;
 //how many graphs do I want to create?
-number_of_graphs=2
 
-
+number_of_graphs=4
+rel_or_abs = 'absolute'
+clicked = true
 //let's create the svgs for each graph!
 var svg_arr=[]
 
 for(i=0;i<number_of_graphs;i++){
-    svg_arr[i] = d3.select("#my_dataviz").append("svg").attr("width", width1 + margin.left + margin.right)
-    .attr("height", height1 + margin.top + margin.bottom).append("g").attr("transform","translate(" + margin.left + "," + margin.top + ")").attr("id", i)
+    svg_arr[i] = d3.select("#my_dataviz").append("svg").attr("width", width1 + margin1.left + margin1.right)
+    .attr("height", height1 + margin1.top + margin1.bottom).append("g").attr("transform","translate(" + margin1.left + "," + margin1.top + ")").attr("id", i)
 }
 
 
-//-------ROBA DROP DOWN MENU--------------
-
-// function myFunction() {
-//     document.getElementById("myDropdown").classList.toggle("show");
-//     }
-
-// for(let i=0;i<cryptonames.length;i++){
-//     var liItem = document.createElement("a");
-//     liItem.href = "#"
-//     liItem.text = cryptonames[i]
-//     liItem.id = cryptonames[i]
-//     let cryptonames_ = cryptonames[i]
-//     var dropdown = document.getElementById("myDropdown").appendChild(liItem).addEventListener("click", function(){createGraphsOfMyCrypto(cryptonames_) });
-//     };
-//----------------------------------------
-
 //--------------------------------------------------------------------------------------------------------------------
 
+document.getElementById("MyBtn").addEventListener("click", function() {
+    if(already_draw){
+        clicked = !clicked;
+        if(clicked) {
+            rel_or_abs = 'absolute';
+            document.getElementById("MyBtn").innerHTML = rel_or_abs+' scale';
+            functionOnClick(rel_or_abs)
+        }
+        else rel_or_abs = 'relative'
+        document.getElementById("MyBtn").innerHTML = rel_or_abs+' scale';
+        functionOnClick(rel_or_abs)
+ }
+  });
+
+function functionOnClick(rel_or_abs){
+
+    let name1 = last_clicked
+    var path_1 = 'dataset/' + String(name1)+ '.csv';
+    let name2 = 'Dogecoin'
+    var path_2 = 'dataset/' + String(name2)+ '.csv';
+
+    var _data_ = d3.csv(path_1, function(data1) {
+        var __data_ =  d3.csv(path_2, function(data2) {
+
+            for(i=0;i<svg_arr.length;i++){ svg_arr[i].selectAll("*").remove(); }
+    
+    
+            data_charts = []
+    
+    
+            attr_to_plot = ["close", "market cap", "volume", "high", "low", "open"]
+    
+    
+            if(need_candlestick==false){
+                var data_final1 = {"name": name1,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
+                var data_final2 = {"name": name2,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
+
+            }
+            else var data_final = {"key": keyword,"values": []}
+    
+            data_final1, _ = preprocess_data(data1,need_candlestick=need_candlestick,data_summary=false,data_final1)
+            data_final2, _ = preprocess_data(data2,need_candlestick=need_candlestick,data_summary=false,data_final2)
+
+    
+            draw_multilines_time_chart(svg_arr[0],margin1, data_final1,data_final2, attr_to_plot[0], [1,2,3], 0,number_of_graphs,rel_or_abs=rel_or_abs)
+    
+            draw_multilines_time_chart(svg_arr[1],margin1, data_final1,data_final2, attr_to_plot[1], [0,2,3], 1,number_of_graphs,rel_or_abs=rel_or_abs)
+
+            draw_multilines_time_chart(svg_arr[2],margin1, data_final1,data_final2, attr_to_plot[2], [0,1,3], 2,number_of_graphs,rel_or_abs=rel_or_abs)
+
+            draw_multilines_time_chart(svg_arr[3],margin1, data_final1,data_final2, attr_to_plot[3], [0,1,2], 3,number_of_graphs,rel_or_abs=rel_or_abs)
+
+
+
+        })
+
+    })
+}
 
 
 //----------FUNZIONE CHIAMATA ONCLICK PER OGNI CRYPTO---------------------------------------
 
 
-function createGraphsOfMyCrypto(name){
-    let name1 = name
-    var path_ = 'dataset/' + String(name)+ '.csv';
 
-    var _data_ = d3.csv(path_, function(data) {
+var already_draw = false
 
-        for(i=0;i<svg_arr.length;i++){ svg_arr[i].selectAll("*").remove(); }
+function createGraphsOfMyCrypto(name1,name2='Dogecoin'){
+    //PER ORA IL CONFRONTO E' FRA QUELLA CHE CLICCO,E Dogecoin.
+    already_draw=true
+    var path_1 = 'dataset/' + String(name1)+ '.csv';
+    var path_2 = 'dataset/' + String(name2)+ '.csv';
+
+    var _data_ = d3.csv(path_1, function(data1) {
+        var __data_ =  d3.csv(path_2, function(data2) {
+
+            for(i=0;i<svg_arr.length;i++){ svg_arr[i].selectAll("*").remove(); }
+    
+    
+            data_charts = []
+    
+    
+            attr_to_plot = ["close", "market cap", "volume", "high", "low", "open"]
+    
+    
+            if(need_candlestick==false){
+                var data_final1 = {"name": name1,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
+                var data_final2 = {"name": name2,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
+             
+                print('the blue line is '+ name1)
+                print('the red line is '+ name2)
+
+            }
+            else var data_final = {"key": keyword,"values": []}
+    
+            data_final1, _ = preprocess_data(data1,need_candlestick=need_candlestick,data_summary=false,data_final1)
+            data_final2, _ = preprocess_data(data2,need_candlestick=need_candlestick,data_summary=false,data_final2)
+
+    
+            draw_multilines_time_chart(svg_arr[0],margin1, data_final1,data_final2, attr_to_plot[0], [1,2,3], 0,number_of_graphs,rel_or_abs=rel_or_abs)
+    
+            draw_multilines_time_chart(svg_arr[1],margin1, data_final1,data_final2, attr_to_plot[1], [0,2,3], 1,number_of_graphs,rel_or_abs=rel_or_abs)
+
+            draw_multilines_time_chart(svg_arr[2],margin1, data_final1,data_final2, attr_to_plot[2], [0,1,3], 2,number_of_graphs,rel_or_abs=rel_or_abs)
+
+            draw_multilines_time_chart(svg_arr[3],margin1, data_final1,data_final2, attr_to_plot[3], [0,1,2], 3,number_of_graphs,rel_or_abs=rel_or_abs)
 
 
-        data_charts = []
 
+        })
 
-        attr_to_plot = ["close", "market cap", "volume", "high", "low", "open"]
-
-
-        if(need_candlestick==false){var data_final = {"name": name1,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}}
-        else var data_final = {"key": keyword,"values": []}
-
-        data_final, _ = preprocess_data(data,need_candlestick=need_candlestick,data_summary=false,data_final)
-
-        // draw_time_chart(svg_arr[0],margin, data_final, attr_to_plot[0], [1,2,3], 0,number_of_graphs)
-
-        // draw_time_chart(svg_arr[1],margin, data_final, attr_to_plot[1], [0,2,3], 1,number_of_graphs)
-
-        // draw_time_chart(svg_arr[2],margin, data_final, attr_to_plot[2], [0,1,3], 2,number_of_graphs)
-
-        // draw_time_chart(svg_arr[3],margin, data_final, attr_to_plot[3], [0,1,2], 3,number_of_graphs)
-
-        draw_time_chart(svg_arr[0],margin, data_final, attr_to_plot[0], [1], 0,number_of_graphs, rel_or_abs='absolute')
-
-        draw_time_chart(svg_arr[1],margin, data_final, attr_to_plot[1], [0], 1,number_of_graphs, rel_or_abs='absolute')
     })
 
 
 }
 //-----------------------------------------------------------------------------------------
 
+//FUNZIONE PER DISEGNARE GRAFICI INTERAGIBILI E INTERCONNESSI, CON DUE LINEE SOPRA
+
+function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,param,id_graph,number_of_graphs,rel_or_abs){
+    //FUNZIONE PER DISEGNARE GRAFICI INTERCONNESSI FRA LORO
+    //-----------------------------------------------------
+    //id is the identification number for the graph.
+    //param is a tuple. Contains the identification numbers of all the graphs you want
+    //to link the graph to
+
+    var data = []
+    var data2 = []
+    max_1_x = Math.max.apply(null, data_final1['date']); 
+    max_2_x = Math.max.apply(null, data_final2['date']); 
+    min_1_x = Math.min.apply(null, data_final1['date']); 
+    min_2_x = Math.min.apply(null, data_final2['date']); 
+    max_1_y = Math.max.apply(null, data_final1[attr]); 
+    max_2_y = Math.max.apply(null, data_final2[attr]); 
+    true_max_x = new Date(Math.max.apply(null,[max_1_x,max_2_x]))
+    true_min_x = new Date(Math.min.apply(null,[min_1_x,min_2_x]))
+    true_max_y = Math.max.apply(null,[max_1_y,max_2_y])
+
+
+    for(var i=0;i<data_final1['date'].length;i++){
+        data.push(new Object())
+        data[i]['date'] = data_final1['date'][i]
+        data[i]['value'] = data_final1[attr][i]
+    }
+    for(var i=0;i<data_final2['date'].length;i++){
+        data2.push(new Object())
+        data2[i]['date'] = data_final2['date'][i]
+        data2[i]['value'] = data_final2[attr][i]
+    }
+
+
+    // A function that set idleTimeOut to null
+    var idleTimeout
+    function idled() { idleTimeout = null; }
+
+
+    // A function that update the chart for given boundaries
+    function updateChart() {
+        data_array = []
+        x_array = []
+        xAxis_array = []
+        y_array = []
+        yAxis_array = []
+        data_new_array = []
+        line_array = []
+        dataFiltered_array = []
+        dataFiltered2_array = []
+        min_array = []
+        max_array = []
+        line2_array = []
+        data2_array = []
+
+        data_array.push(data_charts[id_graph][5])
+        data2_array.push(data_charts[id_graph][7])
+        x_array.push(x)
+        xAxis_array.push(xAxis)
+        y_array.push(y)
+        yAxis_array.push(yAxis)
+        line_array.push(line)
+        line2_array.push(line2)
+        // select a region with boundaries
+        var extent = d3.event.selection
+
+        for(i=1;i<number_of_graphs;i++){
+            x_array[i] = data_charts[param[i-1]][0]            // x_array = [x, x_new, x_new_2]
+            xAxis_array[i] = data_charts[param[i-1]][1]        // xAxis_array = [xAxis, xAxis_new, xAxis_new_2]
+            line_array[i] = data_charts[param[i-1]][2]         // line_array = ...
+            y_array[i] = data_charts[param[i-1]][3]            // y_array = ...
+            yAxis_array[i] = data_charts[param[i-1]][4]        // yAxis_array = ...
+            data_array[i] = data_charts[param[i-1]][5]        // data_new_array = [data_,data_new, data_new_2]
+            line2_array[i] = data_charts[param[i-1]][6]
+            data2_array[i] = data_charts[param[i-1]][7]        // data_new_array = [data_,data_new, data_new_2]
+
+        }
+
+        // If no selection, back to initial coordinate. Otherwise, update X,Y axis domain
+        if(!extent)
+        {
+            if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+            for(i=0;i<number_of_graphs;i++){x_array[i].domain([4,8])}
+
+        }
+        else
+        {
+
+            for(i=0;i<number_of_graphs;i++){
+                x_array[i].domain([ x_array[i].invert(extent[0]), x_array[i].invert(extent[1]) ])
+                dataFiltered_array[i] = data_array[i].filter(function(d, i) {                           //dataFiltered_array = [dataFiltered,dataFiltered_new,...]
+                    if ( (d.date >= x.domain()[0]) && (d.date <= x.domain()[1]) ) {return d.value;}
+                })
+                dataFiltered2_array[i] = data2_array[i].filter(function(d, i) {                           //dataFiltered_array = [dataFiltered,dataFiltered_new,...]
+                    if ( (d.date >= x.domain()[0]) && (d.date <= x.domain()[1]) ) {return d.value;}
+                })
+
+                var max_line_1 = maxArrObj(dataFiltered_array[i],'value')
+                var max_line_2 = maxArrObj(dataFiltered2_array[i],'value')
+                var min_line_1 = minArrObj(dataFiltered_array[i],'value')
+                var min_line_2 = minArrObj(dataFiltered2_array[i],'value')
+
+                max_array[i] = get_max(max_line_1,max_line_2)
+                if(rel_or_abs=='relative') min_array[i] = get_min(min_line_1,min_line_2)
+                else if(rel_or_abs=='absolute') min_array[i]=0
+
+            }
+
+            for(i=0;i<number_of_graphs;i++){
+                y_array[i].domain([min_array[i],max_array[i]])
+            };
+            svg.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been don
+            
+            for(i=0;i<number_of_graphs;i++){
+                
+                xAxis_array[i].transition().duration(1000).call(d3.axisBottom(x_array[i]).ticks(7))
+                xAxis_array[i].selectAll("text").style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)");
+                yAxis_array[i].transition().duration(1000).call(d3.axisLeft(y_array[i]).ticks(5))
+                line_array[i].select(".line").transition().duration(1000).attr("d", d3.line().x(function(d) {
+                    return x_array[i](d.date) }).y(function(d) { return y_array[i](d.value) }))
+                    line2_array[i].select(".line").transition().duration(1000).attr("d", d3.line().x(function(d) {
+                        return x_array[i](d.date) }).y(function(d) { return y_array[i](d.value) }))
+                    }
+                    
+                }
+        // If user double click, reinitialize the chart
+        svg.on("dblclick",function(){
+
+            for(i=0;i<number_of_graphs;i++){
+                var min_for_dom = new Date( get_min( minArrObj(data_array[i],'date'), minArrObj(data2_array[i],'date') ) )
+                var max_for_dom = new Date( get_max(maxArrObj(data_array[i],'date'),minArrObj(data2_array[i],'date') ) )
+                var max_for_cod =get_max( maxArrObj( data_array[i],'value'),maxArrObj(data2_array[i],'value'))
+                x_array[i].domain([min_for_dom,max_for_dom])
+
+                y_array[i].domain([0, max_for_cod]).range([ height1, 0 ]);
+                xAxis_array[i].transition().duration(1000).call(d3.axisBottom(x_array[i]).ticks(7))
+                xAxis_array[i].selectAll("text").style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)");
+                yAxis_array[i].transition().duration(1000).call(d3.axisLeft(y_array[i]).ticks(5))
+
+                line_array[i].select('.line').transition().duration(1000).
+                attr("d", d3.line()
+                .x(function(d) { return x_array[i](d.date) })
+                .y(function(d) { return y_array[i](d.value) }))
+
+                line2_array[i].select('.line').transition().duration(1000).
+                attr("d", d3.line()
+                .x(function(d) { return x_array[i](d.date) })
+                .y(function(d) { return y_array[i](d.value) }))
+
+            }
+        });
+
+
+    }
+
+
+    var line = svg.append('g').attr("clip-path", "url(#clip)")
+    var line2 = svg.append('g').attr("clip-path", "url(#clip)")
+
+    // Add X axis --> it is a date format
+
+    var x = d3.scaleTime().domain(d3.extent(data, function(d) { return d.date; })).range([ 0, width1 ]);
+
+    x.domain([true_min_x,true_max_x])
+
+    var xAxis = svg.append("g").attr("transform", "translate(0," + height1 + ")").call(d3.axisBottom(x).ticks(7))
+    xAxis.selectAll("text")	.style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)");
+
+
+    // Add Y axis
+    var y = d3.scaleLinear()
+    .domain([0, d3.max(data, function(d) { return +d.value; })])
+    .range([ height1, 0 ]);
+    y.domain([0,true_max_y])
+    var yAxis = svg.append("g")
+    .call(d3.axisLeft(y).ticks(5));
+
+    // Add a clipPath: everything out of this area won't be drawn.
+    var clip = svg.append("defs").append("svg:clipPath")
+        .attr("id", "clip")
+        .append("svg:rect")
+        .attr("width", width1 )
+        .attr("height", height1 )
+        .attr("x", 0)
+        .attr("y", 0);
 
 
 
 
+    // Add brushing
+    var brush = d3.brushX()                 // Add the brush feature using the d3.brush function
+    .extent( [ [0,0], [width1,height1] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+    .on("end", updateChart)              // Each time the brush selection changes, trigger the 'updateChart' function
 
-//------------------------------------------UTILITIES------------------------------------------
+
+    // Add the brushing
+    line.append("g").attr("class", "brush").call(brush);
+    //line2.append("g").attr("class", "brush").call(brush);
+
+    // Add the line
+    line.append("path").datum(data).attr("class", "line").attr("fill", "none").attr("stroke", "steelblue").style("opacity",1.0)
+    .attr("stroke-width", 1.5).attr("d", d3.line().x(function(d) { return x(d.date) }).y(function(d) { return y(d.value) }))
+
+    line2.append("path").datum(data2).attr("class", "line").attr("fill", "none").attr("stroke", "red").style("opacity",1.0)
+    .attr("stroke-width", 1.5).attr("d", d3.line().x(function(d) { return x(d.date) }).y(function(d) { return y(d.value) }))
+
+    svg.append("text")
+    .attr("x", (width1 / 2))
+    .attr("y", 10 - (margin1.top / 2))
+    .attr("text-anchor", "middle")
+    .style("font-size", "16px")
+    .style("text-decoration", "underline")
+    .text(attr + ' vs Date Graph');
+
+    data_charts.push([x,xAxis,line,y,yAxis,data,line2,data2])
+
+
+}
+
+//FUNZIONE PER DISEGNARE GRAFICI INTERAGIBILI E INTERCONNESSI, MA CON SOLO UNA LINEA SOPRA
+
+function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_graphs,rel_or_abs){
+    //FUNZIONE PER DISEGNARE GRAFICI INTERCONNESSI FRA LORO
+    //-----------------------------------------------------
+    //id is the identification number for the graph.
+    //param is a tuple. Contains the identification numbers of all the graphs you want
+    //to link the graph to
+    print(data_final['date'].length)
+
+    var data = []
+
+    for(var i=0;i<data_final['date'].length;i++){
+        data.push(new Object())
+        data[i]['date'] = data_final['date'][i]
+        data[i]['value'] = data_final[attr][i]
+    }
+
+
+    // A function that set idleTimeOut to null
+    var idleTimeout
+    function idled() { idleTimeout = null; }
+
+
+    // A function that update the chart for given boundaries
+    function updateChart() {
+        data_array = []
+        x_array = []
+        xAxis_array = []
+        y_array = []
+        yAxis_array = []
+        data_new_array = []
+        line_array = []
+        dataFiltered_array = []
+        min_array = []
+        max_array = []
+
+        data_array.push(data_charts[id_graph][5])
+        x_array.push(x)
+        xAxis_array.push(xAxis)
+        y_array.push(y)
+        yAxis_array.push(yAxis)
+        line_array.push(line)
+
+        // select a region with boundaries
+        var extent = d3.event.selection
+
+        for(i=1;i<number_of_graphs;i++){
+            x_array[i] = data_charts[param[i-1]][0]            // x_array = [x, x_new, x_new_2]
+            xAxis_array[i] = data_charts[param[i-1]][1]        // xAxis_array = [xAxis, xAxis_new, xAxis_new_2]
+            line_array[i] = data_charts[param[i-1]][2]         // line_array = ...
+            y_array[i] = data_charts[param[i-1]][3]            // y_array = ...
+            yAxis_array[i] = data_charts[param[i-1]][4]        // yAxis_array = ...
+            data_array[i] = data_charts[param[i-1]][5]        // data_new_array = [data_,data_new, data_new_2]
+        }
+
+        // If no selection, back to initial coordinate. Otherwise, update X,Y axis domain
+        if(!extent)
+        {
+            if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
+            for(i=0;i<number_of_graphs;i++){x_array[i].domain([4,8])}
+
+        }
+        else
+        {
+            for(i=0;i<number_of_graphs;i++){
+                x_array[i].domain([ x_array[i].invert(extent[0]), x_array[i].invert(extent[1]) ])
+                dataFiltered_array[i] = data_array[i].filter(function(d, i) {                           //dataFiltered_array = [dataFiltered,dataFiltered_new,...]
+                    if ( (d.date >= x.domain()[0]) && (d.date <= x.domain()[1]) ) {return d.value;}
+                })
+
+                max_array[i] = maxArrObj(dataFiltered_array[i],'value') //max_array = [max, max_new,max_new_2]
+                if(rel_or_abs=='relative') min_array[i] = minArrObj(dataFiltered_array[i],'value') //min_array = [min, min_new, min_new_2]
+                else if(rel_or_abs=='absolute') min_array[i]=0
+
+            }
+
+            for(i=0;i<number_of_graphs;i++){
+                y_array[i].domain([min_array[i],max_array[i]])};
+
+            svg.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been don
+        }
+
+        for(i=0;i<number_of_graphs;i++){
+
+            xAxis_array[i].transition().duration(1000).call(d3.axisBottom(x_array[i]).ticks(7))
+            xAxis_array[i].selectAll("text").style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)");
+            yAxis_array[i].transition().duration(1000).call(d3.axisLeft(y_array[i]).ticks(5))
+            line_array[i].select(".line").transition().duration(1000).attr("d", d3.line().x(function(d) {
+                return x_array[i](d.date) }).y(function(d) { return y_array[i](d.value) }))
+        }
+
+        // If user double click, reinitialize the chart
+        svg.on("dblclick",function(){
+
+            for(i=0;i<number_of_graphs;i++){
+                x_array[i].domain(d3.extent(data_array[i], function(d) { return d.date; }))
+                y_array[i].domain([0, d3.max(data_array[i], function(d) { return +d.value; })]).range([ height1, 0 ]);
+                xAxis_array[i].transition().duration(1000).call(d3.axisBottom(x_array[i]).ticks(7))
+                xAxis_array[i].selectAll("text").style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)");
+                yAxis_array[i].transition().duration(1000).call(d3.axisLeft(y_array[i]).ticks(5))
+
+                line_array[i].select('.line').transition().duration(1000).
+                attr("d", d3.line()
+                .x(function(d) { return x_array[i](d.date) })
+                .y(function(d) { return y_array[i](d.value) }))
+
+            }
+        });
+
+
+    }
+
+
+    var line = svg.append('g').attr("clip-path", "url(#clip)")
+
+    // Add X axis --> it is a date format
+    var x = d3.scaleTime().domain(d3.extent(data, function(d) { return d.date; })).range([ 0, width1 ]);
+    // var xAxis = svg.append("g")
+    // .attr("transform", "translate(0," + height + ")")
+    // .call(d3.axisBottom(x));
+    var xAxis = svg.append("g").attr("transform", "translate(0," + height1 + ")").call(d3.axisBottom(x).ticks(7))
+    xAxis.selectAll("text")	.style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)");
+
+
+    // Add Y axis
+    var y = d3.scaleLinear()
+    .domain([0, d3.max(data, function(d) { return +d.value; })])
+    .range([ height1, 0 ]);
+    var yAxis = svg.append("g")
+    .call(d3.axisLeft(y).ticks(5));
+
+    // Add a clipPath: everything out of this area won't be drawn.
+    var clip = svg.append("defs").append("svg:clipPath")
+        .attr("id", "clip")
+        .append("svg:rect")
+        .attr("width", width1 )
+        .attr("height", height1 )
+        .attr("x", 0)
+        .attr("y", 0);
+
+
+
+
+    // Add brushing
+    var brush = d3.brushX()                 // Add the brush feature using the d3.brush function
+    .extent( [ [0,0], [width1,height1] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+    .on("end", updateChart)              // Each time the brush selection changes, trigger the 'updateChart' function
+
+
+    // Add the brushing
+    line.append("g").attr("class", "brush").call(brush);
+
+    // Add the line
+    line.append("path").datum(data).attr("class", "line").attr("fill", "none").attr("stroke", "steelblue").style("opacity",1.0)
+    .attr("stroke-width", 1.5).attr("d", d3.line().x(function(d) { return x(d.date) }).y(function(d) { return y(d.value) }))
+
+    svg.append("text")
+    .attr("x", (width1 / 2))
+    .attr("y", 10 - (margin1.top / 2))
+    .attr("text-anchor", "middle")
+    .style("font-size", "16px")
+    .style("text-decoration", "underline")
+    .text(attr + ' vs Date Graph');
+
+    data_charts.push([x,xAxis,line,y,yAxis,data])
+
+
+}
+
 
 function preprocess_data(data,need_candlestick,data_summary,data_final){
     // the candlestick chart will be done through the usage of the d3-ez library.
@@ -158,6 +569,7 @@ function preprocess_data(data,need_candlestick,data_summary,data_final){
             data_final['open'][i] = data[i].Open
             data_final['high'][i] = data[i].High
             data_final['low'][i] = data[i].Low
+            //data_final['swing'][i] = data[i].High/data[i].Low
             data_final['close'][i] = data[i].Close
             if(data[i].Volume != "-"){
                 data_final['volume'][i] = data[i].Volume
@@ -240,175 +652,9 @@ function preprocess_data(data,need_candlestick,data_summary,data_final){
 }
 
 
-function draw_time_chart(svg,margin,data_final,attr,param,id_graph,number_of_graphs,rel_or_abs){
-    //FUNZIONE PER DISEGNARE GRAFICI INTERCONNESSI FRA LORO
-    //-----------------------------------------------------
-    //id is the identification number for the graph.
-    //param is a tuple. Contains the identification numbers of all the graphs you want
-    //to link the graph to
-    print(data_final['date'].length)
+//FUNZIONE PER DISEGNARE GRAFICI INTERAGIBILI MA NON INTERCONNESSI, CON UNA SOLA LINEA SOPRA
 
-    var data = []
-
-    for(var i=0;i<data_final['date'].length;i++){
-        data.push(new Object())
-        data[i]['date'] = data_final['date'][i]
-        data[i]['value'] = data_final[attr][i]
-    }
-
-
-    // A function that set idleTimeOut to null
-    var idleTimeout
-    function idled() { idleTimeout = null; }
-
-
-    // A function that update the chart for given boundaries
-    function updateChart() {
-        data_array = []
-        x_array = []
-        xAxis_array = []
-        y_array = []
-        yAxis_array = []
-        data_new_array = []
-        line_array = []
-        dataFiltered_array = []
-        min_array = []
-        max_array = []
-
-        data_array.push(data_charts[id_graph][5])
-        //print(data_charts[id_graph][5])
-        x_array.push(x)
-        xAxis_array.push(xAxis)
-        y_array.push(y)
-        yAxis_array.push(yAxis)
-        line_array.push(line)
-
-        // select a region with boundaries
-        var extent = d3.event.selection
-
-        for(i=1;i<number_of_graphs;i++){
-            x_array[i] = data_charts[param[i-1]][0]            // x_array = [x, x_new, x_new_2]
-            xAxis_array[i] = data_charts[param[i-1]][1]        // xAxis_array = [xAxis, xAxis_new, xAxis_new_2]
-            line_array[i] = data_charts[param[i-1]][2]         // line_array = ...
-            y_array[i] = data_charts[param[i-1]][3]            // y_array = ...
-            yAxis_array[i] = data_charts[param[i-1]][4]        // yAxis_array = ...
-            data_array[i] = data_charts[param[i-1]][5]        // data_new_array = [data_,data_new, data_new_2]
-        }
-
-        // If no selection, back to initial coordinate. Otherwise, update X,Y axis domain
-        if(!extent)
-        {
-            if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
-            for(i=0;i<number_of_graphs;i++){x_array[i].domain([4,8])}
-
-        }
-        else
-        {
-            for(i=0;i<number_of_graphs;i++){
-                x_array[i].domain([ x_array[i].invert(extent[0]), x_array[i].invert(extent[1]) ])
-                dataFiltered_array[i] = data_array[i].filter(function(d, i) {                           //dataFiltered_array = [dataFiltered,dataFiltered_new,...]
-                    if ( (d.date >= x.domain()[0]) && (d.date <= x.domain()[1]) ) {return d.value;}
-                })
-
-                max_array[i] = maxArrObj(dataFiltered_array[i],'value') //max_array = [max, max_new,max_new_2]
-                if(rel_or_abs=='relative') min_array[i] = minArrObj(dataFiltered_array[i],'value') //min_array = [min, min_new, min_new_2]
-                else if(rel_or_abs=='absolute') min_array[i]=0
-            }
-
-            for(i=0;i<number_of_graphs;i++){
-                y_array[i].domain([min_array[i],max_array[i]])};
-
-            svg.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been don
-        }
-
-        for(i=0;i<number_of_graphs;i++){
-
-            xAxis_array[i].transition().duration(1000).call(d3.axisBottom(x_array[i]))
-            yAxis_array[i].transition().duration(1000).call(d3.axisLeft(y_array[i]))
-            line_array[i].select(".line").transition().duration(1000).attr("d", d3.line().x(function(d) {
-                return x_array[i](d.date) }).y(function(d) { return y_array[i](d.value) }))
-        }
-
-        // If user double click, reinitialize the chart
-        svg.on("dblclick",function(){
-
-            for(i=0;i<number_of_graphs;i++){
-                x_array[i].domain(d3.extent(data_array[i], function(d) { return d.date; }))
-                y_array[i].domain([0, d3.max(data_array[i], function(d) { return +d.value; })]).range([ height1, 0 ]);
-                xAxis_array[i].transition().duration(1000).call(d3.axisBottom(x_array[i]))
-                yAxis_array[i].transition().duration(1000).call(d3.axisLeft(y_array[i]))
-
-                line_array[i].select('.line').transition().duration(1000).
-                attr("d", d3.line()
-                .x(function(d) { return x_array[i](d.date) })
-                .y(function(d) { return y_array[i](d.value) }))
-
-            }
-        });
-
-
-    }
-
-
-    var line = svg.append('g').attr("clip-path", "url(#clip)")
-
-    // Add X axis --> it is a date format
-    var x = d3.scaleTime().domain(d3.extent(data, function(d) { return d.date; })).range([ 0, width1 ]);
-    // var xAxis = svg.append("g")
-    // .attr("transform", "translate(0," + height + ")")
-    // .call(d3.axisBottom(x));
-    var xAxis = svg.append("g")
-    .attr("transform", "translate(0," + height1 + ")")
-    .call(d3.axisBottom(x));
-
-
-    // Add Y axis
-    var y = d3.scaleLinear()
-    .domain([0, d3.max(data, function(d) { return +d.value; })])
-    .range([ height1, 0 ]);
-    var yAxis = svg.append("g")
-    .call(d3.axisLeft(y));
-
-    // Add a clipPath: everything out of this area won't be drawn.
-    var clip = svg.append("defs").append("svg:clipPath")
-        .attr("id", "clip")
-        .append("svg:rect")
-        .attr("width", width1 )
-        .attr("height", height1 )
-        .attr("x", 0)
-        .attr("y", 0);
-
-
-
-
-    // Add brushing
-    var brush = d3.brushX()                 // Add the brush feature using the d3.brush function
-    .extent( [ [0,0], [width1,height1] ] ) // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-    .on("end", updateChart)              // Each time the brush selection changes, trigger the 'updateChart' function
-
-
-    // Add the brushing
-    line.append("g").attr("class", "brush").call(brush);
-
-    // Add the line
-    line.append("path").datum(data).attr("class", "line").attr("fill", "none").attr("stroke", "steelblue").style("opacity",1.0)
-    .attr("stroke-width", 1.5).attr("d", d3.line().x(function(d) { return x(d.date) }).y(function(d) { return y(d.value) }))
-
-    svg.append("text")
-    .attr("x", (width1 / 2))
-    .attr("y", 10 - (margin.top / 2))
-    .attr("text-anchor", "middle")
-    .style("font-size", "16px")
-    .style("text-decoration", "underline")
-    .text(attr + ' vs Date Graph');
-
-    data_charts.push([x,xAxis,line,y,yAxis,data])
-
-
-}
-
-
-function draw_single_time_chart1(svg,margin,data_final,attr)
+function draw_single_time_chart1(svg,margin1,data_final,attr)
 {   //FUNZIONE PER DISEGNARE UN SOLO GRAFICO, NON CONNESSO CON GLI ALTRI GRAFICI
 
     data = []
@@ -506,7 +752,7 @@ function draw_single_time_chart1(svg,margin,data_final,attr)
 
     svg.append("text")
     .attr("x", (width1 / 2))
-    .attr("y", 10 - (margin.top / 2))
+    .attr("y", 10 - (margin1.top / 2))
     .attr("text-anchor", "middle")
     .style("font-size", "16px")
     .style("text-decoration", "underline")
@@ -515,7 +761,6 @@ function draw_single_time_chart1(svg,margin,data_final,attr)
 
 }
 
-//draw_single_time_chart1(svg_arr[0], margin, data_final, 'close')
 
 function maxArrObj(obj,attr){
     //funzione per il calcolo del massimo valore fra
@@ -542,32 +787,11 @@ function print(text)
     console.log(text)
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- //snippet per tentativo automatizzazione draw_time_chart function call. Non funge. Per qualche motivo
- //una volta che chiama il primo draw_time_chart, il loop usato per chiamare la funzione iterativamente
- // si blocca! Sicuro qualche stranezza asincrona. Peccato!
-
-// for(i=0;i<number_of_graphs;i++){
-//     var id_other_graphs = []
-//     for(j=0;j<number_of_graphs;j++){ id_other_graphs.push(j) }
-//     id_other_graphs.splice(i,1)
-//     print(id_other_graphs)
-//     draw_time_chart(svg_arr[i],margin, data_final, attr_to_plot[i],id_other_graphs,i,number_of_graphs)
-//non posso automatizzare questo? Quando chiama la prima draw_time_chart si blocca,per qualche motivo. Peccato!
-// }
+function get_max(value1,value2){
+    if(value1>=value2) return value1
+    else return value2
+}
+function get_min(value1,value2){
+    if(value1>=value2) return value2
+    else return value1
+}
