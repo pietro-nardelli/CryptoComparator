@@ -162,7 +162,7 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
     //param is a tuple. Contains the identification numbers of all the graphs you want
     //to link the graph to
 
-    var redBox = svg.append("rect")
+    var Box = svg.append("rect")
     .attr("x", 0)
     .attr("y", 0)
     .attr("width", width1)
