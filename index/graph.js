@@ -20,6 +20,7 @@
 */
 
 
+
 ///DATABASE
 var data_reg = {}  //REG NAME ID ECC
 var name_arr = []  //ARR with names only
@@ -291,13 +292,40 @@ function create_graph(ididix){
         })
         .on("mouseout", function (d) {    //ricolora tutto come al normale
 
-            //on_mouseout_function(d)
+          svg.selectAll(".node text")   //ricolora i testi
+          .data(nodes)
+          .style('fill', fill_node_text);
+        
+          svg.selectAll(".node text")   //ridimensiona quelli grandi
+          .data(nodes)
+          .style("stroke-width", "0px")
+          .style("font-size", size_node_text);
+
+          svg.selectAll(".node circle")  //ricolora i cerchi
+          .data(nodes)
+          .filter(function(x) { return last_clicked.name != x.name})
+          .style('fill', fill_node_circle) ;
+
 
         })
         .on('click', function(d){
+
             on_mouseout_function(d)
             //on_click_function(d)
             on_mouseover_function(d)
+
+            svg.selectAll(".node circle")   // il cerchio di quello che preme diventa rosso
+            .data(nodes)
+            .filter(function(x) {return x.name == d.name})
+            .style('fill', 'rgb(255, 220, 0)')
+            .style("stroke-width", stroke_width_node_circle)  //.attr("r", "15") ; per la dim
+            .style("z-index", '0');s
+
+            last_clicked=d;
+
+            matrixReduction(d.name);
+            createGraphsOfMyCrypto(d.name);
+
 
         });
 
@@ -377,6 +405,8 @@ function on_mouseover_function(d) {
     .data(nodes)
     .filter(function(x) {return x.name == target_name})
     .style('fill', fill_node_text) ;
+
+    
   }
   
 }
@@ -418,12 +448,7 @@ function on_click_function(d) {
   .style("font-size", size_node_text);
 
 
-  svg.selectAll(".node circle")   // il cerchio di quello che preme diventa rosso
-  .data(nodes)
-  .filter(function(x) {return x.name == d.name})
-  .style('fill', 'rgb(255, 220, 0)')
-  .style("stroke-width", stroke_width_node_circle)  //.attr("r", "15") ; per la dim
-  .style("z-index", '0');
+
 
   svg.selectAll(".node text")     // il testo diventa grande
   .data(nodes)
@@ -432,10 +457,7 @@ function on_click_function(d) {
   .style("font-size", size_node_text_when_pressed)
   .style("z-index", '2');
 
-  last_clicked=d;
 
-  matrixReduction(d.name);
-  createGraphsOfMyCrypto(d.name);
 }
 
 
