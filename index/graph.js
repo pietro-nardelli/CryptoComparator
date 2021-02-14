@@ -3,9 +3,22 @@
 - potremmo graficare similarità particolari evidenziandole 
   nel grafo e nella matrice nella sottorete creata
 + DOne rami in base alla similarità random YHEEAA done
-- TODO ricrea il grafo premendo il tasto con altri rami
++ done ricrea il grafo premendo il tasto con altri rami yes
+- TODO se passo su un nodo deve ingrandire la scritta(e colorarla?), e ridurla quando esce(e farla tornare bianca in caso)
+       se premo su un nodo già premuto deve tornare tutto alla normalità* eccetto i 2 nodi colorati
+       se premo su un nodo deve colorarlo ed evidenziare la sottorete(nodo,testo,archi*,nodoTarget*,testoTarget*) 
+            e nascondere il resto(nodi non connessi, archi non connessi*)
+       se premo su un altro nodo deve tenere l'ultimo colorato e colorare anche quello nuovo(e con colori specifici)
+       se premo di nuovo sull'ultimo premuto?
+       se premo su un terzo nodo?
+       se premo il primo nodo? 
+      * = relativamente alla soglia attuale, e se viene modificata bisogna tenerne conto
+          (mantenendo solo alcune modifiche, tipo la sottorete deve restare evidenziata con i link più grandi)
+         
+
 - TODO animationhell
 */
+
 
 ///DATABASE
 var data_reg = {}  //REG NAME ID ECC
@@ -65,6 +78,7 @@ function slider_update(t) {
   .data(links)
   .filter(function(x) { return x.k >= t})
   .style("stroke", color_links)
+
 }
 
 
@@ -92,7 +106,7 @@ function get_random_simmetric(n){
 }
 
 //N buttons of similarity we want to use, to give to each link
-n_similarities = 5
+n_similarities = 6
 arr_similarity_matrix = []
 for (var i = 0 ; i < n_similarities; i++){
   arr_similarity_matrix[i] = get_random_simmetric(100);
@@ -100,7 +114,9 @@ for (var i = 0 ; i < n_similarities; i++){
 
 //return top n values from arr, use concat instead of sPlice(0) which gave me an error(?)
 function get_top_n(arr,n){
-  return arr.concat().sort((a,b) => b-a).slice(0,n);
+  return arr.concat()
+            .sort((a,b) => b-a)
+            .slice(0,n);
 }
 
 //get n node from the hat and give them to node namecoin in datareg
@@ -204,6 +220,18 @@ document.getElementById("SIMIL3").addEventListener("click", function () {
   create_graph(3)  
 } )
 
+document.getElementById("SIMIL4").addEventListener("click", function () {
+  create_graph(4)  
+} )
+
+document.getElementById("SIMIL5").addEventListener("click", function () {
+  create_graph(5)  
+} )
+
+document.getElementById("SIMIL0").addEventListener("click", function () {
+  create_graph(0)  
+} )
+
 
 function create_graph(ididix){
 
@@ -255,111 +283,22 @@ function create_graph(ididix){
         .enter().append("g")
         .attr("class", "node")
         .call(force_graph.drag)
+
         .on("mouseover", function (d) {  ///TO UPDATE con data_reg e non selectall, e d.source.name
+          
+          on_click_function(d)
 
-
-          svg.selectAll(".node text")
-            .data(nodes)
-            .filter(function(x) {return x.name == d.name})
-            .style('fill', fill_node_text_when_pressed) 
-            .style("font-size", size_node_text_when_pressed)
-            .style("z-index", '2');
-
-
-          svg.selectAll(".node circle")
-          .data(nodes)
-          .filter(function(x) { return x.name != d.name })
-          .style('fill', 'rgb(100,100,100)') ;
-
-          svg.selectAll(".node text")
-          .data(nodes)
-          .filter(function(x) { return x.name != d.name })
-          .style('fill', 'rgb(100,100,100)');
-
-          svg.selectAll(".link")
-          .data(links)
-          .filter(function(x) { return x.source.name != d.name || x.k< actual_t})
-          .style('stroke', links_stroke_when_filtered_out);
-
-          var target_nodes = svg.selectAll(".link ")
-          .data(links)
-          .filter(function(x) {return x.source.name == d.name  && x.k>= actual_t}) 
-          .style("stroke-width", stroke_width_links_mouseover)
-
-          n=target_nodes[0].length
-          target_name = "";
-          for(var a = 0; a <= n-1 ; a++){  
-            if ( target_nodes[0][a] != undefined)
-              target_name = target_nodes[0][a].getAttribute("target");
-            else console.log("[ERR]GETATTR. ON EMPTY LINKS"+ a)
-
-          svg.selectAll(".node circle")
-          .data(nodes)
-          .filter(function(x) {return x.name == target_name})
-          .style('fill', fill_node_circle) ;
-
-          svg.selectAll(".node text")
-          .data(nodes)
-          .filter(function(x) {return x.name == target_name})
-          .style('fill', fill_node_text) ;
-          }
-
-          test = d
-          console.log(test)
         })
-        .on("mouseout", function (d) {
-            svg.selectAll(".node circle")
-            .data(nodes)
-            .style('fill', fill_node_circle) ;
+        .on("mouseout", function (d) {    //ricolora tutto come al normale
 
-            svg.selectAll(".node text")
-            .data(nodes)
-            .style('fill', fill_node_text);
-
-            svg.selectAll(".node text")
-            .data(nodes)
-            .style("stroke-width", "0px")
-            .style("font-size", size_node_text);
-
-            
-
-
-            svg.selectAll(".link ")   //.filter(function(x) {return  x.k>= actual_t})
-            .data(links).filter(function(x) { return  x.k >= actual_t})
-            .style('stroke', color_links)
-            .style("stroke-width", stroke_width_links_mouseout) ;
+            //on_mouseout_function(d)
 
         })
         .on('click', function(d){
+            on_mouseout_function(d)
+            //on_click_function(d)
+            on_mouseover_function(d)
 
-            svg.selectAll(".node circle")
-            .data(nodes)
-            .style("stroke-width", "0px");
-            
-            svg.selectAll(".node text")
-            .data(nodes)
-            .style("stroke-width", "0px")
-            .style("font-size", size_node_text);
-
-            last_clicked=d;
-
-            matrixReduction(d.name);
-
-            svg.selectAll(".node circle")
-            .data(nodes)
-            .filter(function(x) {return x.name == d.name})
-            .style('fill', 'rgb(255, 220, 0)')
-            .style("stroke-width", stroke_width_node_circle)  //.attr("r", "15") ; per la dim
-            .style("z-index", '0');
-
-            svg.selectAll(".node text")
-            .data(nodes)
-            .filter(function(x) {return x.name == d.name})
-            .style('fill', fill_node_text_when_pressed) 
-            .style("font-size", size_node_text_when_pressed)
-            .style("z-index", '2');
-
-            createGraphsOfMyCrypto(d.name);
         });
 
 
@@ -384,11 +323,119 @@ function create_graph(ididix){
 
         });
 
-    //slider_update(actual_t)
+    slider_update(actual_t)
   });
+}
 
 
+function on_mouseover_function(d) {
+  svg.selectAll(".node text")     //se vado sopra con il mouse ingrandisce la scritta
+  .data(nodes)
+  .filter(function(x) {return x.name == d.name})
+  .style('fill', fill_node_text_when_pressed) 
+  .style("font-size", size_node_text_when_pressed)
+  .style("z-index", '2');
 
+  //spegne i nodi e text del coin non premuto
+  svg.selectAll(".node circle")
+  .data(nodes)
+  .filter(function(x) { return x.name != d.name })
+  .style('fill', 'rgb(100,100,100)') ;
+
+  svg.selectAll(".node text")
+  .data(nodes)
+  .filter(function(x) { return x.name != d.name })
+  .style('fill', 'rgb(100,100,100)');
+
+  //e tutti i link non collegati OR se la soglia è minore della threshold
+  svg.selectAll(".link")
+  .data(links)
+  .filter(function(x) { return x.source.name != d.name || x.k< actual_t})
+  .style('stroke', links_stroke_when_filtered_out);
+
+  //ingrandisce quelli che partono dal nodo
+  var link_target_node = svg.selectAll(".link ")
+  .data(links)
+  .filter(function(x) {return x.source.name == d.name  && x.k>= actual_t}) 
+  .style("stroke-width", stroke_width_links_mouseover)
+
+  //prende i target(ora si potrebbe rifare con x.target.name)
+  //e li ricolora, ovvero cerchi e testi
+  n=link_target_node[0].length
+  target_name = "";
+  for(var a = 0; a <= n-1 ; a++){  
+    if ( link_target_node[0][a] != undefined)
+      target_name = link_target_node[0][a].getAttribute("target");
+    else console.log("[ERR]GETATTR. ON EMPTY LINKS"+ a)
+
+    svg.selectAll(".node circle")
+    .data(nodes)
+    .filter(function(x) {return x.name == target_name})
+    .style('fill', fill_node_circle) ;
+
+    svg.selectAll(".node text")
+    .data(nodes)
+    .filter(function(x) {return x.name == target_name})
+    .style('fill', fill_node_text) ;
+  }
+  
+}
+
+
+function on_mouseout_function(d) {
+
+  svg.selectAll(".node circle")  //ricolora i cerchi
+  .data(nodes)
+  .style('fill', fill_node_circle) ;
+
+  svg.selectAll(".node text")   //ricolora i testi
+  .data(nodes)
+  .style('fill', fill_node_text);
+
+  svg.selectAll(".node text")   //ridimensiona quelli grandi
+  .data(nodes)
+  .style("stroke-width", "0px")
+  .style("font-size", size_node_text);
+
+  svg.selectAll(".link ")     //ricolora i links sopra la soglia
+  .data(links)
+  .filter(function(x) { return  x.k >= actual_t})
+  .style('stroke', color_links)
+  .style("stroke-width", stroke_width_links_mouseout) ;
+  
+}
+
+
+function on_click_function(d) {
+  
+  svg.selectAll(".node circle") // rende la stroke rossa dei nodi a zero per tutti
+  .data(nodes)
+  .style("stroke-width", "0px");
+  
+  svg.selectAll(".node text")   // rende il testo grande uguale per tutti
+  .data(nodes)
+  .style("stroke-width", "0px")
+  .style("font-size", size_node_text);
+
+
+  svg.selectAll(".node circle")   // il cerchio di quello che preme diventa rosso
+  .data(nodes)
+  .filter(function(x) {return x.name == d.name})
+  .style('fill', 'rgb(255, 220, 0)')
+  .style("stroke-width", stroke_width_node_circle)  //.attr("r", "15") ; per la dim
+  .style("z-index", '0');
+
+  svg.selectAll(".node text")     // il testo diventa grande
+  .data(nodes)
+  .filter(function(x) {return x.name == d.name})
+  .style('fill', fill_node_text_when_pressed) 
+  .style("font-size", size_node_text_when_pressed)
+  .style("z-index", '2');
+
+  last_clicked=d;
+
+  matrixReduction(d.name);
+  createGraphsOfMyCrypto(d.name);
 }
 
 
