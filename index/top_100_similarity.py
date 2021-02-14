@@ -7,6 +7,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn import manifold
 from sklearn import preprocessing
+from sklearn.decomposition import PCA
+
 
 import numpy as np
 from numpy import linalg
@@ -48,12 +50,12 @@ def import_data (path:str):
                     temp_dict[csv_headings[i]] = temp
             # {"#": "1", "Name": "Bitcoin", "Market Cap": "60219183594", "Price": "3631.72", "Circulating Supply": "16581450", "Volume (24h)": "1226800000", "% Change (24h)": "-0.84"}
             dictionary['nodes'].append(temp_dict)
-    return dictionaryfor dataset in datasets:
+    return dictionary
 
 
 
 # Preprocess data and compute MDS
-def mds_computation (dictionary):
+def dim_red_computation (dictionary, dim_reduction_alg='PCA'):
     standard_input_list = []
     nodes_id = []
 
@@ -63,9 +65,9 @@ def mds_computation (dictionary):
         node_values = []
 
         node_values.append(node['Market Cap'])
-        node_values.append(node['Price'])
+        #node_values.append(node['Price'])
         node_values.append(node['Circulating Supply'])
-        node_values.append(node['Volume (24h)'])
+        #node_values.append(node['Volume (24h)'])
         node_values.append(node['% Change (24h)'])
 
         standard_input_list.append(node_values)
@@ -74,12 +76,17 @@ def mds_computation (dictionary):
     std_scale = preprocessing.StandardScaler().fit(standard_input_list)
     standard_input_list= std_scale.transform(standard_input_list)
 
-    mds = manifold.MDS(n_components=2, dissimilarity="euclidean",random_state=2)
-    pos = mds.fit(standard_input_list).embedding_
+    if (dim_reduction_alg == 'MDS'):
+        mds = manifold.MDS(n_components=2, dissimilarity="euclidean",random_state=13)
+        pos = mds.fit(standard_input_list).embedding_
+    elif (dim_reduction_alg == 'PCA'):
+        pca = PCA(n_components=2)
+        pos = pca.fit_transform(standard_input_list)
+
 
     return nodes_id,pos,standard_input_list
 
-def plot_mds(nodes_id, pos):
+def plot_dim_red(nodes_id, pos):
     # Scatter plot without labels
     plt.scatter(pos[:, 0], pos[:, 1], color='red',s=10, lw=0, label='Crypto ')
     plt.legend(scatterpoints=1, loc='best', shadow=False)
@@ -119,8 +126,12 @@ def compute_distance(pos, standard_input_list, final_dict, dim_red_flag):
                     max = val
                 final_dict['links'].append( {"source": i, "target": j, "value": val} )
         # Normalization w.r.t. max
+        variance_computation = []
         for link in final_dict['links']:
             link['value'] = link['value']/max
+            variance_computation.append(link['value'])
+
+        print ("Variance: ", variance(variance_computation))
 
     # Compute simple Euclidean distance
     else:
@@ -140,48 +151,21 @@ def compute_distance(pos, standard_input_list, final_dict, dim_red_flag):
 
     return final_dict
 
-'''
-PER MATTEO!
+def variance(data):
+     # Number of observations
+     n = len(data)
+     # Mean of the data
+     mean = sum(data) / n
+     # Square deviations
+     deviations = [(x - mean) ** 2 for x in data]
+     # Variance
+     variance = sum(deviations) / n
+     return variance
 
-***
-Lascia invariato
-***
-final_dict = import_data ('dataset/100List.csv')
-
-
-******************************
-- Sono tante standard_input_list quanti sono le colonne dei dataset (volume, market cap, ...)
-- La lunghezza di ogni sotto lista è pari alla lunghezza della relativa time series.
-- Bitcoin è la prima lista, Ethereum è la seconda lista, Ethereum cash è la terza lista ecc... (ordinamento top 100)
-- Per sapere quale è l'ordine corretto basta iterare:
-    for node in final_dict['nodes']:
-        node['#'] e node['Name'] conterranno rispettivamente la posizione della criptovaluta e il suo nome
-********************
-standard_input_list = ...
-
-
-***
-Tanto a te non serve quindi ti basta inizializzarlo
-****
-pos = 0
-
-***
-Da modificare solamente la lunghezza dei singoli array v_i, v_j se uno dei due è più lungo dell'altro
-***
-final_dict = compute_distance(pos, standard_input_list, final_dict, dim_red_flag=False)
-
-***
-Con la struttura dati "final_dict" che hai creato ti basta generare tanti file .json quanti sono le colonne dei dataset (volume, market cap, ...)
-Ad esempio:
-***
-with open('market_cap.json', 'w') as f:
-    json.dump(final_dict_market_cap,f)
-
-'''
 
 final_dict = import_data ('dataset/100List.csv')
-nodes_id, pos, standard_input_list = mds_computation(final_dict)
-plot_mds(nodes_id, pos)
+nodes_id, pos, standard_input_list = dim_red_computation(final_dict, dim_reduction_alg='MDS')
+plot_dim_red(nodes_id, pos)
 final_dict = compute_distance(pos, standard_input_list, final_dict, dim_red_flag=True)
 
 
