@@ -76,10 +76,10 @@ def dim_red_computation (dictionary, dim_reduction_alg='PCA'):
     std_scale = preprocessing.StandardScaler().fit(standard_input_list)
     standard_input_list= std_scale.transform(standard_input_list)
 
-    if (dim_reduction_alg == 'MDS'):
+    if (dim_reduction_alg == 'mds'):
         mds = manifold.MDS(n_components=2, dissimilarity="euclidean",random_state=13)
         pos = mds.fit(standard_input_list).embedding_
-    elif (dim_reduction_alg == 'PCA'):
+    elif (dim_reduction_alg == 'pca'):
         pca = PCA(n_components=2)
         pos = pca.fit_transform(standard_input_list)
 
@@ -162,13 +162,13 @@ def variance(data):
      variance = sum(deviations) / n
      return variance
 
+dim_reduction_alg = 'mds'
 
 final_dict = import_data ('dataset/100List.csv')
-nodes_id, pos, standard_input_list = dim_red_computation(final_dict, dim_reduction_alg='MDS')
+nodes_id, pos, standard_input_list = dim_red_computation(final_dict, dim_reduction_alg=dim_reduction_alg)
 plot_dim_red(nodes_id, pos)
 final_dict = compute_distance(pos, standard_input_list, final_dict, dim_red_flag=True)
 
 
-
-with open('data.json', 'w') as f:
+with open(dim_reduction_alg+'.json', 'w') as f:
     json.dump(final_dict,f)

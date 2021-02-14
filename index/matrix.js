@@ -6,8 +6,8 @@ var margin = {top: 80, right: 0, bottom: 10, left: 80},
 
 var x_m = d3.scaleBand().range([0, width]),
     //z = d3.scaleLinear().domain([0, 4]).clamp(true),
-    z = d3.scaleLinear().domain([0, 1]).clamp(true),
-    c = d3.scaleOrdinal(d3.schemeCategory10);
+    z = d3.scaleLinear().domain([0, 1]).clamp(true);
+    //c = d3.scaleOrdinal(d3.schemeCategory10);
     //c = d3.scalePow().exponent(1.09).range(["yellow", "red"])
 
 
@@ -39,7 +39,7 @@ if (firstTime){
 
 
 function fullMatrix() {
-  d3.json("data.json", function(crypto_top_100) {
+  d3.json("mds.json", function(crypto_top_100) {
     var matrix = [],
         nodes = crypto_top_100.nodes,
         n = nodes.length;
@@ -134,8 +134,9 @@ function fullMatrix() {
           .attr("x", function(d) { return x_m(d.x); })
           .attr("width", x_m.bandwidth())
           .attr("height", x_m.bandwidth())
-          .style("fill-opacity", function(d) { return z(d.z); })
-          .style("fill", function(d) { return nodes[d.x].group == nodes[d.y].group ? c(nodes[d.x].group) : null; })
+          //.style("fill-opacity", function(d) { return z(d.z); })
+          .style("fill", function(d) {return d3.interpolateMagma(d.z); })
+          //.style("fill", function(d) { return nodes[d.x].group == nodes[d.y].group ? c(nodes[d.x].group) : null; })
           .on("mouseover", mouseover)
           .on("mouseout", mouseout);
     }
@@ -183,7 +184,7 @@ function matrixReduction(node_name) {
 
   //var id = this.id;
 
-  d3.json("data.json", function(crypto_top_100) {
+  d3.json("mds.json", function(crypto_top_100) {
     var matrix = [],
         nodes = crypto_top_100.nodes,
         n = nodes.length;
@@ -319,7 +320,8 @@ function matrixReduction(node_name) {
           .attr("x", function(d,i) { return x_m(i); })
           .attr("width", x_m.bandwidth())
           .attr("height", x_m.bandwidth())
-          .style("fill-opacity", function(d) { return z(d.z); })
+          //.style("fill-opacity", function(d) { return z(d.z); })
+          .style("fill", function(d) {return d3.interpolateMagma(d.z); })
           //.style("fill", function(d) { return ordered_nodes[d.x].group == ordered_nodes[d.y].group ? c(ordered_nodes[d.x].group) : null; }) // Da commentare con n = 10
           .on("mouseover", mouseover)
           .on("mouseout", mouseout);
