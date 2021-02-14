@@ -36,8 +36,9 @@ var height = 1500; //d3 obj height
 //GRAPH VALUES
 var x_c= (width-150)/2;
 var y_c= height/2;
-var radius = 700;
+var radius = 600;
 var theta = 2*Math.PI/100 //split 2pi into 2pi/n_nodes
+var ellisse = false
 
 //CSS VAR NAMES 
 
@@ -55,7 +56,8 @@ size_node_text = '35px'
 
 //NODES VALUES
 fill_node_circle = 'rgb(255, 102, 0)'
-stroke_width_node_circle = '10px'
+stroke_width_node_circle = '100px'
+radius_node_circle = '15  '
 
 ///SLIDER
 var initial_threshold = 0.9; //THRESHOLD MIN x creare il nodo!
@@ -74,6 +76,7 @@ slider.oninput = function() {
 }
 
 function slider_update(t) {
+
   svg.selectAll(".link ")
   .data(links)
   .filter(function(x) { return x.k < t})
@@ -83,6 +86,11 @@ function slider_update(t) {
   .data(links)
   .filter(function(x) { return x.k >= t})
   .style("stroke", color_links)
+
+  if(last_clicked!="")
+  on_mouseover_function(last_clicked)
+  else
+  on_mouseout_function()
 
 }
 
@@ -169,10 +177,14 @@ d3v3.csv("dataset/100List.csv", function(data) {
   for (var i = 0; i < name_arr.length; i++) {  //create in data reg[name] an entry with (x,y),name
     namecoin = name_arr[i]
     aux_radius = radius
-    if( i%2==0)aux_radius = radius *0.8
+    if( i%2==0)aux_radius = radius *0.75
     x = x_c+Math.cos(theta*i)*aux_radius + 520*Math.cos(theta*i)
-    y = y_c+Math.sin(theta*i)*aux_radius //+ 400*Math.sin(theta*i)
-
+    if( i%2!=0) x = x + 100*Math.cos(theta*i)
+    y = y_c+Math.sin(theta*i)*aux_radius 
+    if(!ellisse )y+=  100* (Math.sin(theta*i))*(Math.abs(Math.sin(theta*i)))**10
+    if(i%2==0) y+=2*(Math.sin(theta*i))*(Math.abs(Math.sin(theta*i)))**400
+    if(namecoin=="Dogecoin"){ y+=30,x-=30}
+    if(namecoin=="Radium"){ y-=20,x-=20}
     data_reg[namecoin] = [[x,y],namecoin]
   }
   update_reg_links(0); //set in datareg all the links
@@ -310,27 +322,33 @@ function create_graph(ididix){
               return
             }
 
-
             on_mouseout_function(d)
             //on_click_function(d)
             on_mouseover_function(d)
+            
 
             last_clicked=d;
 
             matrixReduction(d.name);
             createGraphsOfMyCrypto(d.name);
 
+            //blink()
+
+                 
 
         });
 
 
         node.append("circle")
-            .attr("r","7");
+            .attr("r",radius_node_circle);
 
         node.append("text")
             .attr("dx", 12) //function(d) { if(d.name=="Bitcoin") return 12;else return -30  })
             .attr("dy", 3)
             .attr("fill", fill_node_text)
+            .attr("webkit-text-fill-color", "white")
+            .attr("webkit-text-stroke-width" ,"2px")
+            .attr("webkit-text-stroke-color", "black")
             .text(function(d) { return d.name });
 
         force_graph.on("tick", function() {
@@ -341,12 +359,30 @@ function create_graph(ididix){
               .attr("k", function(d) { return d.k;  });  //useless 4 now
 
           node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-
-
+          
         });
 
     slider_update(actual_t)
   });
+}
+
+function blink() {
+  svg.selectAll(".node circle")
+  .data(nodes)
+  .filter(function(x) {return x.name == last_clicked.name})
+  .transition()
+  .duration(500)
+  .style('fill', "yellow") 
+  .transition()
+  .duration(500)
+  .style('fill', fill_node_circle)
+  .transition()
+  .duration(500)
+  .style('fill', "yellow") 
+  .transition()
+  .duration(500)
+  .style('fill', fill_node_circle)
+  //.on("end", blink);
 }
 
 
@@ -444,7 +480,8 @@ function on_click_function(d) {
   .data(nodes)
   .filter(function(x) {return x.name == d.name})
   // .style('fill', 'rgb(255, 220, 0)')
-  // .style("stroke-width", stroke_width_node_circle)  //.attr("r", "15") ; per la dim
+  //.style("stroke-width", stroke_width_node_circle)  
+  //.attr("r", "15") 
   .style("z-index", '0');
 
   svg.selectAll(".node text")     // il testo diventa grande
