@@ -19,6 +19,10 @@
 - TODO animationhell
 */
 
+// matrice 100x100 come ora ma che se premi ti evidenzia i nodi sul grafo senza creare i sottografi
+// e crea con il colore dei nodi del grafo i grafici corrispondenti. se premi sul grafo poi esce il 
+// sottografo di solo quella selezionata, mantenendo i due colori. se premi un tasto torna alla 
+// 100x100
 
 
 ///DATABASE
@@ -292,34 +296,24 @@ function create_graph(ididix){
         })
         .on("mouseout", function (d) {    //ricolora tutto come al normale
 
-          svg.selectAll(".node text")   //ricolora i testi
-          .data(nodes)
-          .style('fill', fill_node_text);
-        
-          svg.selectAll(".node text")   //ridimensiona quelli grandi
-          .data(nodes)
-          .style("stroke-width", "0px")
-          .style("font-size", size_node_text);
+          //on_click_function()
 
-          svg.selectAll(".node circle")  //ricolora i cerchi
-          .data(nodes)
-          .filter(function(x) { return last_clicked.name != x.name})
-          .style('fill', fill_node_circle) ;
 
+          //on_mouseout_function(d)
 
         })
         .on('click', function(d){
 
+            if(last_clicked==d){
+              last_clicked = ""
+              on_mouseout_function()
+              return
+            }
+
+
             on_mouseout_function(d)
             //on_click_function(d)
             on_mouseover_function(d)
-
-            svg.selectAll(".node circle")   // il cerchio di quello che preme diventa rosso
-            .data(nodes)
-            .filter(function(x) {return x.name == d.name})
-            .style('fill', 'rgb(255, 220, 0)')
-            .style("stroke-width", stroke_width_node_circle)  //.attr("r", "15") ; per la dim
-            .style("z-index", '0');s
 
             last_clicked=d;
 
@@ -360,7 +354,7 @@ function on_mouseover_function(d) {
   svg.selectAll(".node text")     //se vado sopra con il mouse ingrandisce la scritta
   .data(nodes)
   .filter(function(x) {return x.name == d.name})
-  .style('fill', fill_node_text_when_pressed) 
+  // .style('fill', fill_node_text_when_pressed) 
   .style("font-size", size_node_text_when_pressed)
   .style("z-index", '2');
 
@@ -405,8 +399,6 @@ function on_mouseover_function(d) {
     .data(nodes)
     .filter(function(x) {return x.name == target_name})
     .style('fill', fill_node_text) ;
-
-    
   }
   
 }
@@ -448,12 +440,17 @@ function on_click_function(d) {
   .style("font-size", size_node_text);
 
 
-
+  svg.selectAll(".node circle")   // il cerchio di quello che preme diventa rosso
+  .data(nodes)
+  .filter(function(x) {return x.name == d.name})
+  // .style('fill', 'rgb(255, 220, 0)')
+  // .style("stroke-width", stroke_width_node_circle)  //.attr("r", "15") ; per la dim
+  .style("z-index", '0');
 
   svg.selectAll(".node text")     // il testo diventa grande
   .data(nodes)
   .filter(function(x) {return x.name == d.name})
-  .style('fill', fill_node_text_when_pressed) 
+  // .style('fill', fill_node_text_when_pressed) 
   .style("font-size", size_node_text_when_pressed)
   .style("z-index", '2');
 
