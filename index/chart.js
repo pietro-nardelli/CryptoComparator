@@ -162,6 +162,19 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
     //param is a tuple. Contains the identification numbers of all the graphs you want
     //to link the graph to
 
+    var redBox = svg.append("rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", width1)
+    .attr("height", height1)
+    .attr("fill", "rgb(2, 200, 255)")
+    .attr("opacity", 0.1);
+
+    svg.append("circle").attr("cx",10).attr("cy",20).attr("r", 4).style("fill", 'rgb(255, 102, 0)')
+    svg.append("circle").attr("cx",10).attr("cy",30).attr("r", 4).style("fill", "white")
+    svg.append("text").attr("x", 25).attr("y", 20).text(data_final1['name'] + ' ' + attr).style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", 'rgb(255, 102, 0)')
+    svg.append("text").attr("x", 25).attr("y", 30).text(data_final2['name'] + ' ' + attr).style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", "white")
+
     var data = []
     var data2 = []
     max_1_x = Math.max.apply(null, data_final1['date']); 
@@ -207,7 +220,7 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
         max_array = []
         line2_array = []
         data2_array = []
-
+        
         data_array.push(data_charts[id_graph][5])
         data2_array.push(data_charts[id_graph][7])
         x_array.push(x)
@@ -216,6 +229,8 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
         yAxis_array.push(yAxis)
         line_array.push(line)
         line2_array.push(line2)
+        
+        var min_time_span = 182529000 // roughly 2 days
         // select a region with boundaries
         var extent = d3.event.selection
 
@@ -231,6 +246,7 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
 
         }
 
+        
         // If no selection, back to initial coordinate. Otherwise, update X,Y axis domain
         if(!extent)
         {
@@ -238,10 +254,22 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
             for(i=0;i<number_of_graphs;i++){x_array[i].domain([4,8])}
 
         }
-        else
-        {
+        //se zoommo in una time window minore di due giorni,non faccio niente
+        else if(Date.parse(x_array[0].invert(extent[1])) - Date.parse(x_array[0].invert(extent[0]))  < min_time_span){
+            svg.select(".brush").call(brush.move, null)
+        }
+        //altrimenti zoomma tranquillamente
+        else{
+ 
 
+            //I compute the time window on the first chart only,since the domains are shared
+            
+            
             for(i=0;i<number_of_graphs;i++){
+
+                // print([ x_array[i].invert(extent[0]), x_array[i].invert(extent[1]) ])
+                // print([ Date.parse(x_array[i].invert(extent[0]))/1000, Date.parse(x_array[i].invert(extent[1]))/1000 ])
+
                 x_array[i].domain([ x_array[i].invert(extent[0]), x_array[i].invert(extent[1]) ])
                 dataFiltered_array[i] = data_array[i].filter(function(d, i) {                           //dataFiltered_array = [dataFiltered,dataFiltered_new,...]
                     if ( (d.date >= x.domain()[0]) && (d.date <= x.domain()[1]) ) {return d.value;}
@@ -269,8 +297,10 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
             for(i=0;i<number_of_graphs;i++){
                 
                 xAxis_array[i].transition().duration(1000).call(d3.axisBottom(x_array[i]).ticks(7))
-                xAxis_array[i].selectAll("text").style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)");
+                xAxis_array[i].selectAll("text").style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)").attr('fill', 'white');
+                ;
                 yAxis_array[i].transition().duration(1000).call(d3.axisLeft(y_array[i]).ticks(5))
+                yAxis_array[i].selectAll("text").attr('fill', 'white');
                 line_array[i].select(".line").transition().duration(1000).attr("d", d3.line().x(function(d) {
                     return x_array[i](d.date) }).y(function(d) { return y_array[i](d.value) }))
                     line2_array[i].select(".line").transition().duration(1000).attr("d", d3.line().x(function(d) {
@@ -289,8 +319,9 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
 
                 y_array[i].domain([0, max_for_cod]).range([ height1, 0 ]);
                 xAxis_array[i].transition().duration(1000).call(d3.axisBottom(x_array[i]).ticks(7))
-                xAxis_array[i].selectAll("text").style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)");
+                xAxis_array[i].selectAll("text").style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)").attr('fill', 'white');
                 yAxis_array[i].transition().duration(1000).call(d3.axisLeft(y_array[i]).ticks(5))
+                yAxis_array[i].selectAll("text").attr('fill', 'white');
 
                 line_array[i].select('.line').transition().duration(1000).
                 attr("d", d3.line()
@@ -319,7 +350,7 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
     x.domain([true_min_x,true_max_x])
 
     var xAxis = svg.append("g").attr("transform", "translate(0," + height1 + ")").call(d3.axisBottom(x).ticks(7))
-    xAxis.selectAll("text")	.style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)");
+    xAxis.selectAll("text").style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)").attr('fill', 'white');
 
 
     // Add Y axis
@@ -327,8 +358,10 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
     .domain([0, d3.max(data, function(d) { return +d.value; })])
     .range([ height1, 0 ]);
     y.domain([0,true_max_y])
+
     var yAxis = svg.append("g")
     .call(d3.axisLeft(y).ticks(5));
+    yAxis.selectAll("text").attr('fill', 'white');
 
     // Add a clipPath: everything out of this area won't be drawn.
     var clip = svg.append("defs").append("svg:clipPath")
@@ -353,19 +386,23 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
     //line2.append("g").attr("class", "brush").call(brush);
 
     // Add the line
-    line.append("path").datum(data).attr("class", "line").attr("fill", "none").attr("stroke", "steelblue").style("opacity",1.0)
+    line.append("path").datum(data).attr("class", "line").attr("fill", "none").attr("stroke", 'rgb(255, 102, 0)').style("opacity",1.0)
     .attr("stroke-width", 1.5).attr("d", d3.line().x(function(d) { return x(d.date) }).y(function(d) { return y(d.value) }))
 
-    line2.append("path").datum(data2).attr("class", "line").attr("fill", "none").attr("stroke", "red").style("opacity",1.0)
+    line2.append("path").datum(data2).attr("class", "line").attr("fill", "none").attr("stroke", "white").style("opacity",1.0)
     .attr("stroke-width", 1.5).attr("d", d3.line().x(function(d) { return x(d.date) }).y(function(d) { return y(d.value) }))
 
-    svg.append("text")
-    .attr("x", (width1 / 2))
-    .attr("y", 10 - (margin1.top / 2))
-    .attr("text-anchor", "middle")
-    .style("font-size", "16px")
-    .style("text-decoration", "underline")
-    .text(attr + ' vs Date Graph');
+    // svg.append("text")
+    // .attr("x", (width1 / 2))
+    // .attr("y", 20 - (margin1.top / 2))
+    // .attr("text-anchor", "middle")
+    // .attr("opacity", 0.8)
+    // .attr("fill", 'white')
+    // .style("font-size", "16px")
+    // .style("text-decoration", "underline")
+    // .text(attr + ' value Chart');
+
+
 
     data_charts.push([x,xAxis,line,y,yAxis,data,line2,data2])
 
