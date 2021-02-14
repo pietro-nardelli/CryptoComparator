@@ -1,14 +1,33 @@
+/*
+TODO:
+  trovare combinazione colori corretta
+  X] sistemare scritte in obliquo per occupare meno spazio
+  collegare lo slider alla matrice
+  X] al passaggio del mouse grassetto delle scritte
+  X] finestrella per visualizzare valore similarità
+  ..]legenda
+  Gestire più similarity
+
+TODO-SCATTER:
+  modificare file.json con valori x-y posizioni
+  scatter plot di pca o MDS
+  alla selezione del nodo, cambiare colore al punto selezionato
+  alla selezione del secondo nodo, cambiare colore al punto selezionato
+  legenda
+*/
+
+
+
 var firstTime = true;
-var margin = {top: 80, right: 0, bottom: 10, left: 80},
+var margin = {top: 30, right: 30, bottom: 50, left: 120},
     width = 500,
     height = 500;
 
 
 var x_m = d3.scaleBand().range([0, width]),
-    //z = d3.scaleLinear().domain([0, 4]).clamp(true),
-    z = d3.scaleLinear().domain([0, 1]).clamp(true);
-    //c = d3.scaleOrdinal(d3.schemeCategory10);
-    //c = d3.scalePow().exponent(1.09).range(["yellow", "red"])
+    z = d3.scaleLinear().domain([0, 1]).clamp(true),
+    c = d3.scaleSequential(d3.interpolateMagma)
+      .domain([0,1]);
 
 
 
@@ -105,6 +124,7 @@ function fullMatrix() {
         .attr("y", x_m.bandwidth() / 2)
         .attr("dy", ".32em")
         .attr("text-anchor", "end")
+        .attr('fill', 'white')
         .text(function(d, i) { return nodes[i].Name; });
 
     // Columns
@@ -124,6 +144,8 @@ function fullMatrix() {
         .attr("y", x_m.bandwidth() / 2)
         .attr("dy", ".32em")
         .attr("text-anchor", "start")
+        .attr("transform", "rotate(30)")
+        .attr('fill', 'white')
         .text(function(d, i) { return nodes[i].Name; });
 
     function row(row) {
@@ -135,7 +157,8 @@ function fullMatrix() {
           .attr("width", x_m.bandwidth())
           .attr("height", x_m.bandwidth())
           //.style("fill-opacity", function(d) { return z(d.z); })
-          .style("fill", function(d) {return d3.interpolateMagma(d.z); })
+          //.style("fill", function(d) {return d3.interpolateMagma(d.z); })
+          .style("fill", function(d) {return c(d.z); })
           //.style("fill", function(d) { return nodes[d.x].group == nodes[d.y].group ? c(nodes[d.x].group) : null; })
           .on("mouseover", mouseover)
           .on("mouseout", mouseout);
@@ -144,10 +167,41 @@ function fullMatrix() {
     function mouseover(p) {
       d3.selectAll(".row text").classed("active", function(d, i) { return i == p.y; });
       d3.selectAll(".column text").classed("active", function(d, i) { return i == p.x; });
+
+      var g = svg_matrix.append('g').attr("id", "similarity");
+      g.append('rect')
+      .attr("x", function(d) { return x_m(p.x)-45; })
+      .attr("y", function(d) { return x_m(p.y)+10; })
+      .attr("width", 120)
+      .attr("height", 47)
+      .style("fill", "rgb(2, 200, 255)")
+      .style("opacity", "0.9");
+      //.style("rx", "0px");
+
+      g.append("text")
+      .style("fill", "white")
+      .attr("x", function(d) { return x_m(p.x)-40; })
+      .attr("y", function(d) { return x_m(p.y)+25; })
+      .style("font-size", "15px")
+      .text(nodes[p.y].Name);
+      g.append("text")
+      .style("fill", "white")
+      .attr("x", function(d) { return x_m(p.x)-40; })
+      .attr("y", function(d) { return x_m(p.y)+40; })
+      .style("font-size", "15px")
+      .text(nodes[p.x].Name);
+      g.append("text")
+      .style("fill", "white")
+      .attr("x", function(d) { return x_m(p.x)-40; })
+      .attr("y", function(d) { return x_m(p.y)+55; })
+      .style("font-size", "15px")
+      .text(p.z.toFixed(4));
+
     }
 
     function mouseout() {
       d3.selectAll("text").classed("active", false);
+      svg_matrix.selectAll("#similarity").remove();
     }
 
     d3.select("#order").on("change", function() {
@@ -290,6 +344,8 @@ function matrixReduction(node_name) {
         .attr("y", x_m.bandwidth() / 2)
         .attr("dy", ".32em")
         .attr("text-anchor", "end")
+        .attr('fill', 'white')
+        .attr('font-size', '10px')
         .text(function(d, i) {return ordered_nodes[i].Name; });
 
     // Columns
@@ -305,10 +361,13 @@ function matrixReduction(node_name) {
 
     // Text on top of the matrix
     column.append("text")
-        .attr("x", 6)
-        .attr("y", x_m.bandwidth() / 2)
+        .attr("x", -10)
+        .attr("y", x_m.bandwidth() / 2 -20)
         .attr("dy", ".32em")
         .attr("text-anchor", "start")
+        .attr('fill', 'white')
+        .attr("transform", "rotate(60)translate(30)")
+        .attr('font-size', '10px')
         .text(function(d, i) { return ordered_nodes[i].Name; });
 
     function row(row) {
@@ -321,7 +380,7 @@ function matrixReduction(node_name) {
           .attr("width", x_m.bandwidth())
           .attr("height", x_m.bandwidth())
           //.style("fill-opacity", function(d) { return z(d.z); })
-          .style("fill", function(d) {return d3.interpolateMagma(d.z); })
+          .style("fill", function(d) {return c(d.z); })
           //.style("fill", function(d) { return ordered_nodes[d.x].group == ordered_nodes[d.y].group ? c(ordered_nodes[d.x].group) : null; }) // Da commentare con n = 10
           .on("mouseover", mouseover)
           .on("mouseout", mouseout);
@@ -331,12 +390,57 @@ function matrixReduction(node_name) {
       // Each row text is ordered as d[k][i].x, given that d is now a list (instead of a matrix)
       // we just need to select the correct row inside a range between 0 and n (number of rows)
       // when the i-th x of d element is equal to p.y (or p.x) return true.
-      d3.selectAll(".row text").classed("active", function(d, i) { return d[i].x == p.y; });
-      d3.selectAll(".column text").classed("active", function(d, i) { return d[i].x == p.x; });
+      d3.selectAll(".row text").classed("activeReduced", function(d, i) { return d[i].x == p.y; });
+      d3.selectAll(".column text").classed("activeReduced", function(d, i) { return d[i].x == p.x; });
+
+      for (var i = 0; i<n; i++) {
+        if (matrix[0][i].x == p.x){
+          var simil_x = i;
+        }
+      }
+      for (var i = 0; i<n; i++) {
+        if (matrix[0][i].x == p.y){
+          var simil_y = i;
+        }
+      }
+
+
+      var g = svg_matrix.append('g').attr("id", "similarity");
+      g.append('rect')
+      .attr("x", function(d) { return x_m(simil_x)-45; })
+      .attr("y", function(d) { return x_m(simil_y)+50; })
+      .attr("width", 120)
+      .attr("height", 49)
+      .style("fill", "rgb(2, 200, 255)")
+      .style("opacity", "0.9");
+      //.style("rx", "0px");
+
+      g.append("text")
+      .style("fill", "white")
+      .attr("x", function(d) { return x_m(simil_x)-40; })
+      .attr("y", function(d) { return x_m(simil_y)+65; })
+      .style("font-size", "15px")
+      .text(nodes[p.y].Name);
+      g.append("text")
+      .style("fill", "white")
+      .attr("x", function(d) { return x_m(simil_x)-40; })
+      .attr("y", function(d) { return x_m(simil_y)+80; })
+      .style("font-size", "15px")
+      .text(nodes[p.x].Name);
+      g.append("text")
+      .style("fill", "white")
+      .attr("x", function(d) { return x_m(simil_x)-40; })
+      .attr("y", function(d) { return x_m(simil_y)+95; })
+      .style("font-size", "15px")
+      .text(p.z.toFixed(4));
+
+
+
     }
 
     function mouseout() {
-      d3.selectAll("text").classed("active", false);
+      d3.selectAll("text").classed("activeReduced", false);
+      svg_matrix.selectAll("#similarity").remove();
     }
 
     d3.select("#order").on("change", function() {

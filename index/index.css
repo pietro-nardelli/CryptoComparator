@@ -9,10 +9,12 @@
   -webkit-text-stroke-width: 2px;
   -webkit-text-stroke-color: rgb(255, 196, 0);
 
-  /* 
+  /*
 
   text-shadow: #000 0px 0px 1px; */
   }
+
+
 
   .node circle{
     cursor:pointer;
@@ -205,6 +207,33 @@
       blockquote q:after {
         content: "";
       }
+      .row{
+        font-size: 5px;
+      }
+      .column{
+        font-size: 5px;
+      }
+
+
+
+      .background {
+        fill: #eee;
+      }
+
+      line {
+        stroke: #fff;
+      }
+
+      text.active {
+        /*fill: red;*/
+        font-weight: bold;
+        font-size: 8px;
+      }
+      text.activeReduced {
+        /*fill: red;*/
+        font-weight: bold;
+      }
+
 
 
       /* DROPDOWN MENU temporaneo*/

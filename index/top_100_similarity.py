@@ -1,3 +1,10 @@
+'''
+TODO:
+    da dissimilarità a similarità (1-d)
+    cross correlation anzichè distanza (nell'altro file)
+    provare scala logaritmica
+'''
+
 import json
 import csv
 import random
