@@ -170,7 +170,8 @@ function functionOnClickSingle(rel_or_abs){
 
 
 function create_boxplot(svg,margin1,data_final,attr){
-    
+    for(i=0;i<svg_arr_boxplot.length;i++){ svg_arr_boxplot[i].selectAll("*").remove(); }
+
     var data = []
     var data_ = data_final[attr]
     var height = height1*(.50)
@@ -241,32 +242,29 @@ function create_boxplot(svg,margin1,data_final,attr){
     .attr("stroke", "black")
 }
 
-function createBoxPlotOfMyCrypto(name){
-    var path_1 = 'dataset/' + String(name)+ '.csv';
+// function createBoxPlotOfMyCrypto(name){
 
-    var __data_ =  d3.csv(path_1, function(data) {
+//     var path_1 = 'dataset/' + String(name)+ '.csv';
 
-        for(i=0;i<svg_arr.length;i++){ svg_arr[i].selectAll("*").remove(); }
-
-
-        data_charts = []
+//     var __data_ =  d3.csv(path_1, function(data) {
 
 
-        attr_to_plot = ["close", "market cap", "volume", "high", "low", "open"]
+
+//         attr_to_plot = ["close", "market cap", "volume", "high", "low", "open"]
 
 
-        var data_final_boxplot = {"name": name,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
+//         var data_final_boxplot = {"name": name,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
         
 
-        data_final_boxplot, _ = preprocess_data(data,need_candlestick=need_candlestick,data_summary=false,data_final_boxplot)
+//         data_final_boxplot, _ = preprocess_data(data,need_candlestick=need_candlestick,data_summary=false,data_final_boxplot)
 
-        create_boxplot(svg_arr_boxplot[0],margin,data_final_boxplot,'market cap')
-        // create_boxplot(svg_arr_boxplot[1],margin,data_final_boxplot,'market cap')
-        // create_boxplot(svg_arr_boxplot[2],margin,data_final_boxplot,'volume')
+//         create_boxplot(svg_arr_boxplot[0],margin,data_final_boxplot,'market cap')
+//         // create_boxplot(svg_arr_boxplot[1],margin,data_final_boxplot,'market cap')
+//         // create_boxplot(svg_arr_boxplot[2],margin,data_final_boxplot,'volume')
 
 
-    })
-}
+//     })
+// }
 
 //createBoxPlotOfMyCrypto('Dogecoin')
 
@@ -333,6 +331,7 @@ function createSingleGraphsOfMyCrypto(name1){
     var path_1 = 'dataset/' + String(name1)+ '.csv';
     
     var _data_ = d3.csv(path_1, function(data1) {
+
         for(i=0;i<svg_arr.length;i++){ svg_arr[i].selectAll("*").remove(); }
     
     
@@ -352,7 +351,8 @@ function createSingleGraphsOfMyCrypto(name1){
     
         data_final1, _ = preprocess_data(data1,need_candlestick=need_candlestick,data_summary=false,data_final1)
     
-    
+        create_boxplot(svg_arr_boxplot[0],margin,data_final1,'market cap')
+
         draw_time_chart(svg_arr[0], margin1, data_final1, attr_to_plot[0], [1,2], 0 , number_of_graphs, rel_or_abs=rel_or_abs)
 
         draw_time_chart(svg_arr[1], margin1, data_final1, attr_to_plot[1], [0,2], 1 , number_of_graphs, rel_or_abs=rel_or_abs)
@@ -630,6 +630,7 @@ function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_gr
     //id is the identification number for the graph.
     //param is a tuple. Contains the identification numbers of all the graphs you want
     //to link the graph to
+
 
     var Box = svg.append("rect")
     .attr("x", 0)
