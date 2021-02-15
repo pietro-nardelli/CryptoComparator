@@ -5,7 +5,8 @@ TODO:
   collegare lo slider alla matrice
   X] al passaggio del mouse grassetto delle scritte
   X] finestrella per visualizzare valore similarità
-  ..]legenda
+  X]legenda
+  X]create graph of my crypto (name1, name2)
   Gestire più similarity
 
 TODO-SCATTER:
@@ -436,7 +437,8 @@ function matrixReduction(node_name) {
           .style("fill", function(d) {return c(d.z); })
           //.style("fill", function(d) { return ordered_nodes[d.x].group == ordered_nodes[d.y].group ? c(ordered_nodes[d.x].group) : null; }) // Da commentare con n = 10
           .on("mouseover", mouseover)
-          .on("mouseout", mouseout);
+          .on("mouseout", mouseout)
+          .on("click", mouseclick);
     }
 
     function mouseover(p) {
@@ -494,6 +496,15 @@ function matrixReduction(node_name) {
     function mouseout() {
       d3.selectAll("text").classed("activeReduced", false);
       svg_matrix.selectAll("#similarity").remove();
+    }
+
+    function mouseclick(p) {
+      // Each row text is ordered as d[k][i].x, given that d is now a list (instead of a matrix)
+      // we just need to select the correct row inside a range between 0 and n (number of rows)
+      // when the i-th x of d element is equal to p.y (or p.x) return true.
+      d3.selectAll(".row text").classed("activeReduced", function(d, i) { return d[i].x == p.y; });
+      d3.selectAll(".column text").classed("activeReduced", function(d, i) { return d[i].x == p.x; });
+      createGraphsOfMyCrypto(nodes[p.y].Name,nodes[p.x].Name)
     }
 
     d3.select("#order").on("change", function() {
