@@ -23,24 +23,32 @@ var height1 = 270 - margin1.top - margin1.bottom;
 var need_candlestick = false;
 //how many graphs do I want to create?
 
-number_of_graphs=4
+number_of_graphs=3
+number_of_boxplot=3
 rel_or_abs = 'absolute'
 clicked = true
 //let's create the svgs for each graph!
 var svg_arr=[]
+var svg_arr_boxplot=[]
 
 for(i=0;i<number_of_graphs;i++){
     svg_arr[i] = d3.select("#my_dataviz").append("svg").attr("width", width1 + margin1.left + margin1.right)
     .attr("height", height1 + margin1.top + margin1.bottom).append("g").attr("transform","translate(" + margin1.left + "," + margin1.top + ")").attr("id", i)
 }
 
+for(i=0;i<number_of_boxplot;i++){
+    svg_arr_boxplot[i] = d3.select("#my_dataviz_boxplot").append("svg").attr("width", width1*(.75) + margin1.left + margin1.right)
+    .attr("height", height1*(.50) + margin1.top + margin1.bottom).append("g").attr("transform","translate(" + margin1.left + "," + margin1.top + ")").attr("id", i)
+}
 
-//--------------------------------------------------------------------------------------------------------------------
+
+//----------FUNZIONE CHIAMATA ONCLICK PER OGNI CRYPTO---------------------------------------
+
 
 document.getElementById("MyBtn").addEventListener("click", function() {
 
     if(already_draw){
-        if(true){
+        if(single_chart){
             clicked = !clicked;
             if(clicked) {
                 rel_or_abs = 'absolute';
@@ -97,13 +105,13 @@ function functionOnClick(rel_or_abs){
             data_final2, _ = preprocess_data(data2,need_candlestick=need_candlestick,data_summary=false,data_final2)
 
     
-            draw_multilines_time_chart(svg_arr[0],margin1, data_final1,data_final2, attr_to_plot[0], [1,2,3], 0,number_of_graphs,rel_or_abs=rel_or_abs)
+            draw_multilines_time_chart(svg_arr[0],margin1, data_final1,data_final2, attr_to_plot[0], [1,2], 0,number_of_graphs,rel_or_abs=rel_or_abs)
     
-            draw_multilines_time_chart(svg_arr[1],margin1, data_final1,data_final2, attr_to_plot[1], [0,2,3], 1,number_of_graphs,rel_or_abs=rel_or_abs)
+            draw_multilines_time_chart(svg_arr[1],margin1, data_final1,data_final2, attr_to_plot[1], [0,2], 1,number_of_graphs,rel_or_abs=rel_or_abs)
 
-            draw_multilines_time_chart(svg_arr[2],margin1, data_final1,data_final2, attr_to_plot[2], [0,1,3], 2,number_of_graphs,rel_or_abs=rel_or_abs)
+            draw_multilines_time_chart(svg_arr[2],margin1, data_final1,data_final2, attr_to_plot[2], [0,1], 2,number_of_graphs,rel_or_abs=rel_or_abs)
 
-            draw_multilines_time_chart(svg_arr[3],margin1, data_final1,data_final2, attr_to_plot[3], [0,1,2], 3,number_of_graphs,rel_or_abs=rel_or_abs)
+            // draw_multilines_time_chart(svg_arr[3],margin1, data_final1,data_final2, attr_to_plot[3], [0,1,2], 3,number_of_graphs,rel_or_abs=rel_or_abs)
 
 
 
@@ -144,21 +152,125 @@ function functionOnClickSingle(rel_or_abs){
 
     
 
-        draw_time_chart(svg_arr[0], margin1, data_final1, attr_to_plot[0], [1,2,3], 0 , number_of_graphs, rel_or_abs=rel_or_abs)
+        draw_time_chart(svg_arr[0], margin1, data_final1, attr_to_plot[0], [1,2], 0 , number_of_graphs, rel_or_abs=rel_or_abs)
 
-        draw_time_chart(svg_arr[1], margin1, data_final1, attr_to_plot[1], [0,2,3], 1 , number_of_graphs, rel_or_abs=rel_or_abs)
+        draw_time_chart(svg_arr[1], margin1, data_final1, attr_to_plot[1], [0,2], 1 , number_of_graphs, rel_or_abs=rel_or_abs)
 
-        draw_time_chart(svg_arr[2], margin1, data_final1, attr_to_plot[2], [0,1,3], 2 , number_of_graphs, rel_or_abs=rel_or_abs)
+        draw_time_chart(svg_arr[2], margin1, data_final1, attr_to_plot[2], [0,1], 2 , number_of_graphs, rel_or_abs=rel_or_abs)
 
-        draw_time_chart(svg_arr[3], margin1, data_final1, attr_to_plot[3], [0,1,2], 3 , number_of_graphs, rel_or_abs=rel_or_abs)
-
-
-})
+       // draw_time_chart(svg_arr[3], margin1, data_final1, attr_to_plot[3], [0,1,2], 3 , number_of_graphs, rel_or_abs=rel_or_abs)
+       
+       
+    })
 }
 
 
-//----------FUNZIONE CHIAMATA ONCLICK PER OGNI CRYPTO---------------------------------------
 
+//--------------------------------------------------------------------------------------------------------------------
+
+
+function create_boxplot(svg,margin1,data_final,attr){
+    
+    var data = []
+    var data_ = data_final[attr]
+    var height = height1*(.50)
+    var width = width1*(.75)
+    var scale_width_rect = 0.5
+
+
+    for(i=0;i<data_.length;i++){
+        data.push(parseInt(data_[i]))
+    }
+
+    // create dummy data
+    //var data = [12,19,11,13,12,22,13,4,15,16,18,19,20,12,11,9]
+
+    // Compute summary statistics used for the box:
+    var data_sorted = data.sort(d3.ascending)
+    var q1 = d3.quantile(data_sorted, .25)
+    var median = d3.quantile(data_sorted, .5)
+    var q3 = d3.quantile(data_sorted, .75)
+    var interQuantileRange = q3 - q1
+    var min = q1 - 1.5 * interQuantileRange
+    var max = q1 + 1.5 * interQuantileRange
+
+   // Show the Y scale
+    var y = d3.scaleLinear()
+    .domain([0,data.reduce(function(a, b) {return Math.max(a, b);})])
+    .range([height, 0]);
+    svg.call(d3.axisLeft(y).ticks(6))
+
+    // var y = d3.scaleLinear()
+    // .domain([0,24])
+    // .range([height, 0]);
+    // svg.call(d3.axisLeft(y))
+
+    // a few features for the box
+    var center = 100
+    // var width = 100*(.75)
+
+    // Show the main vertical line
+    svg
+    .append("line")
+    .attr("x1", center)
+    .attr("x2", center)
+    .attr("y1", y(min))
+    .attr("y2", y(max) )
+    .attr("stroke", "black")
+
+    // Show the box
+    svg
+    .append("rect")
+    .attr("x", center - width/2)
+    .attr("y", y(q3) )
+    .attr("height", (y(q1)-y(q3)) )
+    .attr("width", width )
+    .attr("stroke", "black")
+    .style("fill", "#69b3a2")
+
+    // show median, min and max horizontal lines
+    svg
+    .selectAll("toto")
+    .data([min, median, max])
+    .enter()
+    .append("line")
+    .attr("x1", (center-width/2))
+    .attr("x2", (center+width/2))
+    .attr("y1", function(d){ return(y(d))} )
+    .attr("y2", function(d){ return(y(d))} )
+    .attr("stroke", "black")
+}
+
+function createBoxPlotOfMyCrypto(name){
+    var path_1 = 'dataset/' + String(name)+ '.csv';
+
+    var __data_ =  d3.csv(path_1, function(data) {
+
+        for(i=0;i<svg_arr.length;i++){ svg_arr[i].selectAll("*").remove(); }
+
+
+        data_charts = []
+
+
+        attr_to_plot = ["close", "market cap", "volume", "high", "low", "open"]
+
+
+        var data_final_boxplot = {"name": name,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
+        
+
+        data_final_boxplot, _ = preprocess_data(data,need_candlestick=need_candlestick,data_summary=false,data_final_boxplot)
+
+        create_boxplot(svg_arr_boxplot[0],margin,data_final_boxplot,'market cap')
+        // create_boxplot(svg_arr_boxplot[1],margin,data_final_boxplot,'market cap')
+        // create_boxplot(svg_arr_boxplot[2],margin,data_final_boxplot,'volume')
+
+
+    })
+}
+
+//createBoxPlotOfMyCrypto('Dogecoin')
+
+//--------------------------------------------------------------------------------------------------------------------
 
 
 var already_draw = false
@@ -197,13 +309,13 @@ function createGraphsOfMyCrypto(name1,name2='Dogecoin'){
             data_final2, _ = preprocess_data(data2,need_candlestick=need_candlestick,data_summary=false,data_final2)
 
     
-            draw_multilines_time_chart(svg_arr[0],margin1, data_final1,data_final2, attr_to_plot[0], [1,2,3], 0,number_of_graphs,rel_or_abs=rel_or_abs)
+            draw_multilines_time_chart(svg_arr[0],margin1, data_final1,data_final2, attr_to_plot[0], [1,2], 0,number_of_graphs,rel_or_abs=rel_or_abs)
     
-            draw_multilines_time_chart(svg_arr[1],margin1, data_final1,data_final2, attr_to_plot[1], [0,2,3], 1,number_of_graphs,rel_or_abs=rel_or_abs)
+            draw_multilines_time_chart(svg_arr[1],margin1, data_final1,data_final2, attr_to_plot[1], [0,2], 1,number_of_graphs,rel_or_abs=rel_or_abs)
 
-            draw_multilines_time_chart(svg_arr[2],margin1, data_final1,data_final2, attr_to_plot[2], [0,1,3], 2,number_of_graphs,rel_or_abs=rel_or_abs)
+            draw_multilines_time_chart(svg_arr[2],margin1, data_final1,data_final2, attr_to_plot[2], [0,1], 2,number_of_graphs,rel_or_abs=rel_or_abs)
 
-            draw_multilines_time_chart(svg_arr[3],margin1, data_final1,data_final2, attr_to_plot[3], [0,1,2], 3,number_of_graphs,rel_or_abs=rel_or_abs)
+           // draw_multilines_time_chart(svg_arr[3],margin1, data_final1,data_final2, attr_to_plot[3], [0,1,2], 3,number_of_graphs,rel_or_abs=rel_or_abs)
 
 
 
@@ -241,13 +353,13 @@ function createSingleGraphsOfMyCrypto(name1){
         data_final1, _ = preprocess_data(data1,need_candlestick=need_candlestick,data_summary=false,data_final1)
     
     
-        draw_time_chart(svg_arr[0], margin1, data_final1, attr_to_plot[0], [1,2,3], 0 , number_of_graphs, rel_or_abs=rel_or_abs)
+        draw_time_chart(svg_arr[0], margin1, data_final1, attr_to_plot[0], [1,2], 0 , number_of_graphs, rel_or_abs=rel_or_abs)
 
-        draw_time_chart(svg_arr[1], margin1, data_final1, attr_to_plot[1], [0,2,3], 1 , number_of_graphs, rel_or_abs=rel_or_abs)
+        draw_time_chart(svg_arr[1], margin1, data_final1, attr_to_plot[1], [0,2], 1 , number_of_graphs, rel_or_abs=rel_or_abs)
 
-        draw_time_chart(svg_arr[2], margin1, data_final1, attr_to_plot[2], [0,1,3], 2 , number_of_graphs, rel_or_abs=rel_or_abs)
+        draw_time_chart(svg_arr[2], margin1, data_final1, attr_to_plot[2], [0,1], 2 , number_of_graphs, rel_or_abs=rel_or_abs)
 
-        draw_time_chart(svg_arr[3], margin1, data_final1, attr_to_plot[3], [0,1,2], 3 , number_of_graphs, rel_or_abs=rel_or_abs)
+        //draw_time_chart(svg_arr[3], margin1, data_final1, attr_to_plot[3], [0,1,2], 3 , number_of_graphs, rel_or_abs=rel_or_abs)
 
 
     })
@@ -952,4 +1064,8 @@ function get_max(value1,value2){
 function get_min(value1,value2){
     if(value1>=value2) return value2
     else return value1
+}
+
+function type(element){
+    return typeof(element)
 }
