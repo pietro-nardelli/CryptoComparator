@@ -169,6 +169,16 @@ Input:
 Output:
     final_dict: the final dictionary with nodes[{#:..., Name:..., MarketCap: ..., }] and links[{source:..., target:..., value:...}]
 '''
+
+def my_corrcoef( x, y ):
+    mean_x = np.mean( x )
+    mean_y = np.mean( y )
+    std_x  = np.std ( x )
+    std_y  = np.std ( y )
+    n      = len    ( x )
+    return (( x - mean_x ) * ( y - mean_y )).sum() / n / ( std_x * std_y )
+
+
 def compute_distance(pos, standard_input_list, final_dict, dim_red_flag):
     final_dict['links'] = []
     max = 0
@@ -195,63 +205,20 @@ def compute_distance(pos, standard_input_list, final_dict, dim_red_flag):
             for j in range(i, len(standard_input_list)):
                 v_j = standard_input_list[j]
                 min_nums = min(len(v_i),len(v_j))
-                val = np.linalg.norm(np.asarray(v_i[:min_nums]) - np.asarray(v_j[:min_nums]))
+                val = my_corrcoef(v_i[:min_nums], v_j[:min_nums]) #np.linalg.norm(np.asarray(v_i[:min_nums]) - np.asarray(v_j[:min_nums])) #[-1,1]
+                val = ( val + 1 )/2 # Normalize between [0,1]
                 if (max < val):
                     max = val
 
                 final_dict['links'].append( {"source": i, "target": j, "value": val} )
         # Normalization w.r.t. max
         for link in final_dict['links']:
-            link['value'] = 1-link['value']/max
+            link['value'] = link['value']/max
 
     return final_dict
 
-'''
-PER MATTEO!
-
-***
-Lascia invariato
-***
 final_dict = import_data ('dataset/100List.csv')
 
-
-******************************
-- Sono tante standard_input_list quante sono le colonne dei dataset (volume, market cap, ...)
-- La lunghezza di ogni sotto lista è pari alla lunghezza della relativa time series.
-- Bitcoin è la prima lista, Ethereum è la seconda lista, Ethereum cash è la terza lista ecc... (ordinamento top 100)
-- Per sapere quale è l'ordine corretto basta iterare:
-    for node in final_dict['nodes']:
-        node['#'] e node['Name'] conterranno rispettivamente la posizione della criptovaluta e il suo nome
-********************
-standard_input_list = ...
-
-
-***
-Tanto a te non serve quindi ti basta inizializzarlo
-****
-pos = 0
-
-***
-Da modificare solamente la lunghezza dei singoli array v_i, v_j se uno dei due è più lungo dell'altro
-***
-final_dict = compute_distance(pos, standard_input_list, final_dict, dim_red_flag=False)
-
-***
-Con la struttura dati "final_dict" che hai creato ti basta generare tanti file .json quanti sono le colonne dei dataset (volume, market cap, ...)
-Ad esempio:
-***
-with open('market_cap.json', 'w') as f:
-    json.dump(final_dict_market_cap,f)
-
-'''
-final_dict = import_data ('dataset/100List.csv')
-
-'''
-datasets = []
-for node in final_dict['nodes']:
-    print (node['Name'])
-    datasets.append(preprocess_and_save_Data(node['Name'],dateFormat=True,save=False))
-'''
 
 # ESEMPIO:
 volume_standard_input_list=[]
@@ -294,8 +261,6 @@ list_of_lists.append(low_standard_input_list)
 pos = 0
 
 names = ['volume', 'market_cap', 'open', 'close','high','low']
-
-# ???????????????? final_dict?
 
 for i,list_ in enumerate(list_of_lists):
     final_dict_ = compute_distance(pos, list_, final_dict, dim_red_flag=False)
