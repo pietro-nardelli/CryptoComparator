@@ -1,6 +1,6 @@
 /*
 TODO:
-  trovare combinazione colori corretta
+  ..]trovare combinazione colori corretta
   X] sistemare scritte in obliquo per occupare meno spazio
   collegare lo slider alla matrice
   X] al passaggio del mouse grassetto delle scritte
@@ -20,7 +20,7 @@ TODO-SCATTER:
 
 
 var firstTime = true;
-var margin = {top: 30, right: 150, bottom: 50, left: 120},
+var margin = {top: 30, right: 380, bottom: 50, left: 120},
     width = 500,
     height = 500;
 
