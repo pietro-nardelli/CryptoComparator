@@ -182,7 +182,7 @@ function get_links(namecoin,similarity_idx) {
   var namecoin_similarity_arr = []
   if(similarity_idx == -1){  namecoin_similarity_arr = arr_sim_old[0][namecoin_idx]     } 
   else {namecoin_similarity_arr = arr_similarity_matrix[similarity_idx][namecoin_idx] }
-  console.log(namecoin_similarity_arr)
+  //console.log(namecoin_similarity_arr)
   // console.log("l arr a cui collegarmi è!")
   // console.log(namecoin_similarity_arr)
   for (var i = 0; i < 100; i++) {   //was in n_links to keep n links max, now 100 coins
@@ -236,7 +236,7 @@ d3v3.csv("dataset/100List.csv", function(data) {
   //update_reg_links(0); //set in datareg all the links
 });
 
-console.log(data_reg)
+//console.log(data_reg)
 
 var last_clicked="";
 
@@ -379,6 +379,7 @@ function create_graph(ididix){
             matrixReduction(d.name);
             //createGraphsOfMyCrypto(d.name);
             createSingleGraphsOfMyCrypto(d.name);
+            createBoxPlotOfMyCrypto(d.name);
             //blink()
 
                  
