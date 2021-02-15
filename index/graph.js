@@ -311,7 +311,7 @@ function create_graph(ididix){
     
     console.log("SIMIL1!")
 
-    console.log(arr_similarity_matrix)
+    //console.log(arr_similarity_matrix)
 
     nodes = name_arr;
     links = [];
@@ -394,8 +394,8 @@ function create_graph(ididix){
             .attr("dy", 3)
             .attr("fill", fill_node_text)
             .attr("webkit-text-fill-color", "white")
-            .attr("webkit-text-stroke-width" ,"2px")
-            .attr("webkit-text-stroke-color", "black")
+            .attr("display" ,"block")
+            .attr("display", "inline-block")
             .text(function(d) { return d.name });
 
         force_graph.on("tick", function() {
