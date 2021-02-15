@@ -118,12 +118,54 @@ function get_random_simmetric(n){
   return matrix;
 }
 
+var matrix_prova = [];
+
+create_100100_matrix ("close", matrix_prova);
+
+function create_100100_matrix (json_file, matrix){
+  d3.json("similarities/data_"+json_file+".json", function(data) {
+    var nodes = data.nodes,
+        n = nodes.length;
+    // Compute index per node.
+    nodes.forEach(function(node, i) {
+      node.index = i;     // Initialize attribute "index"
+      node.count = 0;     // Initialize attribute "count"
+      // Each row of the matrix contains an array in range n ([0,...,99])
+      // and "map" will access this value and return an object {x,y,z}
+      // In the end we have matrix[i][j]{x,y,z}
+      matrix[i] = d3.range(n).map(function(j) { return 0 });
+    });
+    // Convert links to matrix; count character occurrences.
+    data.links.forEach(function(link) {
+      // Between source and target (symmetric matrix)
+      matrix[link.source][link.target] = rr(link.value);
+      matrix[link.target][link.source] = rr(link.value);
+    });
+    // Precompute the orders.
+    var orders_name = d3.range(n).sort(function(a, b) { return d3.ascending(nodes[a].Name, nodes[b].Name); });
+    matrix = orders_name.map(i => matrix[i]);
+    
+  });
+  return matrix_prova;
+}
+
+
 //N buttons of similarity we want to use, to give to each link
 n_similarities = 6
 arr_similarity_matrix = []
+arr_path = ["close","high","low","market_cap","open","volume"]
 for (var i = 0 ; i < n_similarities; i++){
-  arr_similarity_matrix[i] = get_random_simmetric(100);
+  var aux= []
+  //get_random_simmetric(100);
+  create_100100_matrix(arr_path[i],aux)
+  arr_similarity_matrix[i] = aux
 }
+
+arr_sim_old = []
+for (var i = 0 ; i < n_similarities; i++){
+  arr_sim_old[i] = get_random_simmetric(100);
+}
+
 
 //return top n values from arr, use concat instead of sPlice(0) which gave me an error(?)
 function get_top_n(arr,n){
@@ -137,11 +179,15 @@ function get_top_n(arr,n){
 function get_links(namecoin,similarity_idx) {
   namecoin_idx = name_arr.indexOf(namecoin)
   links = []
-  namecoin_similarity_arr = arr_similarity_matrix[similarity_idx][namecoin_idx] //
+  var namecoin_similarity_arr = []
+  if(similarity_idx == -1){  namecoin_similarity_arr = arr_sim_old[0][namecoin_idx]     } 
+  else {namecoin_similarity_arr = arr_similarity_matrix[similarity_idx][namecoin_idx] }
+  console.log(namecoin_similarity_arr)
   // console.log("l arr a cui collegarmi è!")
   // console.log(namecoin_similarity_arr)
   for (var i = 0; i < 100; i++) {   //was in n_links to keep n links max, now 100 coins
       //namecoin = name_arr[i*4] //Math.round(Math.random()*100)]
+
       if(namecoin_similarity_arr[i] > initial_threshold && i!=namecoin_idx ) //!!! THRESHOLD MINIMA PER CREARE IL NODO
         links = links.concat(name_arr[i])
     }
@@ -187,7 +233,7 @@ d3v3.csv("dataset/100List.csv", function(data) {
     if(namecoin=="Radium"){ y-=20,x-=20}
     data_reg[namecoin] = [[x,y],namecoin]
   }
-  update_reg_links(0); //set in datareg all the links
+  //update_reg_links(0); //set in datareg all the links
 });
 
 console.log(data_reg)
@@ -216,14 +262,16 @@ var nodes = [];
 //could be better using only the simmMatrix to keep
 //info about who links with who 
 function getThreshold(source,target,similarity_idx) { 
-  matrix = arr_similarity_matrix[similarity_idx]
+  matrix = similarity_idx!=-1 ? arr_similarity_matrix[similarity_idx] : arr_sim_old[0]
   s_idx = name_arr.indexOf(source)
   t_idx = name_arr.indexOf(target)
   ret = matrix[s_idx][t_idx]
   return ret
 }
 
-create_graph(0)
+//update_reg_links(0); !! CI SERVE PURE QUESTO PRIMA?
+create_graph(-1)  
+
 
 document.getElementById("SIMIL1").addEventListener("click", function () {
   create_graph(1)  
@@ -251,18 +299,20 @@ document.getElementById("SIMIL0").addEventListener("click", function () {
 
 
 function create_graph(ididix){
-
-  svg.selectAll("*").remove()
-
-  index_of_similarity_in_use = ididix
-
-  update_reg_links(index_of_similarity_in_use)
-
-  
-  console.log("SIMIL1!")
-
     
-  d3v3.csv("", function() {  // per ogni namecoin prendo i relativi link to add dal datareg 
+  d3v3.csv("similarities/data_close.json", function() {  // per ogni namecoin prendo i relativi link to add dal datareg 
+
+    svg.selectAll("*").remove()
+
+    index_of_similarity_in_use = ididix
+  
+    update_reg_links(index_of_similarity_in_use)
+  
+    
+    console.log("SIMIL1!")
+
+    console.log(arr_similarity_matrix)
+
     nodes = name_arr;
     links = [];
     for (var i = 0; i < name_arr.length; i++) {
