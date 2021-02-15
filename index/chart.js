@@ -24,7 +24,8 @@ var need_candlestick = false;
 //how many graphs do I want to create?
 
 number_of_graphs=3
-number_of_boxplot=3
+number_of_boxplot=2
+
 rel_or_abs = 'absolute'
 clicked = true
 //let's create the svgs for each graph!
@@ -37,8 +38,8 @@ for(i=0;i<number_of_graphs;i++){
 }
 
 for(i=0;i<number_of_boxplot;i++){
-    svg_arr_boxplot[i] = d3.select("#my_dataviz_boxplot").append("svg").attr("width", width1*(.75) + margin1.left + margin1.right)
-    .attr("height", height1*(.50) + margin1.top + margin1.bottom).append("g").attr("transform","translate(" + margin1.left + "," + margin1.top + ")").attr("id", i)
+    svg_arr_boxplot[i] = d3.select("#my_dataviz_boxplot").append("svg").attr("width", width1 + margin1.left + margin1.right)
+    .attr("height", height1 + margin1.top + margin1.bottom).append("g").attr("transform","translate(" + margin1.left + "," + margin1.top + ")").attr("id", i)
 }
 
 
@@ -73,6 +74,7 @@ document.getElementById("MyBtn").addEventListener("click", function() {
         }
     }
   });
+
 
 function functionOnClick(rel_or_abs){
 
@@ -169,22 +171,39 @@ function functionOnClickSingle(rel_or_abs){
 //--------------------------------------------------------------------------------------------------------------------
 
 
-function create_boxplot(svg,margin1,data_final,attr){
-    for(i=0;i<svg_arr_boxplot.length;i++){ svg_arr_boxplot[i].selectAll("*").remove(); }
+function create_boxplot(svg,margin1,data_final,attr,color){
+    //for(i=0;i<svg_arr_boxplot.length;i++){ svg_arr_boxplot[i].selectAll("*").remove(); }
+    return  //na merda
 
     var data = []
     var data_ = data_final[attr]
-    var height = height1*(.50)
-    var width = width1*(.75)
+    var height = height1
+    var width = width1
     var scale_width_rect = 0.5
 
+    var Box = svg.append("rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", 2*width)
+    .attr("height", height)
+    .attr("fill", "rgb(2, 200, 255)")
+    .attr("opacity", 0.1);
+
+
+    if(color==1){
+        var col1 = 'rgb(255, 102, 0)' // arancio
+        var col2 = "rgb(2, 200, 255)" //azzurrino
+
+    }
+    else{
+        var col1 = 'white' // bianco
+        var col2 = "rgb(2, 200, 255)" //azzurrino
+    }
 
     for(i=0;i<data_.length;i++){
         data.push(parseInt(data_[i]))
     }
 
-    // create dummy data
-    //var data = [12,19,11,13,12,22,13,4,15,16,18,19,20,12,11,9]
 
     // Compute summary statistics used for the box:
     var data_sorted = data.sort(d3.ascending)
@@ -199,15 +218,11 @@ function create_boxplot(svg,margin1,data_final,attr){
     var y = d3.scaleLinear()
     .domain([0,data.reduce(function(a, b) {return Math.max(a, b);})])
     .range([height, 0]);
-    svg.call(d3.axisLeft(y).ticks(6))
-
-    // var y = d3.scaleLinear()
-    // .domain([0,24])
-    // .range([height, 0]);
-    // svg.call(d3.axisLeft(y))
+    Y_axis = svg.call(d3.axisLeft(y).ticks(6))
+    Y_axis.selectAll("text").style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-45)").attr('fill', 'white');
 
     // a few features for the box
-    var center = 100
+    var center = 150
     // var width = 100*(.75)
 
     // Show the main vertical line
@@ -216,8 +231,8 @@ function create_boxplot(svg,margin1,data_final,attr){
     .attr("x1", center)
     .attr("x2", center)
     .attr("y1", y(min))
-    .attr("y2", y(max) )
-    .attr("stroke", "black")
+    .attr("y2", y(max))
+    .attr("stroke", col2)
 
     // Show the box
     svg
@@ -226,8 +241,8 @@ function create_boxplot(svg,margin1,data_final,attr){
     .attr("y", y(q3) )
     .attr("height", (y(q1)-y(q3)) )
     .attr("width", width )
-    .attr("stroke", "black")
-    .style("fill", "#69b3a2")
+    .attr("stroke", col2)
+    .style("fill", col1)
 
     // show median, min and max horizontal lines
     svg
@@ -239,34 +254,9 @@ function create_boxplot(svg,margin1,data_final,attr){
     .attr("x2", (center+width/2))
     .attr("y1", function(d){ return(y(d))} )
     .attr("y2", function(d){ return(y(d))} )
-    .attr("stroke", "black")
+    .attr("stroke", col2)
 }
 
-// function createBoxPlotOfMyCrypto(name){
-
-//     var path_1 = 'dataset/' + String(name)+ '.csv';
-
-//     var __data_ =  d3.csv(path_1, function(data) {
-
-
-
-//         attr_to_plot = ["close", "market cap", "volume", "high", "low", "open"]
-
-
-//         var data_final_boxplot = {"name": name,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
-        
-
-//         data_final_boxplot, _ = preprocess_data(data,need_candlestick=need_candlestick,data_summary=false,data_final_boxplot)
-
-//         create_boxplot(svg_arr_boxplot[0],margin,data_final_boxplot,'market cap')
-//         // create_boxplot(svg_arr_boxplot[1],margin,data_final_boxplot,'market cap')
-//         // create_boxplot(svg_arr_boxplot[2],margin,data_final_boxplot,'volume')
-
-
-//     })
-// }
-
-//createBoxPlotOfMyCrypto('Dogecoin')
 
 //--------------------------------------------------------------------------------------------------------------------
 
@@ -285,7 +275,8 @@ function createGraphsOfMyCrypto(name1,name2='Dogecoin'){
         var __data_ =  d3.csv(path_2, function(data2) {
 
             for(i=0;i<svg_arr.length;i++){ svg_arr[i].selectAll("*").remove(); }
-    
+            for(i=0;i<svg_arr_boxplot.length;i++){ svg_arr_boxplot[i].selectAll("*").remove(); }
+
     
             data_charts = []
     
@@ -306,7 +297,10 @@ function createGraphsOfMyCrypto(name1,name2='Dogecoin'){
             data_final1, _ = preprocess_data(data1,need_candlestick=need_candlestick,data_summary=false,data_final1)
             data_final2, _ = preprocess_data(data2,need_candlestick=need_candlestick,data_summary=false,data_final2)
 
-    
+            create_boxplot(svg_arr_boxplot[0],margin,data_final1,attr_to_plot[0],color=1)
+            create_boxplot(svg_arr_boxplot[1],margin,data_final2,attr_to_plot[0],color=2)
+
+
             draw_multilines_time_chart(svg_arr[0],margin1, data_final1,data_final2, attr_to_plot[0], [1,2], 0,number_of_graphs,rel_or_abs=rel_or_abs)
     
             draw_multilines_time_chart(svg_arr[1],margin1, data_final1,data_final2, attr_to_plot[1], [0,2], 1,number_of_graphs,rel_or_abs=rel_or_abs)
@@ -333,7 +327,8 @@ function createSingleGraphsOfMyCrypto(name1){
     var _data_ = d3.csv(path_1, function(data1) {
 
         for(i=0;i<svg_arr.length;i++){ svg_arr[i].selectAll("*").remove(); }
-    
+        for(i=0;i<svg_arr_boxplot.length;i++){ svg_arr_boxplot[i].selectAll("*").remove(); }
+
     
         data_charts = []
     
@@ -351,7 +346,7 @@ function createSingleGraphsOfMyCrypto(name1){
     
         data_final1, _ = preprocess_data(data1,need_candlestick=need_candlestick,data_summary=false,data_final1)
     
-        create_boxplot(svg_arr_boxplot[0],margin,data_final1,'market cap')
+        create_boxplot(svg_arr_boxplot[0],margin,data_final1,'market cap',1)
 
         draw_time_chart(svg_arr[0], margin1, data_final1, attr_to_plot[0], [1,2], 0 , number_of_graphs, rel_or_abs=rel_or_abs)
 
