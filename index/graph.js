@@ -1,27 +1,27 @@
 //TO THINK
 /*
-- potremmo graficare similarità particolari evidenziandole 
+- potremmo graficare similarità particolari evidenziandole
   nel grafo e nella matrice nella sottorete creata
 + DOne rami in base alla similarità random YHEEAA done
 + done ricrea il grafo premendo il tasto con altri rami yes
 - TODO se passo su un nodo deve ingrandire la scritta(e colorarla?), e ridurla quando esce(e farla tornare bianca in caso)
        se premo su un nodo già premuto deve tornare tutto alla normalità* eccetto i 2 nodi colorati
-       se premo su un nodo deve colorarlo ed evidenziare la sottorete(nodo,testo,archi*,nodoTarget*,testoTarget*) 
+       se premo su un nodo deve colorarlo ed evidenziare la sottorete(nodo,testo,archi*,nodoTarget*,testoTarget*)
             e nascondere il resto(nodi non connessi, archi non connessi*)
        se premo su un altro nodo deve tenere l'ultimo colorato e colorare anche quello nuovo(e con colori specifici)
        se premo di nuovo sull'ultimo premuto?
        se premo su un terzo nodo?
-       se premo il primo nodo? 
+       se premo il primo nodo?
       * = relativamente alla soglia attuale, e se viene modificata bisogna tenerne conto
           (mantenendo solo alcune modifiche, tipo la sottorete deve restare evidenziata con i link più grandi)
-         
+
 
 - TODO animationhell
 */
 
 // matrice 100x100 come ora ma che se premi ti evidenzia i nodi sul grafo senza creare i sottografi
-// e crea con il colore dei nodi del grafo i grafici corrispondenti. se premi sul grafo poi esce il 
-// sottografo di solo quella selezionata, mantenendo i due colori. se premi un tasto torna alla 
+// e crea con il colore dei nodi del grafo i grafici corrispondenti. se premi sul grafo poi esce il
+// sottografo di solo quella selezionata, mantenendo i due colori. se premi un tasto torna alla
 // 100x100
 
 
@@ -40,7 +40,7 @@ var radius = 600;
 var theta = 2*Math.PI/100 //split 2pi into 2pi/n_nodes
 var ellisse = false
 
-//CSS VAR NAMES 
+//CSS VAR NAMES
 
 //COLOR LINKS FOR SLIDER UPDATE AND MOUSEOVER
 color_links = "rgb(2, 200, 255)"
@@ -65,7 +65,7 @@ var initial_threshold_slider = 0.9; //THRESHOLD BASE OF THE SLIDER
 var slider = document.getElementById("myRange");
 var output = document.getElementById("demo");
 output.innerHTML =  rr(slider.value/1000+initial_threshold_slider) ;
-actual_t = 0.4; //slider initial value is ?  //NOT USED ANYMORE
+actual_t = 0.9; //slider initial value is ?  //NOT USED ANYMORE
 
 function rr(v){return Number(v.toFixed(3))} //3rd decimal n
 
@@ -87,8 +87,11 @@ function slider_update(t) {
   .filter(function(x) { return x.k >= t})
   .style("stroke", color_links)
 
-  if(last_clicked!="")
-  on_mouseover_function(last_clicked)
+
+  if(last_clicked!="") {
+    on_mouseover_function(last_clicked)
+    matrixReduction(last_clicked.name, data_json, actual_t);
+  }
   else
   on_mouseout_function()
 
@@ -144,7 +147,7 @@ function create_100100_matrix (json_file, matrix){
     // Precompute the orders.
     var orders_name = d3.range(n).sort(function(a, b) { return d3.ascending(nodes[a].Name, nodes[b].Name); });
     matrix = orders_name.map(i => matrix[i]);
-    
+
   });
   return matrix_prova;
 }
@@ -180,7 +183,7 @@ function get_links(namecoin,similarity_idx) {
   namecoin_idx = name_arr.indexOf(namecoin)
   links = []
   var namecoin_similarity_arr = []
-  if(similarity_idx == -1){  namecoin_similarity_arr = arr_sim_old[0][namecoin_idx]     } 
+  if(similarity_idx == -1){  namecoin_similarity_arr = arr_sim_old[0][namecoin_idx]     }
   else {namecoin_similarity_arr = arr_similarity_matrix[similarity_idx][namecoin_idx] }
   //console.log(namecoin_similarity_arr)
   // console.log("l arr a cui collegarmi è!")
@@ -226,7 +229,7 @@ d3v3.csv("dataset/100List.csv", function(data) {
     if( i%2==0)aux_radius = radius *0.75
     x = x_c+Math.cos(theta*i)*aux_radius + 520*Math.cos(theta*i)
     if( i%2!=0) x = x + 100*Math.cos(theta*i)
-    y = y_c+Math.sin(theta*i)*aux_radius 
+    y = y_c+Math.sin(theta*i)*aux_radius
     if(!ellisse )y+=  100* (Math.sin(theta*i))*(Math.abs(Math.sin(theta*i)))**10
     if(i%2==0) y+=2*(Math.sin(theta*i))*(Math.abs(Math.sin(theta*i)))**400
     if(namecoin=="Dogecoin"){ y+=30,x-=30}
@@ -260,8 +263,8 @@ var links = [];
 var nodes = [];
 
 //could be better using only the simmMatrix to keep
-//info about who links with who 
-function getThreshold(source,target,similarity_idx) { 
+//info about who links with who
+function getThreshold(source,target,similarity_idx) {
   matrix = similarity_idx!=-1 ? arr_similarity_matrix[similarity_idx] : arr_sim_old[0]
   s_idx = name_arr.indexOf(source)
   t_idx = name_arr.indexOf(target)
@@ -270,45 +273,58 @@ function getThreshold(source,target,similarity_idx) {
 }
 
 //update_reg_links(0); !! CI SERVE PURE QUESTO PRIMA?
-create_graph(-1)  
+create_graph(-1)
+var data_json = "data_market_cap" //first attribute
 
 
 document.getElementById("SIMIL1").addEventListener("click", function () {
-  create_graph(1)  
+  create_graph(1)
+  var data_json = "data_market_cap"
+  full_matrix_or_reducted (last_clicked, data_json);
 } )
 
 document.getElementById("SIMIL2").addEventListener("click", function () {
-  create_graph(2)  
+  create_graph(2)
+  var data_json = "data_volume";
+  full_matrix_or_reducted (last_clicked, data_json);
 } )
 
 document.getElementById("SIMIL3").addEventListener("click", function () {
-  create_graph(3)  
+  create_graph(3)
+  var data_json = "data_low";
+  full_matrix_or_reducted (last_clicked, data_json);
 } )
 
 document.getElementById("SIMIL4").addEventListener("click", function () {
-  create_graph(4)  
+  create_graph(4)
+  var data_json = "data_high";
+  full_matrix_or_reducted (last_clicked, data_json);
 } )
 
 document.getElementById("SIMIL5").addEventListener("click", function () {
-  create_graph(5)  
+  create_graph(5)
+  var data_json = "data_open";
+  full_matrix_or_reducted (last_clicked, data_json);
 } )
 
 document.getElementById("SIMIL0").addEventListener("click", function () {
-  create_graph(0)  
+  create_graph(0)
+  var data_json = "data_close";
+  full_matrix_or_reducted (last_clicked, data_json);
 } )
 
 
 function create_graph(ididix){
-    
-  d3v3.csv("similarities/data_close.json", function() {  // per ogni namecoin prendo i relativi link to add dal datareg 
+
+  d3v3.csv("similarities/data_close.json", function() {  // per ogni namecoin prendo i relativi link to add dal datareg
 
     svg.selectAll("*").remove()
 
     index_of_similarity_in_use = ididix
-  
+
     update_reg_links(index_of_similarity_in_use)
-  
-    
+
+
     console.log("SIMIL1!")
 
     //console.log(arr_similarity_matrix)
@@ -352,7 +368,7 @@ function create_graph(ididix){
         .call(force_graph.drag)
 
         .on("mouseover", function (d) {  ///TO UPDATE con data_reg e non selectall, e d.source.name
-          
+
           on_click_function(d)
 
         })
@@ -366,22 +382,23 @@ function create_graph(ididix){
 
             if(last_clicked==d){
               last_clicked = ""
+              fullMatrix(data_json)
               on_mouseout_function()
               return
             }
 
             on_mouseout_function(d)
             on_mouseover_function(d)
-            
+
 
             last_clicked=d;
 
-            //matrixReduction(d.name);
+            matrixReduction(d.name, data_json, actual_t);
             //createGraphsOfMyCrypto(d.name);
             createSingleGraphsOfMyCrypto(d.name);
             //createBoxPlotOfMyCrypto(d.name);
             //blink()
-                
+
 
         });
 
@@ -406,7 +423,7 @@ function create_graph(ididix){
               .attr("k", function(d) { return d.k;  });  //useless 4 now
 
           node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
-          
+
         });
 
     slider_update(actual_t)
@@ -419,13 +436,13 @@ function blink() {
   .filter(function(x) {return x.name == last_clicked.name})
   .transition()
   .duration(500)
-  .style('fill', "red") 
+  .style('fill', "red")
   .transition()
   .duration(500)
   .style('fill', fill_node_circle)
   .transition()
   .duration(500)
-  .style('fill', "red") 
+  .style('fill', "red")
   .transition()
   .duration(500)
   .style('fill', fill_node_circle)
@@ -437,7 +454,7 @@ function on_mouseover_function(d) {
   svg.selectAll(".node text")     //se vado sopra con il mouse ingrandisce la scritta
   .data(nodes)
   .filter(function(x) {return x.name == d.name})
-  // .style('fill', fill_node_text_when_pressed) 
+  // .style('fill', fill_node_text_when_pressed)
   .style("font-size", size_node_text_when_pressed)
   .style("z-index", '2');
 
@@ -461,14 +478,14 @@ function on_mouseover_function(d) {
   //ingrandisce quelli che partono dal nodo
   var link_target_node = svg.selectAll(".link ")
   .data(links)
-  .filter(function(x) {return x.source.name == d.name  && x.k>= actual_t}) 
+  .filter(function(x) {return x.source.name == d.name  && x.k>= actual_t})
   .style("stroke-width", stroke_width_links_mouseover)
 
   //prende i target(ora si potrebbe rifare con x.target.name)
   //e li ricolora, ovvero cerchi e testi
   n=link_target_node[0].length
   target_name = "";
-  for(var a = 0; a <= n-1 ; a++){  
+  for(var a = 0; a <= n-1 ; a++){
     if ( link_target_node[0][a] != undefined)
       target_name = link_target_node[0][a].getAttribute("target");
     else console.log("[ERR]GETATTR. ON EMPTY LINKS"+ a)
@@ -483,7 +500,7 @@ function on_mouseover_function(d) {
     .filter(function(x) {return x.name == target_name})
     .style('fill', fill_node_text) ;
   }
-  
+
 }
 
 
@@ -507,16 +524,16 @@ function on_mouseout_function(d) {
   .filter(function(x) { return  x.k >= actual_t})
   .style('stroke', color_links)
   .style("stroke-width", stroke_width_links_mouseout) ;
-  
+
 }
 
 
 function on_click_function(d) {
-  
+
   svg.selectAll(".node circle") // rende la stroke rossa dei nodi a zero per tutti
   .data(nodes)
   .style("stroke-width", "0px");
-  
+
   svg.selectAll(".node text")   // rende il testo grande uguale per tutti
   .data(nodes)
    .filter(function(x) {return x.name != last_clicked.name})
@@ -528,14 +545,14 @@ function on_click_function(d) {
   .data(nodes)
   .filter(function(x) {return x.name == d.name})
   // .style('fill', 'rgb(255, 220, 0)')
-  //.style("stroke-width", stroke_width_node_circle)  
-  //.attr("r", "15") 
+  //.style("stroke-width", stroke_width_node_circle)
+  //.attr("r", "15")
   .style("z-index", '0');
 
   svg.selectAll(".node text")     // il testo diventa grande
   .data(nodes)
   .filter(function(x) {return x.name == d.name})
-  // .style('fill', fill_node_text_when_pressed) 
+  // .style('fill', fill_node_text_when_pressed)
   .style("font-size", size_node_text_when_pressed)
   .style("z-index", '2');
 
@@ -580,9 +597,3 @@ function ontick(n){
 
   svg.selectAll(".node circle").transition().duration(1000).attr("transform","translate(1200,100)")
 }
-
-
-
-
-
-

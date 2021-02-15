@@ -176,6 +176,7 @@
         font: 10px sans-serif;
         margin-right: 50px;
         float: right;
+        zoom: 0.8;
       }
 
       .axis path, .axis line {
@@ -260,6 +261,7 @@
         right: 300px;
         top: 315px;
         width: 25px;
+        zoom: 0.8;
       }
       #svg_legend_matrix{
         padding-right: 0px;
