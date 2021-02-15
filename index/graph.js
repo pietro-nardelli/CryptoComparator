@@ -376,13 +376,12 @@ function create_graph(ididix){
 
             last_clicked=d;
 
-            matrixReduction(d.name);
+            //matrixReduction(d.name);
             //createGraphsOfMyCrypto(d.name);
             createSingleGraphsOfMyCrypto(d.name);
-            createBoxPlotOfMyCrypto(d.name);
+            //createBoxPlotOfMyCrypto(d.name);
             //blink()
-
-                 
+                
 
         });
 
