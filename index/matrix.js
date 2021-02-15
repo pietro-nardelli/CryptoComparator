@@ -304,13 +304,14 @@ function fullMatrix(file_json) {
 }
 
 
-function matrixReduction(node_name, file_json) {
-
+function matrixReduction(node_name, file_json, slider_value) {
+  console.log(node_name);
+  console.log(file_json);
+  console.log(slider_value);
   if (!firstTime) {
     svg_matrix.selectAll("*").remove();
   }
   firstTime = false;
-
 
   d3.json("similarities/"+file_json+".json", function(crypto_top_100) {
     var matrix = [],
@@ -359,12 +360,19 @@ function matrixReduction(node_name, file_json) {
     order_distance = order_distance.sort(function(a, b) { return a.z - b.z; }).reverse();
     //console.log(order_distance);
 
+    console.log(order_distance);
+    for (var i = 0; i < n; i++) {
+      if (order_distance[i].z < slider_value){
+        console.log(order_distance[i].z)
+        n = i+1;
+        break;
+      }
+    }
 
-    n = 10;
     order_distance = order_distance.slice(0,n);
+    console.log(order_distance);
 
-    // Aggiunto per avere i nodi ordinati secondo index, una volta scelti i 10 piu simili
-    //order_distance = order_distance.sort(function(a, b) { return a.x - b.x; });
+    // Aggiunto per avere i nodi ordinati secondo index, una volta scelti gli n piu simili
 
     // Reorder the matrix based on the selected element
     var matrix2 = new Array(n).fill(0).map(() => new Array(n).fill(0));
@@ -436,7 +444,7 @@ function matrixReduction(node_name, file_json) {
     // Text on top of the matrix
     column.append("text")
         .attr("x", -10)
-        .attr("y", x_m.bandwidth() / 2 -20)
+        .attr("y", x_m.bandwidth() / 2 - 20)
         .attr("dy", ".32em")
         .attr("text-anchor", "start")
         .attr('fill', 'white')
