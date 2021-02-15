@@ -20,17 +20,20 @@ TODO-SCATTER:
 
 
 var firstTime = true;
-var margin = {top: 30, right: 30, bottom: 50, left: 120},
+var margin = {top: 30, right: 150, bottom: 50, left: 120},
     width = 500,
     height = 500;
 
 
 var x_m = d3.scaleBand().range([0, width]),
     z = d3.scaleLinear().domain([0, 1]).clamp(true),
-    c = d3.scaleSequential(d3.interpolateMagma)
+
+    c = d3.scaleLinear().range(["#02c8ff", "#ff6600"])
       .domain([0,1]);
-
-
+    /*
+    c = d3.scaleSequential(d3.interpolateSpectral)
+    .domain([1,0]);
+*/
 
 var svg_matrix = d3.select("body").append("svg")
     .attr("id", "svg_matrix")
@@ -113,7 +116,7 @@ if (firstTime){
 
 
 function fullMatrix() {
-  d3.json("mds.json", function(crypto_top_100) {
+  d3.json("similarities/data_market_cap.json", function(crypto_top_100) {
     var matrix = [],
         nodes = crypto_top_100.nodes,
         n = nodes.length;
@@ -215,12 +218,13 @@ function fullMatrix() {
           .style("fill", function(d) {return c(d.z); })
           //.style("fill", function(d) { return nodes[d.x].group == nodes[d.y].group ? c(nodes[d.x].group) : null; })
           .on("mouseover", mouseover)
-          .on("mouseout", mouseout);
+          .on("mouseout", mouseout)
+          .on("click", mouseclick)
     }
 
     function mouseover(p) {
-      d3.selectAll(".row text").classed("active", function(d, i) { return i == p.y; });
-      d3.selectAll(".column text").classed("active", function(d, i) { return i == p.x; });
+      d3.selectAll(".row text").classed("active-x", function(d, i) { return i == p.y; });
+      d3.selectAll(".column text").classed("active-y", function(d, i) { return i == p.x; });
 
       var g = svg_matrix.append('g').attr("id", "similarity");
       g.append('rect')
@@ -258,6 +262,15 @@ function fullMatrix() {
       svg_matrix.selectAll("#similarity").remove();
     }
 
+    function mouseclick(p) {
+      // Each row text is ordered as d[k][i].x, given that d is now a list (instead of a matrix)
+      // we just need to select the correct row inside a range between 0 and n (number of rows)
+      // when the i-th x of d element is equal to p.y (or p.x) return true.
+      d3.selectAll(".row text").classed("activeReduced", function(d, i) { return d[i].x == p.y; });
+      d3.selectAll(".column text").classed("activeReduced", function(d, i) { return d[i].x == p.x; });
+      createGraphsOfMyCrypto(nodes[p.y].Name,nodes[p.x].Name)
+    }
+
     d3.select("#order").on("change", function() {
       order(this.value);
     });
@@ -292,7 +305,7 @@ function matrixReduction(node_name) {
 
   //var id = this.id;
 
-  d3.json("mds.json", function(crypto_top_100) {
+  d3.json("similarities/data_market_cap.json", function(crypto_top_100) {
     var matrix = [],
         nodes = crypto_top_100.nodes,
         n = nodes.length;
@@ -336,7 +349,7 @@ function matrixReduction(node_name) {
     }
     //console.log(order_distance);
     // Sort the columns for row ID wrt Z in ascending order
-    order_distance = order_distance.sort(function(a, b) { return a.z - b.z; });
+    order_distance = order_distance.sort(function(a, b) { return a.z - b.z; }).reverse();
     //console.log(order_distance);
 
 
@@ -445,8 +458,8 @@ function matrixReduction(node_name) {
       // Each row text is ordered as d[k][i].x, given that d is now a list (instead of a matrix)
       // we just need to select the correct row inside a range between 0 and n (number of rows)
       // when the i-th x of d element is equal to p.y (or p.x) return true.
-      d3.selectAll(".row text").classed("activeReduced", function(d, i) { return d[i].x == p.y; });
-      d3.selectAll(".column text").classed("activeReduced", function(d, i) { return d[i].x == p.x; });
+      d3.selectAll(".row text").classed("activeReduced-x", function(d, i) { return d[i].x == p.y; });
+      d3.selectAll(".column text").classed("activeReduced-y", function(d, i) { return d[i].x == p.x; });
 
       for (var i = 0; i<n; i++) {
         if (matrix[0][i].x == p.x){

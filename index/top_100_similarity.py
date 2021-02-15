@@ -1,8 +1,7 @@
 '''
 TODO:
-    da dissimilarità a similarità (1-d)
+    x]da dissimilarità a similarità (1-d)
     cross correlation anzichè distanza (nell'altro file)
-    provare scala logaritmica
 '''
 
 import json
@@ -135,7 +134,7 @@ def compute_distance(pos, standard_input_list, final_dict, dim_red_flag):
         # Normalization w.r.t. max
         variance_computation = []
         for link in final_dict['links']:
-            link['value'] = link['value']/max
+            link['value'] = 1 - link['value']/max
             variance_computation.append(link['value'])
 
         print ("Variance: ", variance(variance_computation))

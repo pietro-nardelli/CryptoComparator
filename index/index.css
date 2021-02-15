@@ -35,8 +35,6 @@
           font-size: 20px;
           color: #ff0000;
       }
-      /* Copyright 2013 Michael Bostock. All rights reserved. Do not copy. */
-
 
       html {
         min-width: 1040px;
@@ -208,10 +206,10 @@
         content: "";
       }
       .row{
-        font-size: 5px;
+        font-size: 9px;
       }
       .column{
-        font-size: 5px;
+        font-size: 9px;
       }
 
 
@@ -224,15 +222,27 @@
         stroke: #fff;
       }
 
-      text.active {
-        /*fill: red;*/
+      text.active-x {
+        fill: rgb(255, 102, 0);
         font-weight: bold;
-        font-size: 8px;
+        font-size: 15px;
       }
-      text.activeReduced {
-        /*fill: red;*/
+      text.active-y {
+        fill: white;
         font-weight: bold;
+        font-size: 15px;
       }
+      text.activeReduced-x {
+        fill: rgb(255, 102, 0);
+        font-weight: bold;
+        font-size: 15px;
+      }
+      text.activeReduced-y {
+        fill: white;
+        font-weight: bold;
+        font-size: 15px;
+      }
+
       /* LEGEND MATRIX*/
       .axis text {
         font: 10px sans-serif;
@@ -247,7 +257,7 @@
       #legend_matrix{
         position: absolute;
         margin-left: 450px;
-        right: 275px;
+        right: 375px;
         top: 290px;
         width: 50px;
       }
