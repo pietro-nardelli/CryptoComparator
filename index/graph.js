@@ -309,8 +309,6 @@ function create_graph(ididix){
         .on("mouseout", function (d) {    //ricolora tutto come al normale
 
           //on_click_function()
-
-
           //on_mouseout_function(d)
 
         })
@@ -323,15 +321,14 @@ function create_graph(ididix){
             }
 
             on_mouseout_function(d)
-            //on_click_function(d)
             on_mouseover_function(d)
             
 
             last_clicked=d;
 
             matrixReduction(d.name);
-            createGraphsOfMyCrypto(d.name);
-
+            //createGraphsOfMyCrypto(d.name);
+            createSingleGraphsOfMyCrypto(d.name);
             //blink()
 
                  
@@ -372,13 +369,13 @@ function blink() {
   .filter(function(x) {return x.name == last_clicked.name})
   .transition()
   .duration(500)
-  .style('fill', "yellow") 
+  .style('fill', "red") 
   .transition()
   .duration(500)
   .style('fill', fill_node_circle)
   .transition()
   .duration(500)
-  .style('fill', "yellow") 
+  .style('fill', "red") 
   .transition()
   .duration(500)
   .style('fill', fill_node_circle)
@@ -472,6 +469,7 @@ function on_click_function(d) {
   
   svg.selectAll(".node text")   // rende il testo grande uguale per tutti
   .data(nodes)
+   .filter(function(x) {return x.name != last_clicked.name})
   .style("stroke-width", "0px")
   .style("font-size", size_node_text);
 
