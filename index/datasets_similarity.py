@@ -202,7 +202,7 @@ def compute_distance(pos, standard_input_list, final_dict, dim_red_flag):
                 final_dict['links'].append( {"source": i, "target": j, "value": val} )
         # Normalization w.r.t. max
         for link in final_dict['links']:
-            link['value'] = link['value']/max
+            link['value'] = 1-link['value']/max
 
     return final_dict
 
