@@ -233,9 +233,26 @@
         /*fill: red;*/
         font-weight: bold;
       }
+      /* LEGEND MATRIX*/
+      .axis text {
+        font: 10px sans-serif;
+        fill: white;
+      }
 
-
-
+      .axis line, .axis path {
+        fill: none;
+        stroke: white;
+        shape-rendering: crispEdges;
+      }
+      #legend_matrix{
+        position: absolute;
+        right: -235px;
+        top: 290px;
+      }
+      #svg_legend_matrix{
+        padding-right: 50px;
+      }
+      /**********/
       /* DROPDOWN MENU temporaneo*/
       .dropbtn2 {
         margin-right: 300px;

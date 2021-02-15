@@ -39,18 +39,72 @@ var svg_matrix = d3.select("body").append("svg")
   .append("g")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")"); // Senza => no nomi e attaccata
 
+/* LEGEND MATRIX */
+var w = width, h = 50;
 
-// Dropdown elements creation DA ELIMINARE DURANTE IL MERGE
-/*
-for (var k = 0; k < 100; k++) {
-  navLink = document.createElement("a");
-  navLink.id = k;
-  navLink.text = k;
-  navLink.href = "#";
-  navLink.addEventListener("click", matrixReduction);
-  document.getElementById("myDropdown").appendChild(navLink);
-}
-*/
+var key = d3.select("#legend_matrix")
+  .append("svg")
+  .attr("id", "svg_legend_matrix")
+  .attr("width", w)
+  .attr("height", h)
+  .attr("transform", "rotate(-90)");
+
+var legend = key.append("defs")
+  .append("svg:linearGradient")
+  .attr("id", "gradient")
+  .attr("x1", "0%")
+  .attr("y1", "100%")
+  .attr("x2", "100%")
+  .attr("y2", "100%")
+  .attr("spreadMethod", "pad");
+
+legend.append("stop")
+  .attr("offset", "0%")
+  .attr("stop-color", c(0))
+  .attr("stop-opacity", 1);
+
+legend.append("stop")
+  .attr("offset", "33%")
+  .attr("stop-color", c(0.33))
+  .attr("stop-opacity", 1);
+
+legend.append("stop")
+  .attr("offset", "66%")
+  .attr("stop-color", c(0.66))
+  .attr("stop-opacity", 1);
+
+legend.append("stop")
+  .attr("offset", "100%")
+  .attr("stop-color",c(1))
+  .attr("stop-opacity", 1);
+
+key.append("rect")
+  .attr("width", w)
+  .attr("height", h - 30)
+  .style("fill", "url(#gradient)")
+  .attr("transform", "translate(0,10)");
+
+//Same width of the matrix
+var y_leg = d3.scaleLinear()
+  .range([width, 0])
+  .domain([1, 0]);
+
+var yAxis = d3.axisBottom()
+  .scale(y_leg)
+  .ticks(10);
+
+key.append("g")
+  .attr("class", "y axis")
+  .attr("transform", "translate(0,30)")
+  .call(yAxis)
+  .append("text")
+  .attr("transform", "rotate(90)")
+  .attr("y", 0)
+  .attr("dy", ".71em")
+  .style("text-anchor", "end")
+  .text("axis title");
+/****************/
+
 if (firstTime){
   fullMatrix();
   firstTime = false;
@@ -72,7 +126,6 @@ function fullMatrix() {
       // In the end we have matrix[i][j]{x,y,z}
       matrix[i] = d3.range(n).map(function(j) { return {x: j, y: i, z: 0}; });
     });
-
     // Convert links to matrix; count character occurrences.
     crypto_top_100.links.forEach(function(link) {
       // Between source and target (symmetric matrix)
