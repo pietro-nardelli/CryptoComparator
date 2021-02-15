@@ -7,7 +7,7 @@ TODO:
   X] finestrella per visualizzare valore similarità
   X]legenda
   X]create graph of my crypto (name1, name2)
-  Gestire più similarity
+  X]Gestire più similarity
 
 TODO-SCATTER:
   modificare file.json con valori x-y posizioni
@@ -27,13 +27,15 @@ var margin = {top: 30, right: 380, bottom: 50, left: 120},
 
 var x_m = d3.scaleBand().range([0, width]),
     z = d3.scaleLinear().domain([0, 1]).clamp(true),
-
+/*
     c = d3.scaleLinear().range(["#02c8ff", "#ff6600"])
       .domain([0,1]);
-    /*
+
     c = d3.scaleSequential(d3.interpolateSpectral)
     .domain([1,0]);
 */
+  c = d3.scaleSequential(d3.interpolateInferno)
+      .domain([0,1]);
 
 var svg_matrix = d3.select("body").append("svg")
     .attr("id", "svg_matrix")
@@ -109,14 +111,18 @@ key.append("g")
   .text("axis title");
 /****************/
 
+var first_file_json = "data_market_cap";
 if (firstTime){
-  fullMatrix();
+  fullMatrix(first_file_json);
   firstTime = false;
 }
 
 
-function fullMatrix() {
-  d3.json("similarities/data_market_cap.json", function(crypto_top_100) {
+function fullMatrix(file_json) {
+  if (!firstTime) {
+    svg_matrix.selectAll("*").remove();
+  }
+  d3.json("similarities/"+file_json+".json", function(crypto_top_100) {
     var matrix = [],
         nodes = crypto_top_100.nodes,
         n = nodes.length;
@@ -153,7 +159,9 @@ function fullMatrix() {
     };
 
     // The default sort order.
-    x_m.domain(orders.name);
+    var ord_val = document.getElementById("order").value;
+    x_m.domain(orders[ord_val]);
+    //x_m.domain(orders.name);
 
 
     // Generation of the matrix on the webpage
@@ -296,16 +304,15 @@ function fullMatrix() {
 }
 
 
-function matrixReduction(node_name) {
+function matrixReduction(node_name, file_json) {
 
   if (!firstTime) {
     svg_matrix.selectAll("*").remove();
   }
   firstTime = false;
 
-  //var id = this.id;
 
-  d3.json("similarities/data_market_cap.json", function(crypto_top_100) {
+  d3.json("similarities/"+file_json+".json", function(crypto_top_100) {
     var matrix = [],
         nodes = crypto_top_100.nodes,
         n = nodes.length;
@@ -544,4 +551,13 @@ function matrixReduction(node_name) {
     }
 
   });
+}
+
+function full_matrix_or_reducted(last_clicked, data_json){
+  if (last_clicked == ""){
+    fullMatrix(data_json);
+  }
+  else {
+    matrixReduction(last_clicked.name, data_json)
+  }
 }

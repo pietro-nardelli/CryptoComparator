@@ -256,13 +256,14 @@
       }
       #legend_matrix{
         position: absolute;
-        margin-left: 450px;
-        right: 625px;
-        top: 290px;
-        width: 50px;
+        margin-left: 0px;
+        right: 300px;
+        top: 315px;
+        width: 25px;
       }
       #svg_legend_matrix{
-        padding-right: 50px;
+        padding-right: 0px;
+        margin-left:-300px;
       }
       /**********/
       /* DROPDOWN MENU temporaneo*/

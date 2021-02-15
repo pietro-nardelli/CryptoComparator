@@ -205,7 +205,8 @@ def compute_distance(pos, standard_input_list, final_dict, dim_red_flag):
             for j in range(i, len(standard_input_list)):
                 v_j = standard_input_list[j]
                 min_nums = min(len(v_i),len(v_j))
-                val = my_corrcoef(v_i[:min_nums], v_j[:min_nums]) #np.linalg.norm(np.asarray(v_i[:min_nums]) - np.asarray(v_j[:min_nums])) #[-1,1]
+                val = my_corrcoef(v_i[:min_nums], v_j[:min_nums])
+                #val = np.linalg.norm(np.asarray(v_i[:min_nums]) - np.asarray(v_j[:min_nums])) #[-1,1]
                 val = ( val + 1 )/2 # Normalize between [0,1]
                 if (max < val):
                     max = val
@@ -214,7 +215,6 @@ def compute_distance(pos, standard_input_list, final_dict, dim_red_flag):
         # Normalization w.r.t. max
         for link in final_dict['links']:
             link['value'] = link['value']/max
-
     return final_dict
 
 final_dict = import_data ('dataset/100List.csv')
