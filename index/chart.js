@@ -38,20 +38,36 @@ for(i=0;i<number_of_graphs;i++){
 //--------------------------------------------------------------------------------------------------------------------
 
 document.getElementById("MyBtn").addEventListener("click", function() {
+
     if(already_draw){
-        clicked = !clicked;
-        if(clicked) {
-            rel_or_abs = 'absolute';
+        if(true){
+            clicked = !clicked;
+            if(clicked) {
+                rel_or_abs = 'absolute';
+                document.getElementById("MyBtn").innerHTML = rel_or_abs+' scale';
+                functionOnClickSingle(rel_or_abs)
+            }
+            else rel_or_abs = 'relative'
+            document.getElementById("MyBtn").innerHTML = rel_or_abs+' scale';
+            functionOnClickSingle(rel_or_abs)
+        }
+        else{
+            clicked = !clicked;
+            if(clicked) {
+                rel_or_abs = 'absolute';
+                document.getElementById("MyBtn").innerHTML = rel_or_abs+' scale';
+                functionOnClick(rel_or_abs)
+            }
+            else rel_or_abs = 'relative'
             document.getElementById("MyBtn").innerHTML = rel_or_abs+' scale';
             functionOnClick(rel_or_abs)
+
         }
-        else rel_or_abs = 'relative'
-        document.getElementById("MyBtn").innerHTML = rel_or_abs+' scale';
-        functionOnClick(rel_or_abs)
- }
+    }
   });
 
 function functionOnClick(rel_or_abs){
+
 
     let name1 = last_clicked.name
     var path_1 = 'dataset/' + String(name1)+ '.csv';
@@ -97,15 +113,61 @@ function functionOnClick(rel_or_abs){
 }
 
 
+function functionOnClickSingle(rel_or_abs){
+
+    //PER ORA IL CONFRONTO E' FRA QUELLA CHE CLICCO,E Dogecoin.
+    already_draw=true
+    single_chart=true
+    name1 = last_clicked.name
+    var path_1 = 'dataset/' + String(name1)+ '.csv';
+
+    var _data_ = d3.csv(path_1, function(data1) {
+        for(i=0;i<svg_arr.length;i++){ svg_arr[i].selectAll("*").remove(); }
+
+
+        data_charts = []
+
+
+        attr_to_plot = ["close", "market cap", "volume", "high", "low", "open"]
+
+
+        if(need_candlestick==false){
+            var data_final1 = {"name": name1,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
+        
+            print('the blue line is '+ name1)
+
+        }
+        else var data_final1 = {"key": keyword,"values": []}
+
+        data_final1, _ = preprocess_data(data1,need_candlestick=need_candlestick,data_summary=false,data_final1)
+
+
+    
+
+        draw_time_chart(svg_arr[0], margin1, data_final1, attr_to_plot[0], [1,2,3], 0 , number_of_graphs, rel_or_abs=rel_or_abs)
+
+        draw_time_chart(svg_arr[1], margin1, data_final1, attr_to_plot[1], [0,2,3], 1 , number_of_graphs, rel_or_abs=rel_or_abs)
+
+        draw_time_chart(svg_arr[2], margin1, data_final1, attr_to_plot[2], [0,1,3], 2 , number_of_graphs, rel_or_abs=rel_or_abs)
+
+        draw_time_chart(svg_arr[3], margin1, data_final1, attr_to_plot[3], [0,1,2], 3 , number_of_graphs, rel_or_abs=rel_or_abs)
+
+
+})
+}
+
+
 //----------FUNZIONE CHIAMATA ONCLICK PER OGNI CRYPTO---------------------------------------
 
 
 
 var already_draw = false
+var single_chart = false
 
 function createGraphsOfMyCrypto(name1,name2='Dogecoin'){
     //PER ORA IL CONFRONTO E' FRA QUELLA CHE CLICCO,E Dogecoin.
     already_draw=true
+    single_chart=false
     var path_1 = 'dataset/' + String(name1)+ '.csv';
     var path_2 = 'dataset/' + String(name2)+ '.csv';
 
@@ -151,8 +213,47 @@ function createGraphsOfMyCrypto(name1,name2='Dogecoin'){
 
 
 }
-//-----------------------------------------------------------------------------------------
 
+function createSingleGraphsOfMyCrypto(name1){
+    //PER ORA IL CONFRONTO E' FRA QUELLA CHE CLICCO,E Dogecoin.
+    already_draw=true
+    single_chart=true
+    var path_1 = 'dataset/' + String(name1)+ '.csv';
+    
+    var _data_ = d3.csv(path_1, function(data1) {
+        for(i=0;i<svg_arr.length;i++){ svg_arr[i].selectAll("*").remove(); }
+    
+    
+        data_charts = []
+    
+    
+        attr_to_plot = ["close", "market cap", "volume", "high", "low", "open"]
+    
+    
+        if(need_candlestick==false){
+            var data_final1 = {"name": name1,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
+         
+            print('the blue line is '+ name1)
+    
+        }
+        else var data_final = {"key": keyword,"values": []}
+    
+        data_final1, _ = preprocess_data(data1,need_candlestick=need_candlestick,data_summary=false,data_final1)
+    
+    
+        draw_time_chart(svg_arr[0], margin1, data_final1, attr_to_plot[0], [1,2,3], 0 , number_of_graphs, rel_or_abs=rel_or_abs)
+
+        draw_time_chart(svg_arr[1], margin1, data_final1, attr_to_plot[1], [0,2,3], 1 , number_of_graphs, rel_or_abs=rel_or_abs)
+
+        draw_time_chart(svg_arr[2], margin1, data_final1, attr_to_plot[2], [0,1,3], 2 , number_of_graphs, rel_or_abs=rel_or_abs)
+
+        draw_time_chart(svg_arr[3], margin1, data_final1, attr_to_plot[3], [0,1,2], 3 , number_of_graphs, rel_or_abs=rel_or_abs)
+
+
+    })
+
+
+}
 //FUNZIONE PER DISEGNARE GRAFICI INTERAGIBILI E INTERCONNESSI, CON DUE LINEE SOPRA
 
 function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,param,id_graph,number_of_graphs,rel_or_abs){
@@ -417,7 +518,20 @@ function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_gr
     //id is the identification number for the graph.
     //param is a tuple. Contains the identification numbers of all the graphs you want
     //to link the graph to
-    print(data_final['date'].length)
+
+    var Box = svg.append("rect")
+    .attr("x", 0)
+    .attr("y", 0)
+    .attr("width", width1)
+    .attr("height", height1)
+    .attr("fill", "rgb(2, 200, 255)")
+    .attr("opacity", 0.1);
+
+    svg.append("circle").attr("cx",10).attr("cy",20).attr("r", 4).style("fill", 'rgb(255, 102, 0)')
+    svg.append("text").attr("x", 25).attr("y", 20).text(data_final['name'] + ' ' + attr).style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", 'rgb(255, 102, 0)')
+
+
+    //print(data_final['date'].length)
 
     var data = []
 
@@ -445,6 +559,7 @@ function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_gr
         dataFiltered_array = []
         min_array = []
         max_array = []
+        var min_time_span = 182529000 // roughly 2 days
 
         data_array.push(data_charts[id_graph][5])
         x_array.push(x)
@@ -472,8 +587,12 @@ function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_gr
             for(i=0;i<number_of_graphs;i++){x_array[i].domain([4,8])}
 
         }
-        else
-        {
+        //se zoommo in una time window minore di due giorni,non faccio niente
+        else if(Date.parse(x_array[0].invert(extent[1])) - Date.parse(x_array[0].invert(extent[0]))  < min_time_span){
+            svg.select(".brush").call(brush.move, null)
+        }
+        //altrimenti zoomma tranquillamente
+        else{
             for(i=0;i<number_of_graphs;i++){
                 x_array[i].domain([ x_array[i].invert(extent[0]), x_array[i].invert(extent[1]) ])
                 dataFiltered_array[i] = data_array[i].filter(function(d, i) {                           //dataFiltered_array = [dataFiltered,dataFiltered_new,...]
@@ -495,8 +614,9 @@ function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_gr
         for(i=0;i<number_of_graphs;i++){
 
             xAxis_array[i].transition().duration(1000).call(d3.axisBottom(x_array[i]).ticks(7))
-            xAxis_array[i].selectAll("text").style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)");
+            xAxis_array[i].selectAll("text").style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)").attr('fill', 'white');
             yAxis_array[i].transition().duration(1000).call(d3.axisLeft(y_array[i]).ticks(5))
+            yAxis_array[i].selectAll("text").attr('fill', 'white');
             line_array[i].select(".line").transition().duration(1000).attr("d", d3.line().x(function(d) {
                 return x_array[i](d.date) }).y(function(d) { return y_array[i](d.value) }))
         }
@@ -508,8 +628,9 @@ function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_gr
                 x_array[i].domain(d3.extent(data_array[i], function(d) { return d.date; }))
                 y_array[i].domain([0, d3.max(data_array[i], function(d) { return +d.value; })]).range([ height1, 0 ]);
                 xAxis_array[i].transition().duration(1000).call(d3.axisBottom(x_array[i]).ticks(7))
-                xAxis_array[i].selectAll("text").style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)");
+                xAxis_array[i].selectAll("text").style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)").attr('fill', 'white');
                 yAxis_array[i].transition().duration(1000).call(d3.axisLeft(y_array[i]).ticks(5))
+                yAxis_array[i].selectAll("text").attr('fill', 'white');
 
                 line_array[i].select('.line').transition().duration(1000).
                 attr("d", d3.line()
@@ -531,7 +652,7 @@ function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_gr
     // .attr("transform", "translate(0," + height + ")")
     // .call(d3.axisBottom(x));
     var xAxis = svg.append("g").attr("transform", "translate(0," + height1 + ")").call(d3.axisBottom(x).ticks(7))
-    xAxis.selectAll("text")	.style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)");
+    xAxis.selectAll("text")	.style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)").attr('fill', 'white');
 
 
     // Add Y axis
@@ -540,6 +661,7 @@ function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_gr
     .range([ height1, 0 ]);
     var yAxis = svg.append("g")
     .call(d3.axisLeft(y).ticks(5));
+    yAxis.selectAll("text").attr('fill', 'white');
 
     // Add a clipPath: everything out of this area won't be drawn.
     var clip = svg.append("defs").append("svg:clipPath")
@@ -566,13 +688,13 @@ function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_gr
     line.append("path").datum(data).attr("class", "line").attr("fill", "none").attr("stroke", "steelblue").style("opacity",1.0)
     .attr("stroke-width", 1.5).attr("d", d3.line().x(function(d) { return x(d.date) }).y(function(d) { return y(d.value) }))
 
-    svg.append("text")
-    .attr("x", (width1 / 2))
-    .attr("y", 10 - (margin1.top / 2))
-    .attr("text-anchor", "middle")
-    .style("font-size", "16px")
-    .style("text-decoration", "underline")
-    .text(attr + ' vs Date Graph');
+    // svg.append("text")
+    // .attr("x", (width1 / 2))
+    // .attr("y", 10 - (margin1.top / 2))
+    // .attr("text-anchor", "middle")
+    // .style("font-size", "16px")
+    // .style("text-decoration", "underline")
+    // .text(attr + ' vs Date Graph');
 
     data_charts.push([x,xAxis,line,y,yAxis,data])
 
