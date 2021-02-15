@@ -685,7 +685,7 @@ function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_gr
     line.append("g").attr("class", "brush").call(brush);
 
     // Add the line
-    line.append("path").datum(data).attr("class", "line").attr("fill", "none").attr("stroke", "steelblue").style("opacity",1.0)
+    line.append("path").datum(data).attr("class", "line").attr("fill", "none").attr("stroke", 'rgb(255, 102, 0)').style("opacity",1.0)
     .attr("stroke-width", 1.5).attr("d", d3.line().x(function(d) { return x(d.date) }).y(function(d) { return y(d.value) }))
 
     // svg.append("text")
