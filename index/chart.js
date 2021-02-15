@@ -698,7 +698,6 @@ function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_gr
 
     data_charts.push([x,xAxis,line,y,yAxis,data])
 
-
 }
 
 
