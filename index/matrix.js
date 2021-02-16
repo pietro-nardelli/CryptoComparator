@@ -118,7 +118,6 @@ if (firstTime){
 
 
 function fullMatrix(file_json) {
-  console.trace();
   if (!firstTime) {
     svg_matrix.selectAll("*").remove();
   }
@@ -371,7 +370,6 @@ function matrixReduction(node_name, file_json, slider_value) {
     }
 
     order_distance = order_distance.slice(0,n);
-    console.log(order_distance);
 
     // Aggiunto per avere i nodi ordinati secondo index, una volta scelti gli n piu simili
 

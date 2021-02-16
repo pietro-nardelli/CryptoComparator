@@ -135,7 +135,6 @@ function get_random_simmetric(n){
 var matrix_prova = [];
 
 create_100100_matrix ("close", matrix_prova);
-
 function create_100100_matrix (json_file, matrix){
   d3.json("similarities/data_"+json_file+".json", function(data) {
     var nodes = data.nodes,
@@ -157,10 +156,15 @@ function create_100100_matrix (json_file, matrix){
     });
     // Precompute the orders.
     var orders_name = d3.range(n).sort(function(a, b) { return d3.ascending(nodes[a].Name, nodes[b].Name); });
-    matrix = orders_name.map(i => matrix[i]);
-
+    var matrix_temp = new Array(100).fill(0).map(() => new Array(100).fill(0));
+    for (var r=0; r<100; r++) {
+      for (var c=0; c < 100; c++) {
+        matrix_temp[r][c] = matrix[orders_name[r]][orders_name[c]]
+      }
+    }
+    matrix = matrix_temp;
   });
-  return matrix_prova;
+  //return matrix;
 }
 
 
