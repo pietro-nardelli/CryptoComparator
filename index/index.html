@@ -24,8 +24,8 @@
     <!-- slider -->
     <div style="background-color: rgb(53, 53, 53); background-position: 100%;"  class="slidecontainer">
 
-      <div style="float: left;">Value: <span id="demo"></span></div>
-      <input type="range" min="0" max="100" value="0" class="slider" id="myRange">
+      
+
       <!-- matrix order -->
       <button type="button" id='MyBtn' style="position: absoulte; margin-left: 300px; ">absolute scale</button>
       <div style="position: absoulte; margin-left: 700px; color: white; display: inline;">
@@ -40,16 +40,24 @@
     <div id="my_dataviz" data-refresh-interval="500">
       </div>
       <div id="my_dataviz_boxplot" data-refresh-interval="500">
-      </div>
-    <div style="position: absoulte; margin-left: 10px;">
-      <button type="button" id="SIMIL1">SIMIL1!</button>
+    </div>
+
+  <div style="position: absoulte; margin-left: 10px;border: 2px solid rgb(209, 153, 0) ; width: 550px;"> 
+      <input type="range" min="0" max="100" value="0" class="slider" id="myRange" >
+      <br>
+      <div style="float: left;">Value: <span id="demo"></span></div>
+      <br>
+      <button type="button" style="position: absoulte; margin-left: 20px; "id="SIMIL1">SIMIL1!</button>
       <button type="button" style="position: absoulte; margin-left: 20px; " id="SIMIL2">SIMIL2!</button>
       <button type="button" style="position: absoulte; margin-left: 30px; " id="SIMIL3">SIMIL3!</button>
       <button type="button" style="position: absoulte; margin-left: 20px; " id="SIMIL4">SIMIL4!</button>
       <button type="button" style="position: absoulte; margin-left: 30px; " id="SIMIL5">SIMIL5!</button>
       <button type="button" style="position: absoulte; margin-left: 20px; " id="SIMIL0">SIMIL0!</button>
-    </div>
+  
+
+   <div id="graph_div" data-refresh-interval="500"></div>
   </div>
+
   <div id="legend_matrix"></div>
 
   <div style="position:absolute;right: 0px; top: 100px; stroke: rgb(255, 255, 255); border: 2px solid rgb(209, 153, 0) ; width: 220px;">

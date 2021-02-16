@@ -246,7 +246,7 @@ var last_clicked="";
 
 
 //SVG OBJs from d3v3
-var svg = d3v3.select("body").append("svg")
+var svg = d3v3.select("#graph_div").append("svg")
     .attr("id", "svg_graph")
     .attr("width", width)
     .attr("height", height);
@@ -344,9 +344,10 @@ function create_graph(ididix){
                       target:nodes.indexOf(link_to_add[j]),
                       k:tr })
 
-          links.push({source:nodes.indexOf(link_to_add[j]) ,
-                      target:nodes.indexOf(namecoin),
-                      k:tr })}
+          // links.push({source:nodes.indexOf(link_to_add[j]) ,
+          //             target:nodes.indexOf(namecoin),
+          //             k:tr })
+          }
         }
     }
     nodes = nodes.map(function(n){return {name:n, fixed:true , x:getX(n) ,y:getY(n)}
@@ -359,6 +360,7 @@ function create_graph(ididix){
         .enter().append("line")
         .attr("class", "link")
         .attr("target", function(d) { return d.target.name; }) //per ora inutile
+        .attr("k", function(d) { return d.k;  })
         .style("stroke-width", function(d) { return stroke_width_links_mouseout; });
 
     var node = svg.selectAll(".node")
@@ -419,8 +421,8 @@ function create_graph(ididix){
           link.attr("x1", function(d) { return d.source.x; })
               .attr("y1", function(d) { return d.source.y; })
               .attr("x2", function(d) { return d.target.x; })
-              .attr("y2", function(d) { return d.target.y; })
-              .attr("k", function(d) { return d.k;  });  //useless 4 now
+              .attr("y2", function(d) { return d.target.y; });
+           //useless 4 now
 
           node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
 

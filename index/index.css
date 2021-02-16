@@ -14,7 +14,11 @@
   text-shadow: #000 0px 0px 1px; */
   }
 
-
+  /* .button {
+    transition-duration: 0.4s;
+  }
+  */
+   
 
   .node circle{
     cursor:pointer;
