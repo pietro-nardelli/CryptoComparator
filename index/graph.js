@@ -60,8 +60,8 @@ stroke_width_node_circle = '100px'
 radius_node_circle = '15  '
 
 ///SLIDER
-var initial_threshold = 0.9; //THRESHOLD MIN x creare il nodo!
-var initial_threshold_slider = 0.9; //THRESHOLD BASE OF THE SLIDER
+var initial_threshold = 0.95; //THRESHOLD MIN x creare il nodo!
+var initial_threshold_slider = 0.95; //THRESHOLD BASE OF THE SLIDER
 var slider = document.getElementById("myRange");
 var output = document.getElementById("demo");
 output.innerHTML =  rr(slider.value/1000+initial_threshold_slider) ;
