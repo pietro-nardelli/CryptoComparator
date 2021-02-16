@@ -2,7 +2,7 @@
 TODO:
   ..]trovare combinazione colori corretta
   X] sistemare scritte in obliquo per occupare meno spazio
-  collegare lo slider alla matrice
+  X]collegare lo slider alla matrice
   X] al passaggio del mouse grassetto delle scritte
   X] finestrella per visualizzare valore similarità
   X]legenda
@@ -114,11 +114,11 @@ key.append("g")
 var first_file_json = "data_market_cap";
 if (firstTime){
   fullMatrix(first_file_json);
-  firstTime = false;
 }
 
 
 function fullMatrix(file_json) {
+  console.trace();
   if (!firstTime) {
     svg_matrix.selectAll("*").remove();
   }
@@ -206,7 +206,7 @@ function fullMatrix(file_json) {
     // Text on top of the matrix
     column.append("text")
         .attr("x", 6)
-        .attr("y", x_m.bandwidth() / 2)
+        .attr("y",0)
         .attr("dy", ".32em")
         .attr("text-anchor", "start")
         .attr("transform", "rotate(30)")
@@ -305,13 +305,13 @@ function fullMatrix(file_json) {
 
 
 function matrixReduction(node_name, file_json, slider_value) {
+  console.log(arguments.callee.caller.toString())
   console.log(node_name);
   console.log(file_json);
   console.log(slider_value);
   if (!firstTime) {
     svg_matrix.selectAll("*").remove();
   }
-  firstTime = false;
 
   d3.json("similarities/"+file_json+".json", function(crypto_top_100) {
     var matrix = [],
@@ -360,13 +360,14 @@ function matrixReduction(node_name, file_json, slider_value) {
     order_distance = order_distance.sort(function(a, b) { return a.z - b.z; }).reverse();
     //console.log(order_distance);
 
-    console.log(order_distance);
     for (var i = 0; i < n; i++) {
       if (order_distance[i].z < slider_value){
-        console.log(order_distance[i].z)
         n = i+1;
         break;
       }
+    }
+    if (i == 1){
+      n = 1;
     }
 
     order_distance = order_distance.slice(0,n);
@@ -442,13 +443,15 @@ function matrixReduction(node_name, file_json, slider_value) {
         .attr("x1", -width);
 
     // Text on top of the matrix
+    var rotation_col_text = (n <= 10) ? 90  : 30;
+    var y_col_text = (n <= 10) ? -10  : 0;
     column.append("text")
-        .attr("x", -10)
-        .attr("y", x_m.bandwidth() / 2 - 20)
+        .attr("x", -25)
+        .attr("y", y_col_text)
         .attr("dy", ".32em")
         .attr("text-anchor", "start")
         .attr('fill', 'white')
-        .attr("transform", "rotate(60)translate(30)")
+        .attr("transform", "rotate("+rotation_col_text+")translate(30)")
         .attr('font-size', '10px')
         .text(function(d, i) { return ordered_nodes[i].Name; });
 
@@ -561,11 +564,14 @@ function matrixReduction(node_name, file_json, slider_value) {
   });
 }
 
-function full_matrix_or_reducted(last_clicked, data_json){
-  if (last_clicked == ""){
-    fullMatrix(data_json);
+function full_matrix_or_reducted(last_clicked, data_json, actual_t){
+  if (!mouse_down_on_slider && !firstTime) {
+    if (last_clicked == ""){
+      fullMatrix(data_json);
+    }
+    else {
+      matrixReduction(last_clicked.name, data_json, actual_t)
+    }
   }
-  else {
-    matrixReduction(last_clicked.name, data_json)
-  }
+  firstTime = false;
 }

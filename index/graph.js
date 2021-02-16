@@ -66,6 +66,18 @@ var slider = document.getElementById("myRange");
 var output = document.getElementById("demo");
 output.innerHTML =  rr(slider.value/1000+initial_threshold_slider) ;
 actual_t = 0.9; //slider initial value is ?  //NOT USED ANYMORE
+// Useful to avoid refresh of the matrix too many times
+function mouseDownOnSlider () {
+  mouse_down_on_slider = true;
+}
+function mouseUpOnSlider () {
+  mouse_down_on_slider = false;
+  full_matrix_or_reducted (last_clicked, data_json, actual_t);
+}
+slider.addEventListener("mousedown", mouseDownOnSlider);
+slider.addEventListener("mouseup", mouseUpOnSlider);
+var mouse_down_on_slider = false;
+//
 
 function rr(v){return Number(v.toFixed(3))} //3rd decimal n
 
@@ -87,10 +99,9 @@ function slider_update(t) {
   .filter(function(x) { return x.k >= t})
   .style("stroke", color_links)
 
-
+  full_matrix_or_reducted (last_clicked, data_json, t);
   if(last_clicked!="") {
     on_mouseover_function(last_clicked)
-    matrixReduction(last_clicked.name, data_json, actual_t);
   }
   else
   on_mouseout_function()
@@ -278,39 +289,33 @@ var data_json = "data_market_cap" //first attribute
 
 
 document.getElementById("SIMIL1").addEventListener("click", function () {
-  create_graph(1)
   var data_json = "data_market_cap"
-  full_matrix_or_reducted (last_clicked, data_json);
+  create_graph(1)
 } )
 
 document.getElementById("SIMIL2").addEventListener("click", function () {
-  create_graph(2)
   var data_json = "data_volume";
-  full_matrix_or_reducted (last_clicked, data_json);
+  create_graph(2)
 } )
 
 document.getElementById("SIMIL3").addEventListener("click", function () {
-  create_graph(3)
   var data_json = "data_low";
-  full_matrix_or_reducted (last_clicked, data_json);
+  create_graph(3)
 } )
 
 document.getElementById("SIMIL4").addEventListener("click", function () {
-  create_graph(4)
   var data_json = "data_high";
-  full_matrix_or_reducted (last_clicked, data_json);
+  create_graph(4)
 } )
 
 document.getElementById("SIMIL5").addEventListener("click", function () {
-  create_graph(5)
   var data_json = "data_open";
-  full_matrix_or_reducted (last_clicked, data_json);
+  create_graph(5)
 } )
 
 document.getElementById("SIMIL0").addEventListener("click", function () {
-  create_graph(0)
   var data_json = "data_close";
-  full_matrix_or_reducted (last_clicked, data_json);
+  create_graph(0)
 } )
 
 
