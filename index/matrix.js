@@ -10,9 +10,9 @@ TODO-SCATTER:
 
 
 var firstTime = true;
-var margin = {top: 30, right: 380, bottom: 50, left: 120},
-    width = 500,
-    height = 500;
+var margin = {top: 30, right: 380, bottom: 200, left: 120},
+    width = 430,
+    height = 430;
 
 
 var x_m = d3.scaleBand().range([0, width]),
@@ -27,13 +27,13 @@ var x_m = d3.scaleBand().range([0, width]),
   c = d3.scaleSequential(d3.interpolateInferno)
       .domain([0,1]);
 
-var svg_matrix = d3.select("body").append("svg")
+var svg_matrix = d3.select("#matrix_div").append("svg")
     .attr("id", "svg_matrix")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-    .style("margin-left", -margin.left + "px") // delete
+    .style("margin-left", 0 + "px") // delete
   .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")"); // Senza => no nomi e attaccata
+    .attr("transform", "translate(" + 110 + "," + 100 + ")"); // Senza => no nomi e attaccata
 
 /* LEGEND MATRIX */
 var w = width, h = 50;
@@ -293,6 +293,7 @@ function fullMatrix(file_json) {
 
 
 function matrixReduction(node_name, file_json, slider_value) {
+  console.log(slider_value);
   if (!firstTime) {
     svg_matrix.selectAll("*").remove();
   }
