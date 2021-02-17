@@ -33,7 +33,25 @@ var svg_matrix = d3.select("#matrix_div").append("svg")
     .attr("height", height + margin.top + margin.bottom)
     .style("margin-left", 0 + "px") // delete
   .append("g")
-    .attr("transform", "translate(" + 110 + "," + 100 + ")"); // Senza => no nomi e attaccata
+    .attr("transform", "translate(" + 110 + "," + 100 + ")");
+
+d3.select("#svg_matrix")
+    .on("mouseleave", mouseleave_matrix);
+
+
+function mouseleave_matrix() {
+  d3.selectAll(".row text").classed("non-active-x", false);
+  d3.selectAll(".column text").classed("non-active-y", false);
+  d3.selectAll(".row text").classed("active-x", false);
+  d3.selectAll(".column text").classed("active-y", false);
+  d3.selectAll(".row text").classed("activeReduced-x", false);
+  d3.selectAll(".column text").classed("activeReduced-y", false);
+  d3.selectAll(".text").attr('fill', 'red').attr('opacity', 1)
+
+
+}
+
+
 
 /* LEGEND MATRIX */
 var w = width, h = 50;
@@ -221,6 +239,9 @@ function fullMatrix(file_json) {
     function mouseover(p) {
       d3.selectAll(".row text").classed("active-x", function(d, i) { return i == p.y; });
       d3.selectAll(".column text").classed("active-y", function(d, i) { return i == p.x; });
+      d3.selectAll(".row text").classed("non-active-x", function(d, i) { return i != p.y; });
+      d3.selectAll(".column text").classed("non-active-y", function(d, i) { return i != p.x; });
+
 
       var g = svg_matrix.append('g').attr("id", "similarity");
       g.append('rect')
@@ -293,7 +314,6 @@ function fullMatrix(file_json) {
 
 
 function matrixReduction(node_name, file_json, slider_value) {
-  console.log(slider_value);
   if (!firstTime) {
     svg_matrix.selectAll("*").remove();
   }
@@ -461,6 +481,8 @@ function matrixReduction(node_name, file_json, slider_value) {
       // when the i-th x of d element is equal to p.y (or p.x) return true.
       d3.selectAll(".row text").classed("activeReduced-x", function(d, i) { return d[i].x == p.y; });
       d3.selectAll(".column text").classed("activeReduced-y", function(d, i) { return d[i].x == p.x; });
+      d3.selectAll(".row text").classed("non-active-x", function(d, i) { return d[i].x != p.y; });
+      d3.selectAll(".column text").classed("non-active-y", function(d, i) { return d[i].x != p.x; });
 
       for (var i = 0; i<n; i++) {
         if (matrix[0][i].x == p.x){
