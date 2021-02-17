@@ -261,6 +261,58 @@ function create_boxplot(svg,margin1,data_final,attr,color){
 //--------------------------------------------------------------------------------------------------------------------
 
 
+
+function create_scatterplot(svg,margin){
+
+    // set the dimensions and margins of the graph
+    width = 460 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
+    // append the svg object to the body of the page
+    var svg = d3.select("#my_dataviz_boxplot")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+
+    //Read the data
+    d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/2_TwoNum.csv", function(data) {
+
+    print(data)
+
+    // Add X axis
+    var x = d3.scaleLinear()
+    .domain([0, 4000])
+    .range([ 0, width ]);
+    svg.append("g")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(x));
+
+    // Add Y axis
+    var y = d3.scaleLinear()
+    .domain([0, 500000])
+    .range([ height, 0]);
+    svg.append("g")
+    .call(d3.axisLeft(y));
+
+    // Add dots
+    svg.append('g')
+    .selectAll("dot")
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("cx", function (d) { return x(d.GrLivArea); } )
+    .attr("cy", function (d) { return y(d.SalePrice); } )
+    .attr("r", 1.5)
+    .style("fill", "#69b3a2")
+
+    })
+}
+
+
+create_scatterplot(svg,margin1)
 var already_draw = false
 var single_chart = false
 
@@ -297,8 +349,8 @@ function createGraphsOfMyCrypto(name1,name2='Dogecoin'){
             data_final1, _ = preprocess_data(data1,need_candlestick=need_candlestick,data_summary=false,data_final1)
             data_final2, _ = preprocess_data(data2,need_candlestick=need_candlestick,data_summary=false,data_final2)
 
-            create_boxplot(svg_arr_boxplot[0],margin,data_final1,attr_to_plot[0],color=1)
-            create_boxplot(svg_arr_boxplot[1],margin,data_final2,attr_to_plot[0],color=2)
+            // create_boxplot(svg_arr_boxplot[0],margin,data_final1,attr_to_plot[0],color=1)
+            // create_boxplot(svg_arr_boxplot[1],margin,data_final2,attr_to_plot[0],color=2)
 
 
             draw_multilines_time_chart(svg_arr[0],margin1, data_final1,data_final2, attr_to_plot[0], [1,2], 0,number_of_graphs,rel_or_abs=rel_or_abs)
