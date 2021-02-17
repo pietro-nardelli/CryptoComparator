@@ -312,7 +312,7 @@ function getThreshold(source,target,similarity_idx) {
 }
 
 //update_reg_links(0); !! CI SERVE PURE QUESTO PRIMA?
-create_graph(-1)
+create_graph(0)
 var data_json = "data_market_cap" //first attribute
 
 
