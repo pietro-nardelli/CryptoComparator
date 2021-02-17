@@ -88,27 +88,27 @@ function functionOnClick(rel_or_abs){
         var __data_ =  d3.csv(path_2, function(data2) {
 
             for(i=0;i<svg_arr.length;i++){ svg_arr[i].selectAll("*").remove(); }
-    
-    
+
+
             data_charts = []
-    
-    
+
+
             attr_to_plot = ["close", "market cap", "volume", "high", "low", "open"]
-    
-    
+
+
             if(need_candlestick==false){
                 var data_final1 = {"name": name1,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
                 var data_final2 = {"name": name2,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
 
             }
             else var data_final = {"key": keyword,"values": []}
-    
+
             data_final1, _ = preprocess_data(data1,need_candlestick=need_candlestick,data_summary=false,data_final1)
             data_final2, _ = preprocess_data(data2,need_candlestick=need_candlestick,data_summary=false,data_final2)
 
-    
+
             draw_multilines_time_chart(svg_arr[0],margin1, data_final1,data_final2, attr_to_plot[0], [1,2], 0,number_of_graphs,rel_or_abs=rel_or_abs)
-    
+
             draw_multilines_time_chart(svg_arr[1],margin1, data_final1,data_final2, attr_to_plot[1], [0,2], 1,number_of_graphs,rel_or_abs=rel_or_abs)
 
             draw_multilines_time_chart(svg_arr[2],margin1, data_final1,data_final2, attr_to_plot[2], [0,1], 2,number_of_graphs,rel_or_abs=rel_or_abs)
@@ -143,7 +143,7 @@ function functionOnClickSingle(rel_or_abs){
 
         if(need_candlestick==false){
             var data_final1 = {"name": name1,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
-        
+
             print('the blue line is '+ name1)
 
         }
@@ -152,7 +152,7 @@ function functionOnClickSingle(rel_or_abs){
         data_final1, _ = preprocess_data(data1,need_candlestick=need_candlestick,data_summary=false,data_final1)
 
 
-    
+
 
         draw_time_chart(svg_arr[0], margin1, data_final1, attr_to_plot[0], [1,2], 0 , number_of_graphs, rel_or_abs=rel_or_abs)
 
@@ -161,8 +161,8 @@ function functionOnClickSingle(rel_or_abs){
         draw_time_chart(svg_arr[2], margin1, data_final1, attr_to_plot[2], [0,1], 2 , number_of_graphs, rel_or_abs=rel_or_abs)
 
        // draw_time_chart(svg_arr[3], margin1, data_final1, attr_to_plot[3], [0,1,2], 3 , number_of_graphs, rel_or_abs=rel_or_abs)
-       
-       
+
+
     })
 }
 
@@ -329,23 +329,23 @@ function createGraphsOfMyCrypto(name1,name2='Dogecoin'){
             for(i=0;i<svg_arr.length;i++){ svg_arr[i].selectAll("*").remove(); }
             for(i=0;i<svg_arr_boxplot.length;i++){ svg_arr_boxplot[i].selectAll("*").remove(); }
 
-    
+
             data_charts = []
-    
-    
+
+
             attr_to_plot = ["close", "market cap", "volume", "high", "low", "open"]
-    
-    
+
+
             if(need_candlestick==false){
                 var data_final1 = {"name": name1,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
                 var data_final2 = {"name": name2,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
-             
+
                 print('the blue line is '+ name1)
                 print('the red line is '+ name2)
 
             }
             else var data_final = {"key": keyword,"values": []}
-    
+
             data_final1, _ = preprocess_data(data1,need_candlestick=need_candlestick,data_summary=false,data_final1)
             data_final2, _ = preprocess_data(data2,need_candlestick=need_candlestick,data_summary=false,data_final2)
 
@@ -354,7 +354,7 @@ function createGraphsOfMyCrypto(name1,name2='Dogecoin'){
 
 
             draw_multilines_time_chart(svg_arr[0],margin1, data_final1,data_final2, attr_to_plot[0], [1,2], 0,number_of_graphs,rel_or_abs=rel_or_abs)
-    
+
             draw_multilines_time_chart(svg_arr[1],margin1, data_final1,data_final2, attr_to_plot[1], [0,2], 1,number_of_graphs,rel_or_abs=rel_or_abs)
 
             draw_multilines_time_chart(svg_arr[2],margin1, data_final1,data_final2, attr_to_plot[2], [0,1], 2,number_of_graphs,rel_or_abs=rel_or_abs)
@@ -375,29 +375,29 @@ function createSingleGraphsOfMyCrypto(name1){
     already_draw=true
     single_chart=true
     var path_1 = 'dataset/' + String(name1)+ '.csv';
-    
+
     var _data_ = d3.csv(path_1, function(data1) {
 
         for(i=0;i<svg_arr.length;i++){ svg_arr[i].selectAll("*").remove(); }
         for(i=0;i<svg_arr_boxplot.length;i++){ svg_arr_boxplot[i].selectAll("*").remove(); }
 
-    
+
         data_charts = []
-    
-    
+
+
         attr_to_plot = ["close", "market cap", "volume", "high", "low", "open"]
-    
-    
+
+
         if(need_candlestick==false){
             var data_final1 = {"name": name1,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
-         
+
             print('the blue line is '+ name1)
-    
+
         }
         else var data_final = {"key": keyword,"values": []}
-    
+
         data_final1, _ = preprocess_data(data1,need_candlestick=need_candlestick,data_summary=false,data_final1)
-    
+
         create_boxplot(svg_arr_boxplot[0],margin,data_final1,'market cap',1)
 
         draw_time_chart(svg_arr[0], margin1, data_final1, attr_to_plot[0], [1,2], 0 , number_of_graphs, rel_or_abs=rel_or_abs)
@@ -437,12 +437,12 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
 
     var data = []
     var data2 = []
-    max_1_x = Math.max.apply(null, data_final1['date']); 
-    max_2_x = Math.max.apply(null, data_final2['date']); 
-    min_1_x = Math.min.apply(null, data_final1['date']); 
-    min_2_x = Math.min.apply(null, data_final2['date']); 
-    max_1_y = Math.max.apply(null, data_final1[attr]); 
-    max_2_y = Math.max.apply(null, data_final2[attr]); 
+    max_1_x = Math.max.apply(null, data_final1['date']);
+    max_2_x = Math.max.apply(null, data_final2['date']);
+    min_1_x = Math.min.apply(null, data_final1['date']);
+    min_2_x = Math.min.apply(null, data_final2['date']);
+    max_1_y = Math.max.apply(null, data_final1[attr]);
+    max_2_y = Math.max.apply(null, data_final2[attr]);
     true_max_x = new Date(Math.max.apply(null,[max_1_x,max_2_x]))
     true_min_x = new Date(Math.min.apply(null,[min_1_x,min_2_x]))
     true_max_y = Math.max.apply(null,[max_1_y,max_2_y])
@@ -480,7 +480,7 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
         max_array = []
         line2_array = []
         data2_array = []
-        
+
         data_array.push(data_charts[id_graph][5])
         data2_array.push(data_charts[id_graph][7])
         x_array.push(x)
@@ -489,7 +489,7 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
         yAxis_array.push(yAxis)
         line_array.push(line)
         line2_array.push(line2)
-        
+
         var min_time_span = 182529000 // roughly 2 days
         // select a region with boundaries
         var extent = d3.event.selection
@@ -506,7 +506,7 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
 
         }
 
-        
+
         // If no selection, back to initial coordinate. Otherwise, update X,Y axis domain
         if(!extent)
         {
@@ -520,11 +520,11 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
         }
         //altrimenti zoomma tranquillamente
         else{
- 
+
 
             //I compute the time window on the first chart only,since the domains are shared
-            
-            
+
+
             for(i=0;i<number_of_graphs;i++){
 
                 // print([ x_array[i].invert(extent[0]), x_array[i].invert(extent[1]) ])
@@ -553,9 +553,9 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
                 y_array[i].domain([min_array[i],max_array[i]])
             };
             svg.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been don
-            
+
             for(i=0;i<number_of_graphs;i++){
-                
+
                 xAxis_array[i].transition().duration(1000).call(d3.axisBottom(x_array[i]).ticks(7))
                 xAxis_array[i].selectAll("text").style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)").attr('fill', 'white');
                 ;
@@ -566,7 +566,7 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
                     line2_array[i].select(".line").transition().duration(1000).attr("d", d3.line().x(function(d) {
                         return x_array[i](d.date) }).y(function(d) { return y_array[i](d.value) }))
                     }
-                    
+
                 }
         // If user double click, reinitialize the chart
         svg.on("dblclick",function(){

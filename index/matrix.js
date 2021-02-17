@@ -1,14 +1,4 @@
 /*
-TODO:
-  ..]trovare combinazione colori corretta
-  X] sistemare scritte in obliquo per occupare meno spazio
-  X]collegare lo slider alla matrice
-  X] al passaggio del mouse grassetto delle scritte
-  X] finestrella per visualizzare valore similarità
-  X]legenda
-  X]create graph of my crypto (name1, name2)
-  X]Gestire più similarity
-
 TODO-SCATTER:
   modificare file.json con valori x-y posizioni
   scatter plot di pca o MDS
@@ -20,9 +10,9 @@ TODO-SCATTER:
 
 
 var firstTime = true;
-var margin = {top: 30, right: 380, bottom: 50, left: 120},
-    width = 500,
-    height = 500;
+var margin = {top: 30, right: 380, bottom: 200, left: 120},
+    width = 430,
+    height = 430;
 
 
 var x_m = d3.scaleBand().range([0, width]),
@@ -37,13 +27,31 @@ var x_m = d3.scaleBand().range([0, width]),
   c = d3.scaleSequential(d3.interpolateInferno)
       .domain([0,1]);
 
-var svg_matrix = d3.select("body").append("svg")
+var svg_matrix = d3.select("#matrix_div").append("svg")
     .attr("id", "svg_matrix")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-    .style("margin-left", -margin.left + "px") // delete
+    .style("margin-left", 0 + "px") // delete
   .append("g")
-    .attr("transform", "translate(" + margin.left + "," + margin.top + ")"); // Senza => no nomi e attaccata
+    .attr("transform", "translate(" + 110 + "," + 100 + ")");
+
+d3.select("#svg_matrix")
+    .on("mouseleave", mouseleave_matrix);
+
+
+function mouseleave_matrix() {
+  d3.selectAll(".row text").classed("non-active-x", false);
+  d3.selectAll(".column text").classed("non-active-y", false);
+  d3.selectAll(".row text").classed("active-x", false);
+  d3.selectAll(".column text").classed("active-y", false);
+  d3.selectAll(".row text").classed("activeReduced-x", false);
+  d3.selectAll(".column text").classed("activeReduced-y", false);
+  d3.selectAll(".text").attr('fill', 'red').attr('opacity', 1)
+
+
+}
+
+
 
 /* LEGEND MATRIX */
 var w = width, h = 50;
@@ -111,7 +119,7 @@ key.append("g")
   .text("axis title");
 /****************/
 
-var first_file_json = "data_market_cap";
+var first_file_json = "data_close";
 if (firstTime){
   fullMatrix(first_file_json);
 }
@@ -161,7 +169,6 @@ function fullMatrix(file_json) {
     var ord_val = document.getElementById("order").value;
     x_m.domain(orders[ord_val]);
     //x_m.domain(orders.name);
-
 
     // Generation of the matrix on the webpage
     // Rectangle background
@@ -232,6 +239,9 @@ function fullMatrix(file_json) {
     function mouseover(p) {
       d3.selectAll(".row text").classed("active-x", function(d, i) { return i == p.y; });
       d3.selectAll(".column text").classed("active-y", function(d, i) { return i == p.x; });
+      d3.selectAll(".row text").classed("non-active-x", function(d, i) { return i != p.y; });
+      d3.selectAll(".column text").classed("non-active-y", function(d, i) { return i != p.x; });
+
 
       var g = svg_matrix.append('g').attr("id", "similarity");
       g.append('rect')
@@ -260,7 +270,7 @@ function fullMatrix(file_json) {
       .attr("x", function(d) { return x_m(p.x)-40; })
       .attr("y", function(d) { return x_m(p.y)+55; })
       .style("font-size", "15px")
-      .text(p.z.toFixed(4));
+      .text(p.z.toFixed(3));
 
     }
 
@@ -304,10 +314,6 @@ function fullMatrix(file_json) {
 
 
 function matrixReduction(node_name, file_json, slider_value) {
-  console.log(arguments.callee.caller.toString())
-  console.log(node_name);
-  console.log(file_json);
-  console.log(slider_value);
   if (!firstTime) {
     svg_matrix.selectAll("*").remove();
   }
@@ -360,8 +366,8 @@ function matrixReduction(node_name, file_json, slider_value) {
     //console.log(order_distance);
 
     for (var i = 0; i < n; i++) {
-      if (order_distance[i].z < slider_value){
-        n = i+1;
+      if (order_distance[i].z.toFixed(3) < slider_value){
+        n = i;
         break;
       }
     }
@@ -370,7 +376,6 @@ function matrixReduction(node_name, file_json, slider_value) {
     }
 
     order_distance = order_distance.slice(0,n);
-
     // Aggiunto per avere i nodi ordinati secondo index, una volta scelti gli n piu simili
 
     // Reorder the matrix based on the selected element
@@ -476,6 +481,8 @@ function matrixReduction(node_name, file_json, slider_value) {
       // when the i-th x of d element is equal to p.y (or p.x) return true.
       d3.selectAll(".row text").classed("activeReduced-x", function(d, i) { return d[i].x == p.y; });
       d3.selectAll(".column text").classed("activeReduced-y", function(d, i) { return d[i].x == p.x; });
+      d3.selectAll(".row text").classed("non-active-x", function(d, i) { return d[i].x != p.y; });
+      d3.selectAll(".column text").classed("non-active-y", function(d, i) { return d[i].x != p.x; });
 
       for (var i = 0; i<n; i++) {
         if (matrix[0][i].x == p.x){
@@ -516,10 +523,7 @@ function matrixReduction(node_name, file_json, slider_value) {
       .attr("x", function(d) { return x_m(simil_x)-40; })
       .attr("y", function(d) { return x_m(simil_y)+95; })
       .style("font-size", "15px")
-      .text(p.z.toFixed(4));
-
-
-
+      .text(p.z.toFixed(3));
     }
 
     function mouseout() {
@@ -563,13 +567,16 @@ function matrixReduction(node_name, file_json, slider_value) {
 }
 
 function full_matrix_or_reducted(last_clicked, data_json, actual_t){
-  if (!mouse_down_on_slider && !firstTime) {
-    if (last_clicked == ""){
+  if (!firstTime) {
+    if (last_clicked == "" && mouse_down_on_slider==-1){
       fullMatrix(data_json);
     }
-    else {
+    else if (last_clicked != "" && (mouse_down_on_slider==0 || mouse_down_on_slider== -1)) {
       matrixReduction(last_clicked.name, data_json, actual_t)
     }
+  }
+  if (mouse_down_on_slider == 0) {
+    mouse_down_on_slider = -1;
   }
   firstTime = false;
 }

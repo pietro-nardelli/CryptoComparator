@@ -166,9 +166,15 @@ dim_reduction_alg = 'mds'
 
 final_dict = import_data ('dataset/100List.csv')
 nodes_id, pos, standard_input_list = dim_red_computation(final_dict, dim_reduction_alg=dim_reduction_alg)
-plot_dim_red(nodes_id, pos)
+#plot_dim_red(nodes_id, pos)
 final_dict = compute_distance(pos, standard_input_list, final_dict, dim_red_flag=True)
 
+pos_dict = {} # {}
+for i,node in enumerate(final_dict['nodes']):
+    pos_dict[i] = [pos[i][0], pos[i][1]]
 
 with open(dim_reduction_alg+'.json', 'w') as f:
     json.dump(final_dict,f)
+
+with open('positions.json', 'w') as f:
+    json.dump(pos_dict,f)
