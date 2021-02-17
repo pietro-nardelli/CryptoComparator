@@ -28,6 +28,7 @@
 ///DATABASE
 var data_reg = {}  //REG NAME ID ECC
 var name_arr = []  //ARR with names only
+var name_arr_not_sorted = []
 
 //D3 OBJ
 var width = 2700;  //d3 object width
@@ -62,9 +63,10 @@ radius_node_circle = '15  '
 ///SLIDER
 var initial_threshold = 0.95; //THRESHOLD MIN x creare il nodo!
 var initial_threshold_slider = 0.95; //THRESHOLD BASE OF THE SLIDER
+var fix_val_slider = 2 //2 if 0.95, 0 if 0.9, 0.5 if 0.8 ..
 var slider = document.getElementById("myRange");
 var output = document.getElementById("demo");
-output.innerHTML =  rr(slider.value/1000+initial_threshold_slider) ;
+output.innerHTML =  rr(slider.value/(1000*fix_val_slider)+initial_threshold_slider) ;
 actual_t = 0.9; //slider initial value is ?  //NOT USED ANYMORE
 // Useful to avoid refresh of the matrix too many times
 function mouseDownOnSlider () {
@@ -82,8 +84,9 @@ var mouse_down_on_slider = false;
 function rr(v){return Number(v.toFixed(3))} //3rd decimal n
 
 slider.oninput = function() {
-  output.innerHTML = rr(this.value/1000+initial_threshold_slider);
-  actual_t = rr((this.value/1000)+initial_threshold_slider); // slider range 0-100 norm in 0 1
+  
+  actual_t = rr((this.value/(1000*fix_val_slider))+initial_threshold_slider); // slider range 0-100 norm in 0 1
+  output.innerHTML = actual_t;
   slider_update(actual_t)
 }
 
@@ -135,10 +138,11 @@ function get_random_simmetric(n){
 var matrix_prova = [];
 
 create_100100_matrix ("close", matrix_prova);
+
 function create_100100_matrix (json_file, matrix){
   d3.json("similarities/data_"+json_file+".json", function(data) {
     var nodes = data.nodes,
-        n = nodes.length;
+          n = nodes.length;
     // Compute index per node.
     nodes.forEach(function(node, i) {
       node.index = i;     // Initialize attribute "index"
@@ -146,7 +150,7 @@ function create_100100_matrix (json_file, matrix){
       // Each row of the matrix contains an array in range n ([0,...,99])
       // and "map" will access this value and return an object {x,y,z}
       // In the end we have matrix[i][j]{x,y,z}
-      matrix[i] = d3.range(n).map(function(j) { return 0 });
+      matrix[i] = d3.range(n).fill(0);
     });
     // Convert links to matrix; count character occurrences.
     data.links.forEach(function(link) {
@@ -154,17 +158,36 @@ function create_100100_matrix (json_file, matrix){
       matrix[link.source][link.target] = rr(link.value);
       matrix[link.target][link.source] = rr(link.value);
     });
-    // Precompute the orders.
-    var orders_name = d3.range(n).sort(function(a, b) { return d3.ascending(nodes[a].Name, nodes[b].Name); });
-    var matrix_temp = new Array(100).fill(0).map(() => new Array(100).fill(0));
-    for (var r=0; r<100; r++) {
-      for (var c=0; c < 100; c++) {
-        matrix_temp[r][c] = matrix[orders_name[r]][orders_name[c]]
+    
+    test = Array(100).fill(Array(100))
+
+    for (var i = 0; i < 100; i++) {
+      for (var j = 0; j < 100; j++) {
+        test[i][j] = matrix[name_arr_not_sorted.indexOf(name_arr[i])][name_arr_not_sorted.indexOf(name_arr[j])]
       }
     }
-    matrix = matrix_temp;
+    // var orders_name = d3.range(n).sort(function(a, b) { return d3.ascending(nodes[a].Name, nodes[b].Name); });
+    // var matrix_temp = [new Array(100).map(() => new Array(100).fill(0))];
+    // for (var r = 0; r < 100; r++) {
+    //   for (var c = 0; c < 100; c++) {
+    //     matrix_temp[r][c] = matrix[orders_name[r]][orders_name[c]]
+    //   }
+    // }
+    matrix = test;
   });
   //return matrix;
+}
+
+              
+
+function reshape(q) {
+  var w = []   
+  for (var i = 0; i < 100; i++) {
+     aux = new Array(100).fill(0)
+       for (var j = 0; j < 100; j++) {
+         aux[j] = q[name_arr_not_sorted.indexOf(name_arr[i])][name_arr_not_sorted.indexOf(name_arr[j])]}
+     w.push(aux)}
+  return w;
 }
 
 
@@ -236,6 +259,7 @@ d3v3.csv("dataset/100List.csv", function(data) {
   for (var i = 0; i < data.length; i++) {
     name_arr = name_arr.concat(data[i].Name)  //fill name_arr with names
   }
+  name_arr_not_sorted = name_arr.concat()
   name_arr.sort() //alphabetical order
 
   for (var i = 0; i < name_arr.length; i++) {  //create in data reg[name] an entry with (x,y),name
@@ -330,6 +354,9 @@ function create_graph(ididix){
     svg.selectAll("*").remove()
 
     index_of_similarity_in_use = ididix
+
+    for(var i = 0; i<6 ; i++){
+      arr_similarity_matrix[i] = reshape(arr_similarity_matrix[i])}
 
     update_reg_links(index_of_similarity_in_use)
 
