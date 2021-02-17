@@ -346,6 +346,7 @@ document.getElementById("SIMIL0").addEventListener("click", function () {
   create_graph(0)
 } )
 
+var reshape_flag = 1;
 
 function create_graph(ididix){
 
@@ -355,9 +356,11 @@ function create_graph(ididix){
 
     index_of_similarity_in_use = ididix
 
+    if(reshape_flag==1){
+    reshape_flag = 0
     for(var i = 0; i<6 ; i++){
       arr_similarity_matrix[i] = reshape(arr_similarity_matrix[i])}
-
+    }
     update_reg_links(index_of_similarity_in_use)
 
 
