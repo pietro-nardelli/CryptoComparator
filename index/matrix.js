@@ -101,13 +101,14 @@ key.append("g")
   .text("axis title");
 /****************/
 
-var first_file_json = "data_market_cap";
+var first_file_json = "data_close";
 if (firstTime){
   fullMatrix(first_file_json);
 }
 
 
 function fullMatrix(file_json) {
+  console.log(file_json);
   if (!firstTime) {
     svg_matrix.selectAll("*").remove();
   }
@@ -151,7 +152,6 @@ function fullMatrix(file_json) {
     var ord_val = document.getElementById("order").value;
     x_m.domain(orders[ord_val]);
     //x_m.domain(orders.name);
-
 
     // Generation of the matrix on the webpage
     // Rectangle background

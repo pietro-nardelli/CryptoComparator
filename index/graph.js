@@ -313,31 +313,31 @@ function getThreshold(source,target,similarity_idx) {
 
 //update_reg_links(0); !! CI SERVE PURE QUESTO PRIMA?
 create_graph(0)
-var data_json = "data_market_cap" //first attribute
+var data_json = "data_close" //first attribute
 
 
 document.getElementById("SIMIL1").addEventListener("click", function () {
-  data_json = "data_market_cap"
+  data_json = "data_high"
   create_graph(1)
 } )
 
 document.getElementById("SIMIL2").addEventListener("click", function () {
-  data_json = "data_volume";
+  data_json = "data_low";
   create_graph(2)
 } )
 
 document.getElementById("SIMIL3").addEventListener("click", function () {
-  data_json = "data_low";
+  data_json = "data_market_cap";
   create_graph(3)
 } )
 
 document.getElementById("SIMIL4").addEventListener("click", function () {
-  data_json = "data_high";
+  data_json = "data_open";
   create_graph(4)
 } )
 
 document.getElementById("SIMIL5").addEventListener("click", function () {
-  data_json = "data_open";
+  data_json = "data_volume";
   create_graph(5)
 } )
 
