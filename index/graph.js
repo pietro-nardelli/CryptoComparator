@@ -70,15 +70,15 @@ output.innerHTML =  rr(slider.value/(1000*fix_val_slider)+initial_threshold_slid
 actual_t = 0.9; //slider initial value is ?  //NOT USED ANYMORE
 // Useful to avoid refresh of the matrix too many times
 function mouseDownOnSlider () {
-  mouse_down_on_slider = true;
+  mouse_down_on_slider = 1; //Click
 }
 function mouseUpOnSlider () {
-  mouse_down_on_slider = false;
+  mouse_down_on_slider = 0; // Unclick
   full_matrix_or_reducted (last_clicked, data_json, actual_t);
 }
 slider.addEventListener("mousedown", mouseDownOnSlider);
 slider.addEventListener("mouseup", mouseUpOnSlider);
-var mouse_down_on_slider = false;
+var mouse_down_on_slider = -1; // No click/unclick
 //
 
 function rr(v){return Number(v.toFixed(3))} //3rd decimal n

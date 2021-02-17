@@ -108,7 +108,6 @@ if (firstTime){
 
 
 function fullMatrix(file_json) {
-  console.log(file_json);
   if (!firstTime) {
     svg_matrix.selectAll("*").remove();
   }
@@ -545,13 +544,16 @@ function matrixReduction(node_name, file_json, slider_value) {
 }
 
 function full_matrix_or_reducted(last_clicked, data_json, actual_t){
-  if (!mouse_down_on_slider && !firstTime) {
-    if (last_clicked == ""){
+  if (!firstTime) {
+    if (last_clicked == "" && mouse_down_on_slider==-1){
       fullMatrix(data_json);
     }
-    else {
+    else if (last_clicked != "" && (mouse_down_on_slider==0 || mouse_down_on_slider== -1)) {
       matrixReduction(last_clicked.name, data_json, actual_t)
     }
+  }
+  if (mouse_down_on_slider == 0) {
+    mouse_down_on_slider = -1;
   }
   firstTime = false;
 }

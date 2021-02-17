@@ -29,17 +29,11 @@
       <div style="position: absoulte; margin-left: 700px; color: white; display: inline;">
         Matrix order:
         <select id="order">
-          <option value="name" style="font-family : inherit;">by Name</option>
-          <option value="count" style="font-family : inherit;">by Frequency</option>
+          <option value="count" style="font-family : inherit;">Frequency</option>
+          <option value="name" style="font-family : inherit;">Name</option>
         </select>
       </p>
     </div>
-
-    <div id="my_dataviz" data-refresh-interval="500">
-      </div>
-      <div id="my_dataviz_boxplot" data-refresh-interval="500">
-    </div>
-
   <div style="position: absoulte; margin-left: 10px;border: 2px solid rgb(209, 153, 0) ; width: 550px; ">
       <input style=" width: 350px" type="range" min="0" max="100" value="0" class="slider" id="myRange" >
       <br>
@@ -53,6 +47,10 @@
       <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL0">SIMIL0!</button>
     </div>
   </div>
+<div id="my_dataviz" data-refresh-interval="500">
+  </div>
+  <div id="my_dataviz_boxplot" data-refresh-interval="500">
+</div>
  <div id="graph_div" data-refresh-interval="500"></div>
 
   <div id="legend_matrix"></div>
