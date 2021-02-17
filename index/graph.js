@@ -67,7 +67,7 @@ var fix_val_slider = 2 //2 if 0.95, 0 if 0.9, 0.5 if 0.8 ..
 var slider = document.getElementById("myRange");
 var output = document.getElementById("demo");
 output.innerHTML =  rr(slider.value/(1000*fix_val_slider)+initial_threshold_slider) ;
-actual_t = 0.9; //slider initial value is ?  //NOT USED ANYMORE
+actual_t = initial_threshold_slider; //slider initial value is ?  //NOT USED ANYMORE
 // Useful to avoid refresh of the matrix too many times
 function mouseDownOnSlider () {
   mouse_down_on_slider = 1; //Click
