@@ -260,7 +260,7 @@ function fullMatrix(file_json) {
       .attr("x", function(d) { return x_m(p.x)-40; })
       .attr("y", function(d) { return x_m(p.y)+55; })
       .style("font-size", "15px")
-      .text(p.z.toFixed(4));
+      .text(p.z.toFixed(3));
 
     }
 
@@ -304,10 +304,6 @@ function fullMatrix(file_json) {
 
 
 function matrixReduction(node_name, file_json, slider_value) {
-  console.log(arguments.callee.caller.toString())
-  console.log(node_name);
-  console.log(file_json);
-  console.log(slider_value);
   if (!firstTime) {
     svg_matrix.selectAll("*").remove();
   }
@@ -360,8 +356,8 @@ function matrixReduction(node_name, file_json, slider_value) {
     //console.log(order_distance);
 
     for (var i = 0; i < n; i++) {
-      if (order_distance[i].z < slider_value){
-        n = i+1;
+      if (order_distance[i].z.toFixed(3) < slider_value){
+        n = i;
         break;
       }
     }
@@ -370,7 +366,6 @@ function matrixReduction(node_name, file_json, slider_value) {
     }
 
     order_distance = order_distance.slice(0,n);
-
     // Aggiunto per avere i nodi ordinati secondo index, una volta scelti gli n piu simili
 
     // Reorder the matrix based on the selected element
@@ -516,10 +511,7 @@ function matrixReduction(node_name, file_json, slider_value) {
       .attr("x", function(d) { return x_m(simil_x)-40; })
       .attr("y", function(d) { return x_m(simil_y)+95; })
       .style("font-size", "15px")
-      .text(p.z.toFixed(4));
-
-
-
+      .text(p.z.toFixed(3));
     }
 
     function mouseout() {
