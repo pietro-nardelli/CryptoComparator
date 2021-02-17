@@ -1,14 +1,4 @@
 /*
-TODO:
-  ..]trovare combinazione colori corretta
-  X] sistemare scritte in obliquo per occupare meno spazio
-  X]collegare lo slider alla matrice
-  X] al passaggio del mouse grassetto delle scritte
-  X] finestrella per visualizzare valore similarità
-  X]legenda
-  X]create graph of my crypto (name1, name2)
-  X]Gestire più similarity
-
 TODO-SCATTER:
   modificare file.json con valori x-y posizioni
   scatter plot di pca o MDS

@@ -22,17 +22,15 @@
     <!-- This will serve as a container for our chart. This does not have to be a div, and can in fact, just be the body if you want. -->
     <!--<div style="position: relative"><div id="my-chart"></div></div>-->
     <!-- slider -->
-    <div style="background-color: rgb(53, 53, 53); background-position: 100%;"  class="slidecontainer">
+    <div class="menu">
+      Cryptocurrency comparator
+      <button type="button" id='MyBtn' style="position: absoulte; margin-left: 300px; font-family : inherit;">absolute scale</button>  <!-- VA MESSO DA UN'ALTRA PARTE -->
 
-      
-
-      <!-- matrix order -->
-      <button type="button" id='MyBtn' style="position: absoulte; margin-left: 300px; ">absolute scale</button>
       <div style="position: absoulte; margin-left: 700px; color: white; display: inline;">
         Matrix order:
         <select id="order">
-          <option value="name">by Name</option>
-          <option value="count">by Frequency</option>
+          <option value="name" style="font-family : inherit;">by Name</option>
+          <option value="count" style="font-family : inherit;">by Frequency</option>
         </select>
       </p>
     </div>
@@ -42,26 +40,25 @@
       <div id="my_dataviz_boxplot" data-refresh-interval="500">
     </div>
 
-  <div style="position: absoulte; margin-left: 10px;border: 2px solid rgb(209, 153, 0) ; width: 550px;"> 
+  <div style="position: absoulte; margin-left: 10px;border: 2px solid rgb(209, 153, 0) ; width: 550px; ">
       <input style=" width: 350px" type="range" min="0" max="100" value="0" class="slider" id="myRange" >
       <br>
       <div style="float: left;">Value: <span id="demo"></span></div>
       <br>
-      <button type="button" style="position: absoulte; margin-left: 20px; "id="SIMIL1">SIMIL1!</button>
-      <button type="button" style="position: absoulte; margin-left: 20px; " id="SIMIL2">SIMIL2!</button>
-      <button type="button" style="position: absoulte; margin-left: 30px; " id="SIMIL3">SIMIL3!</button>
-      <button type="button" style="position: absoulte; margin-left: 20px; " id="SIMIL4">SIMIL4!</button>
-      <button type="button" style="position: absoulte; margin-left: 30px; " id="SIMIL5">SIMIL5!</button>
-      <button type="button" style="position: absoulte; margin-left: 20px; " id="SIMIL0">SIMIL0!</button>
-  
-
-   <div id="graph_div" data-refresh-interval="500"></div>
+      <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL1">SIMIL1!</button>
+      <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL2">SIMIL2!</button>
+      <button type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;" id="SIMIL3">SIMIL3!</button>
+      <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL4">SIMIL4!</button>
+      <button type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;" id="SIMIL5">SIMIL5!</button>
+      <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL0">SIMIL0!</button>
+    </div>
   </div>
+ <div id="graph_div" data-refresh-interval="500"></div>
 
   <div id="legend_matrix"></div>
 
   <div style="position:absolute;right: 0px; top: 100px; stroke: rgb(255, 255, 255); border: 2px solid rgb(209, 153, 0) ; width: 220px;">
-  <a class="twitter-timeline" data-lang="en" data-width="250" data-height="400" data-dnt="true" data-theme="dark" href="https://twitter.com/CryptoBoomNews">Tweets </a> 
+  <a class="twitter-timeline" data-lang="en" data-width="250" data-height="400" data-dnt="true" data-theme="dark" href="https://twitter.com/CryptoBoomNews">Tweets </a>
   <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
   </div>
 
@@ -96,6 +93,9 @@ window.onclick = function(event) {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v2.min.js"></script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
 <script src="graph.js" defer ></script>
 <script src="chart.js" defer ></script>
 <script src="matrix.js" defer ></script>

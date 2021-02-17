@@ -1,3 +1,23 @@
+body {
+  background-color: rgb(53, 53, 53);
+  font-family: "Nunito","PT Serif", serif;
+  /*margin: 1em auto 4em auto;*/
+  position: relative;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+menu {
+  background-color: rgb(53, 53, 53);
+  background-position: 100%;
+}
+
+.button {
+  font-family : inherit;
+
+}
+
+
 .link {
     stroke: rgb(2, 200, 255);
     stroke-width:1px;
@@ -23,11 +43,11 @@
     -webkit-transition: .2s;
     transition: opacity .2s;
   }
-  
+
   .slider:hover {
     opacity: 1;
   }
-  
+
   .slider::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
@@ -37,7 +57,7 @@
     background: #0099ff;
     cursor: pointer;
   }
-  
+
   .slider::-moz-range-thumb {
     width: 15px;
     height: 15px;
@@ -49,12 +69,12 @@
   /*
 
   text-shadow: #000 0px 0px 1px; */
-  
+
   /* .button {
     transition-duration: 0.4s;
   }
   */
-   
+
 
   .node circle{
     cursor:pointer;
@@ -80,17 +100,10 @@
         min-width: 1040px;
       }
 
-      body {
-        background-color: rgb(53, 53, 53);
-        font-family: "PT Serif", serif;
-        /*margin: 1em auto 4em auto;*/
-        position: relative;
-        width: 100%;
-        overflow-x: hidden;
-      }
+
 
       header, footer, aside, h1, h2, h3, h4 {
-        font-family: "PT Sans", sans-serif;
+        font-family: "Nunito","PT Serif", serif;
       }
 
       h1, h2, h3, h4 {
@@ -167,7 +180,7 @@
       }
 
       pre, code, textarea {
-        font-family: "Menlo", monospace;
+        font-family: "Nunito","PT Serif", serif;
       }
 
       code {
@@ -213,7 +226,8 @@
       }
 
       #svg_matrix {
-        font: 10px sans-serif;
+        font: 10px;
+        font-family : inherit;
         margin-right: 50px;
         float: right;
         zoom: 0.8;
@@ -295,6 +309,10 @@
         stroke: white;
         shape-rendering: crispEdges;
       }
+
+      #order {
+        font-family : inherit;
+      }
       #legend_matrix{
         position: absolute;
         margin-left: 0px;
@@ -307,59 +325,17 @@
         padding-right: 0px;
         margin-left:-300px;
       }
+
+      tick {
+        font-family: inherit;
+      }
       /**********/
-      /* DROPDOWN MENU temporaneo*/
-      .dropbtn2 {
-        margin-right: 300px;
-        background-color: #3498DB;
-        color: white;
-        padding: 16px;
-        font-size: 16px;
-        border: none;
-        cursor: pointer;
-      }
-
-      .dropbtn2:hover, .dropbtn2:focus {
-        background-color: #2980B9;
-      }
-
-      .dropdown2 {
-        position: relative;
-        display: inline-block;
-      }
-
-      .dropdown-content2 {
-        display: none;
-        position: absolute;
-        background-color: #f1f1f1;
-        min-width: 160px;
-        overflow: auto;
-        box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-        z-index: 1;
-      }
-
-      .dropdown-content2 a {
-        color: black;
-        padding: 12px 16px;
-        text-decoration: none;
-        display: block;
-      }
-
-      .dropdown2 a:hover {background-color: #ddd;}
-
-      .show {display: block;}
-
-
-      /* Dropdown button on hover & focus */
-      .dropbtn2:hover, .dropbtn2:focus {
-        background-color: #2980B9;
-      }
-
       /****************************** MATTEO */
     #my_dataviz {
       position:absolute;
       float: left;
       margin-top: 550px;
+      style="font-family : inherit;"
     }
     #my_dataviz_boxplot {
       position:absolute;
@@ -367,6 +343,7 @@
       margin-left: 865px;
       width: 600px;
       height: 300px;
+      style="font-family : inherit;"
     }
 
       /* The container <div> - needed to position the dropdown content */

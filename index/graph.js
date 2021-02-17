@@ -84,7 +84,7 @@ var mouse_down_on_slider = false;
 function rr(v){return Number(v.toFixed(3))} //3rd decimal n
 
 slider.oninput = function() {
-  
+
   actual_t = rr((this.value/(1000*fix_val_slider))+initial_threshold_slider); // slider range 0-100 norm in 0 1
   output.innerHTML = actual_t;
   slider_update(actual_t)
@@ -158,7 +158,7 @@ function create_100100_matrix (json_file, matrix){
       matrix[link.source][link.target] = rr(link.value);
       matrix[link.target][link.source] = rr(link.value);
     });
-    
+
     test = Array(100).fill(Array(100))
 
     for (var i = 0; i < 100; i++) {
@@ -178,10 +178,10 @@ function create_100100_matrix (json_file, matrix){
   //return matrix;
 }
 
-              
+
 
 function reshape(q) {
-  var w = []   
+  var w = []
   for (var i = 0; i < 100; i++) {
      aux = new Array(100).fill(0)
        for (var j = 0; j < 100; j++) {
@@ -317,32 +317,32 @@ var data_json = "data_market_cap" //first attribute
 
 
 document.getElementById("SIMIL1").addEventListener("click", function () {
-  var data_json = "data_market_cap"
+  data_json = "data_market_cap"
   create_graph(1)
 } )
 
 document.getElementById("SIMIL2").addEventListener("click", function () {
-  var data_json = "data_volume";
+  data_json = "data_volume";
   create_graph(2)
 } )
 
 document.getElementById("SIMIL3").addEventListener("click", function () {
-  var data_json = "data_low";
+  data_json = "data_low";
   create_graph(3)
 } )
 
 document.getElementById("SIMIL4").addEventListener("click", function () {
-  var data_json = "data_high";
+  data_json = "data_high";
   create_graph(4)
 } )
 
 document.getElementById("SIMIL5").addEventListener("click", function () {
-  var data_json = "data_open";
+  data_json = "data_open";
   create_graph(5)
 } )
 
 document.getElementById("SIMIL0").addEventListener("click", function () {
-  var data_json = "data_close";
+  data_json = "data_close";
   create_graph(0)
 } )
 
