@@ -171,7 +171,7 @@ final_dict = compute_distance(pos, standard_input_list, final_dict, dim_red_flag
 
 pos_dict = {} # {}
 for i,node in enumerate(final_dict['nodes']):
-    pos_dict[i] = {node['Name'] : [pos[i][0], pos[i][1]]}
+    pos_dict[i] = [pos[i][0], pos[i][1]]
 
 with open(dim_reduction_alg+'.json', 'w') as f:
     json.dump(final_dict,f)
