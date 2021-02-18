@@ -312,7 +312,7 @@ function create_scatterplot(svg,margin){
 }
 
 
-//create_scatterplot(svg,margin1)
+create_scatterplot(svg,margin1)
 var already_draw = false
 var single_chart = false
 
