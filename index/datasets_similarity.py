@@ -117,49 +117,6 @@ def import_data (path:str):
     return dictionary
 
 
-# Preprocess data and compute MDS
-def mds_computation (dictionary):
-    standard_input_list = []
-    nodes_id = []
-
-    for node in dictionary['nodes']:
-        nodes_id.append(node['#'])
-
-        node_values = []
-
-        node_values.append(node['Market Cap'])
-        node_values.append(node['Price'])
-        node_values.append(node['Circulating Supply'])
-        node_values.append(node['Volume (24h)'])
-        node_values.append(node['% Change (24h)'])
-
-        standard_input_list.append(node_values)
-
-    #data standardization
-    std_scale = preprocessing.StandardScaler().fit(standard_input_list)
-    standard_input_list= std_scale.transform(standard_input_list)
-
-    mds = manifold.MDS(n_components=2, dissimilarity="euclidean",random_state=2)
-    pos = mds.fit(standard_input_list).embedding_
-
-    return nodes_id,pos,standard_input_list
-
-def plot_mds(nodes_id, pos):
-    # Scatter plot without labels
-    plt.scatter(pos[:, 0], pos[:, 1], color='red',s=10, lw=0, label='Crypto ')
-    plt.legend(scatterpoints=1, loc='best', shadow=False)
-    plt.show()
-
-    # Scatter plot with labels: each label is the identifier of the cryptocurrency
-    for label, x, y in zip(nodes_id[:], pos[:, 0], pos[:, 1]):
-
-        plt.annotate(
-            label,
-            xy = (x, y), xytext = (7, -5),
-            textcoords = 'offset points', ha = 'right', va = 'bottom',
-            bbox = dict(boxstyle = 'round,pad=0.1', fc = 'red', alpha = 0.5))
-    plt.show()
-
 '''
 Input:
     pos:          positions in 2-Dim space from MDS
@@ -179,42 +136,25 @@ def my_corrcoef( x, y ):
     return (( x - mean_x ) * ( y - mean_y )).sum() / n / ( std_x * std_y )
 
 
-def compute_distance(pos, standard_input_list, final_dict, dim_red_flag):
+def compute_similarity_t0(standard_input_list, final_dict):
     final_dict['links'] = []
-    max = 0
-    # Compute distance with MDS
-    if (dim_red_flag):
-        for i in range(len(pos)):
-            v_i = pos[i]
-            for j in range(i, len(pos)):
-                v_j = pos[j]
-                val = np.linalg.norm(v_i - v_j)
-                # Compute max value for normalization
-                if (max < val):
-                    max = val
-                final_dict['links'].append( {"source": i, "target": j, "value": val} )
-        # Normalization w.r.t. max
-        for link in final_dict['links']:
-            link['value'] = link['value']/max
-
     # Compute simple Euclidean distance
-    else:
-        max = 0
-        for i in range(len(standard_input_list)):
-            v_i = standard_input_list[i]
-            for j in range(i, len(standard_input_list)):
-                v_j = standard_input_list[j]
-                min_nums = min(len(v_i),len(v_j))
-                val = my_corrcoef(v_i[:min_nums], v_j[:min_nums])
-                #val = np.linalg.norm(np.asarray(v_i[:min_nums]) - np.asarray(v_j[:min_nums])) #[-1,1]
-                val = ( val + 1 )/2 # Normalize between [0,1]
-                if (max < val):
-                    max = val
+    max = 0
+    for i in range(len(standard_input_list)):
+        v_i = standard_input_list[i]
+        for j in range(i, len(standard_input_list)):
+            v_j = standard_input_list[j]
+            min_nums = min(len(v_i),len(v_j))
+            val = my_corrcoef(v_i[:min_nums], v_j[:min_nums])
+            #val = np.linalg.norm(np.asarray(v_i[:min_nums]) - np.asarray(v_j[:min_nums])) #[-1,1]
+            val = ( val + 1 )/2 # Normalize between [0,1]
+            if (max < val):
+                max = val
 
-                final_dict['links'].append( {"source": i, "target": j, "value": val} )
-        # Normalization w.r.t. max
-        for link in final_dict['links']:
-            link['value'] = link['value']/max
+            final_dict['links'].append( {"source": i, "target": j, "value": val} )
+    # Normalization w.r.t. max
+    for link in final_dict['links']:
+        link['value'] = link['value']/max
     return final_dict
 
 final_dict = import_data ('dataset/100List.csv')
@@ -227,6 +167,8 @@ high_standard_input_list=[]
 low_standard_input_list=[]
 open_standard_input_list=[]
 close_standard_input_list=[]
+date_input_list=[]
+
 list_of_lists = []
 
 cryptonames = ["Bitcoin", "Ethereum", "Bitcoin Cash", "Ripple", "Dash", "Litecoin", "NEM", "IOTA", "Monero", "Ethereum Classic", "NEO", "BitConnect", "Lisk", "Zcash", "Stratis", "Waves", "Ark","Steem", "Bytecoin", "Decred", "BitShares", "Stellar Lumens", "Hshare", "Komodo", "PIVX", "Factom", "Byteball Bytes", "Nexus", "Siacoin", "DigiByte", "BitcoinDark", "GameCredits", "GXShares", "Lykke", "Dogecoin", "Blocknet", "Syscoin", "Verge", "FirstCoin", "Nxt", "I-O Coin", "Ubiq", "Particl","NAV Coin", "Rise", "Vertcoin", "Bitdeal", "FairCoin", "Metaverse ETP", "Gulden", "ZCoin", "CloakCoin", "NoLimitCoin", "Elastic", "Peercoin", "Aidos Kuneen", "ReddCoin", "LEOcoin", "Counterparty", "MonaCoin", "DECENT", "The ChampCoin", "Viacoin", "Emercoin", "Crown", "Sprouts", "ION", "Namecoin", "Clams", "BitBay", "OKCash", "Unobtanium", "Diamond", "Skycoin", "MonetaryUnit", "SpreadCoin", "Mooncoin", "Expanse", "SIBCoin", "ZenCash", "PotCoin", "Radium", "Burst", "LBRY Credits", "Shift","DigitalNote", "Neblio", "Einsteinium", "Compcoin", "Omni", "ATC Coin", "Energycoin", "Rubycoin", "Gambit", "E-coin", "SaluS", "Groestlcoin", "BlackCoin", "Golos", "GridCoin"]
@@ -234,13 +176,15 @@ cryptonames = ["Bitcoin", "Ethereum", "Bitcoin Cash", "Ripple", "Dash", "Litecoi
 
 for crypto in cryptonames:
     dataset = preprocess_and_save_Data(crypto,dateFormat=True,save=False)
-    del dataset['Date']
+    #del dataset['Date']
     vol_list = list(dataset['Volume'])
     market_list = list(dataset['Market Cap'])
     open_list = list(dataset['Open'])
     close_list = list(dataset['Close'])
     high_list = list(dataset['High'])
     low_list = list(dataset['Low'])
+    date_list = list(dataset['Date'])
+
 
     volume_standard_input_list.append(vol_list)
     market_standard_input_list.append(market_list)
@@ -248,6 +192,7 @@ for crypto in cryptonames:
     close_standard_input_list.append(close_list)
     high_standard_input_list.append(high_list)
     low_standard_input_list.append(low_list)
+    date_input_list.append(date_list)
 
 
 list_of_lists.append(volume_standard_input_list)
@@ -258,11 +203,91 @@ list_of_lists.append(high_standard_input_list)
 list_of_lists.append(low_standard_input_list)
 
 
-pos = 0
-
 names = ['volume', 'market_cap', 'open', 'close','high','low']
-
+years = ['2017', '2016', '2015']
+'''
 for i,list_ in enumerate(list_of_lists):
-    final_dict_ = compute_distance(pos, list_, final_dict, dim_red_flag=False)
+    final_dict_ = compute_similarity_t0(list_, final_dict)
     with open('similarities/data_'+names[i]+'.json', 'w') as f:
         json.dump(final_dict_,f)
+'''
+
+def index_of_first_of_the_year(date_input_list_of_cryptos):
+    date_indexes_list = []
+    for j in range(len(date_input_list_of_cryptos)):
+        date_index = {'2017': 0, '2016': 0, '2015': 0}
+        for i,d in enumerate(date_input_list_of_cryptos[j]):
+            if (d[0:2]=='01' and d[3:5]=='01' and d[6:] == '2017' and date_index['2017']==0):
+                date_index['2017'] = i
+            elif (d[0:2]=='01' and d[3:5]=='01' and d[6:] == '2016' and date_index['2016']==0):
+                date_index['2016'] = i
+            elif (d[0:2]=='01' and d[3:5]=='01' and d[6:] == '2015' and date_index['2015']==0):
+                date_index['2015'] = i
+        date_indexes_list.append(date_index)
+    return date_indexes_list
+
+def compute_similarity_year(standard_input_list, final_dict, date_indexes_list, year):
+    final_dict['links'] = []
+    # Compute simple Euclidean distance
+    max = 0
+
+    for i in range(len(standard_input_list)):
+        v_i = standard_input_list[i]
+
+        for j in range(i, len(standard_input_list)):
+            # 264 if year 2017
+            # 630 if year 2016
+            # 995 if year 2015
+
+            # E.g. Crown crypto 925 if year 2015: some values are lost.
+            if (date_indexes_list[i][year] == date_indexes_list[j][year] and date_indexes_list[i][year] != 0 and date_indexes_list[i][year] !=0):
+
+                v_j = standard_input_list[j]
+                if (year == '2017'):
+                    # from 0 to the start of the year, but we need to include it with +1
+                    # otherwise python indexing will discard it
+                    min_index = 0
+                    max_index = date_indexes_list[i][year]+1
+
+                elif (year == '2016'):
+                    # from the last day of 2016 to the first day of 2016
+                    min_index = date_indexes_list[i]['2017']+1
+                    max_index = date_indexes_list[i][year]+1
+
+                else:
+                    # from the last day of 2015 to the first day
+                    min_index = date_indexes_list[i]['2016']+1
+                    max_index = date_indexes_list[i][year]+1
+                '''
+                print (i)
+                print (len(v_i[min_index:max_index]))
+                print (date_indexes_list[i][year])
+                print (j)
+                print (len(v_j[min_index:max_index]))
+                print (date_indexes_list[j][year])
+                '''
+                val = my_corrcoef(v_i[min_index:max_index], v_j[min_index:max_index])
+
+                #val = np.linalg.norm(np.asarray(v_i[:min_nums]) - np.asarray(v_j[:min_nums])) #[-1,1]
+                val = ( val + 1 )/2 # Normalize between [0,1]
+                if (max < val):
+                    max = val
+            else:
+                val = -1
+
+            final_dict['links'].append( {"source": i, "target": j, "value": val} )
+    # Normalization w.r.t. max
+    for link in final_dict['links']:
+        link['value'] = link['value']/max
+    return final_dict
+
+date_indexes_list = index_of_first_of_the_year (date_input_list)
+#print (date_indexes_list)
+
+for i,list_ in enumerate(list_of_lists):
+    for year in years:
+        final_dict_ = compute_similarity_year(list_, final_dict, date_indexes_list, year)
+        with open('similarities/data_'+names[i]+'_'+year+'.json', 'w') as f:
+            json.dump(final_dict_,f)
+
+#final_dict_ = compute_similarity_year(list_of_lists[3], final_dict, date_indexes_list, '2015')

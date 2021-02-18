@@ -1,14 +1,3 @@
-/*
-TODO-SCATTER:
-  modificare file.json con valori x-y posizioni
-  scatter plot di pca o MDS
-  alla selezione del nodo, cambiare colore al punto selezionato
-  alla selezione del secondo nodo, cambiare colore al punto selezionato
-  legenda
-*/
-
-
-
 var firstTime = true;
 var margin = {top: 30, right: 380, bottom: 200, left: 120},
     width = 430,
@@ -129,7 +118,9 @@ function fullMatrix(file_json) {
   if (!firstTime) {
     svg_matrix.selectAll("*").remove();
   }
-  d3.json("similarities/"+file_json+".json", function(crypto_top_100) {
+  //data_close_2015
+  //d3.json("similarities/"+file_json+".json", function(crypto_top_100) {
+  d3.json("similarities/data_volume_2016.json", function(crypto_top_100) {
     var matrix = [],
         nodes = crypto_top_100.nodes,
         n = nodes.length;
@@ -221,7 +212,7 @@ function fullMatrix(file_json) {
 
     function row(row) {
       var cell = d3.select(this).selectAll(".cell")
-          .data(row.filter(function(d) { return d.z>=0; }))
+          .data(row.filter(function(d) { return d.z>=-1; }))
         .enter().append("rect")
           .attr("class", "cell")
           .attr("x", function(d) { return x_m(d.x); })
@@ -229,7 +220,7 @@ function fullMatrix(file_json) {
           .attr("height", x_m.bandwidth())
           //.style("fill-opacity", function(d) { return z(d.z); })
           //.style("fill", function(d) {return d3.interpolateMagma(d.z); })
-          .style("fill", function(d) {return c(d.z); })
+          .style("fill", function(d) { return d.z==-1 ? "grey" : c(d.z); })
           //.style("fill", function(d) { return nodes[d.x].group == nodes[d.y].group ? c(nodes[d.x].group) : null; })
           .on("mouseover", mouseover)
           .on("mouseout", mouseout)
@@ -318,7 +309,8 @@ function matrixReduction(node_name, file_json, slider_value) {
     svg_matrix.selectAll("*").remove();
   }
 
-  d3.json("similarities/"+file_json+".json", function(crypto_top_100) {
+  //d3.json("similarities/"+file_json+".json", function(crypto_top_100) {
+  d3.json("similarities/data_volume_2016.json", function(crypto_top_100) {
     var matrix = [],
         nodes = crypto_top_100.nodes,
         n = nodes.length;
@@ -460,7 +452,7 @@ function matrixReduction(node_name, file_json, slider_value) {
 
     function row(row) {
       var cell = d3.select(this).selectAll(".cell")
-          .data(row.filter(function(d) { return d.z>=0; }))
+          .data(row.filter(function(d) { return d.z>=-1; }))
         .enter().append("rect")
           .attr("class", "cell")
           //.attr("x", function(d) { return x_m(d.x); }) In this case, no symmetric matrix.
@@ -468,7 +460,7 @@ function matrixReduction(node_name, file_json, slider_value) {
           .attr("width", x_m.bandwidth())
           .attr("height", x_m.bandwidth())
           //.style("fill-opacity", function(d) { return z(d.z); })
-          .style("fill", function(d) {return c(d.z); })
+          .style("fill", function(d) {return d.z==-1 ? "grey" : c(d.z); })
           //.style("fill", function(d) { return ordered_nodes[d.x].group == ordered_nodes[d.y].group ? c(ordered_nodes[d.x].group) : null; }) // Da commentare con n = 10
           .on("mouseover", mouseover)
           .on("mouseout", mouseout)
