@@ -2,17 +2,17 @@
 var mydata = [];
 
 // dimensions and margins
-var margin = { top: 10, right: -300, bottom: 30, left: 100 },
-      width = 460 - margin.left - margin.right,
-      height = 400 - margin.top - margin.bottom;
+var margin_s = { top: 10, right: -300, bottom: 30, left: 100 },
+      width_s = 460 - margin_s.left - margin_s.right,
+      height_s = 400 - margin_s.top - margin_s.bottom;
 
 var svgg = d3.select("#scatterplot")
       .append("svg")
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
+      .attr("width", width_s + margin_s.left + margin_s.right)
+      .attr("height", height_s + margin_s.top + margin_s.bottom)
       .append("g")
       .attr("transform",
-            "translate(" + margin.left + "," + margin.top + ")");
+            "translate(" + margin_s.left + "," + margin_s.top + ")");
 var mydata = []
 
 create_scatterplot()
@@ -22,14 +22,14 @@ function create_scatterplot() {
 
             var x = d3.scaleLinear()
                   .domain([-2, 10])
-                  .range([0, width]);
+                  .range([0, width_s]);
             svgg.append("g")
-                  .attr("transform", "translate(0," + height + ")")
+                  .attr("transform", "translate(0," + height_s + ")")
                   .call(d3.axisBottom(x));
 
             var y = d3.scaleLinear()
                   .domain([-10, 3])
-                  .range([height, 0]);
+                  .range([height_s, 0]);
             svgg.append("g")
                   .call(d3.axisLeft(y));
 
