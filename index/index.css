@@ -350,7 +350,7 @@ menu {
       position:absolute;
       float: left;
       margin-top: 550px;
-      style="font-family : inherit;"
+      /* style="font-family : inherit;" */
     }
     #my_dataviz_boxplot {
       position:absolute;
