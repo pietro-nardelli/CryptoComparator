@@ -7,6 +7,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn import manifold
 from sklearn import preprocessing
+from sklearn.decomposition import PCA
+from sklearn.utils.validation import check_symmetric
+
+
 
 import numpy as np
 from numpy import linalg
@@ -116,6 +120,53 @@ def import_data (path:str):
             dictionary['nodes'].append(temp_dict)
     return dictionary
 
+# Preprocess data and compute MDS
+def dim_red_computation (dictionary, dim_reduction_alg='PCA'):
+    standard_input_list = []
+    nodes_id = []
+
+    for node in dictionary['nodes']:
+        nodes_id.append(node['#'])
+
+        node_values = []
+
+        node_values.append(node['Market Cap'])
+        #node_values.append(node['Price'])
+        node_values.append(node['Circulating Supply'])
+        #node_values.append(node['Volume (24h)'])
+        node_values.append(node['% Change (24h)'])
+
+        standard_input_list.append(node_values)
+
+    #data standardization
+    std_scale = preprocessing.StandardScaler().fit(standard_input_list)
+    standard_input_list= std_scale.transform(standard_input_list)
+
+    if (dim_reduction_alg == 'mds'):
+        mds = manifold.MDS(n_components=2, dissimilarity="euclidean",random_state=13)
+        pos = mds.fit(standard_input_list).embedding_
+    elif (dim_reduction_alg == 'pca'):
+        pca = PCA(n_components=2)
+        pos = pca.fit_transform(standard_input_list)
+
+
+    return nodes_id,pos,standard_input_list
+
+def plot_dim_red(nodes_id, pos):
+    # Scatter plot without labels
+    plt.scatter(pos[:, 0], pos[:, 1], color='red',s=10, lw=0, label='Crypto ')
+    plt.legend(scatterpoints=1, loc='best', shadow=False)
+    plt.show()
+
+    # Scatter plot with labels: each label is the identifier of the cryptocurrency
+    for label, x, y in zip(nodes_id[:], pos[:, 0], pos[:, 1]):
+
+        plt.annotate(
+            label,
+            xy = (x, y), xytext = (7, -5),
+            textcoords = 'offset points', ha = 'right', va = 'bottom',
+            bbox = dict(boxstyle = 'round,pad=0.1', fc = 'red', alpha = 0.5))
+    plt.show()
 
 '''
 Input:
@@ -126,6 +177,58 @@ Input:
 Output:
     final_dict: the final dictionary with nodes[{#:..., Name:..., MarketCap: ..., }] and links[{source:..., target:..., value:...}]
 '''
+def compute_distance(pos, standard_input_list, final_dict, dim_red_flag):
+    final_dict['links'] = []
+    max = 0
+    # Compute distance with MDS
+    if (dim_red_flag):
+        for i in range(len(pos)):
+            v_i = pos[i]
+            for j in range(i, len(pos)):
+                v_j = pos[j]
+                val = np.linalg.norm(v_i - v_j)
+                # Compute max value for normalization
+                if (max < val):
+                    max = val
+                final_dict['links'].append( {"source": i, "target": j, "value": val} )
+        # Normalization w.r.t. max
+        variance_computation = []
+        for link in final_dict['links']:
+            link['value'] = 1 - link['value']/max
+            variance_computation.append(link['value'])
+
+        print ("Variance: ", variance(variance_computation))
+
+    # Compute simple Euclidean distance
+    else:
+        max = 0
+        for i in range(len(standard_input_list)):
+            v_i = standard_input_list[i]
+            for j in range(i, len(standard_input_list)):
+                v_j = standard_input_list[j]
+                val = np.linalg.norm(v_i - v_j)
+                if (max < val):
+                    max = val
+
+                final_dict['links'].append( {"source": i, "target": j, "value": val} )
+        # Normalization w.r.t. max
+        for link in final_dict['links']:
+            link['value'] = link['value']/max
+
+    return final_dict
+
+
+def variance(data):
+     # Number of observations
+     n = len(data)
+     # Mean of the data
+     mean = sum(data) / n
+     # Square deviations
+     deviations = [(x - mean) ** 2 for x in data]
+     # Variance
+     variance = sum(deviations) / n
+     return variance
+
 
 def my_corrcoef( x, y ):
     mean_x = np.mean( x )
@@ -157,60 +260,50 @@ def compute_similarity_t0(standard_input_list, final_dict):
         link['value'] = link['value']/max
     return final_dict
 
-final_dict = import_data ('dataset/100List.csv')
 
 
-# ESEMPIO:
-volume_standard_input_list=[]
-market_standard_input_list=[]
-high_standard_input_list=[]
-low_standard_input_list=[]
-open_standard_input_list=[]
-close_standard_input_list=[]
-date_input_list=[]
+def compute_dissimilarity_t0_for_mds(standard_input_list):
+    matrix = []
+    max = 0
+    for i in range(len(standard_input_list)):
+        row = []
+        v_i = standard_input_list[i]
+        for j in range(len(standard_input_list)):
+            v_j = standard_input_list[j]
+            min_nums = min(len(v_i),len(v_j))
+            val = my_corrcoef(v_i[:min_nums], v_j[:min_nums])
+            #val = np.linalg.norm(np.asarray(v_i[:min_nums]) - np.asarray(v_j[:min_nums])) #[-1,1]
+            val = ( val + 1 )/2 # Normalize between [0,1]
+            val = round(val.astype(np.float64),1)
+            if (max < val):
+                max = val
 
-list_of_lists = []
+            row.append(val)
+        matrix.append(row)
+    # Normalization w.r.t. max
+    for r in range(len(matrix)):
+        for c in range(len(matrix)):
+            if ( r == c):
+                matrix[r][c] = 0
+            else:
+                matrix[r][c] = 1 - matrix[r][c]/max
+    matrix = np.array(matrix, dtype=np.float64)
+    print (matrix)
+    return matrix
 
-cryptonames = ["Bitcoin", "Ethereum", "Bitcoin Cash", "Ripple", "Dash", "Litecoin", "NEM", "IOTA", "Monero", "Ethereum Classic", "NEO", "BitConnect", "Lisk", "Zcash", "Stratis", "Waves", "Ark","Steem", "Bytecoin", "Decred", "BitShares", "Stellar Lumens", "Hshare", "Komodo", "PIVX", "Factom", "Byteball Bytes", "Nexus", "Siacoin", "DigiByte", "BitcoinDark", "GameCredits", "GXShares", "Lykke", "Dogecoin", "Blocknet", "Syscoin", "Verge", "FirstCoin", "Nxt", "I-O Coin", "Ubiq", "Particl","NAV Coin", "Rise", "Vertcoin", "Bitdeal", "FairCoin", "Metaverse ETP", "Gulden", "ZCoin", "CloakCoin", "NoLimitCoin", "Elastic", "Peercoin", "Aidos Kuneen", "ReddCoin", "LEOcoin", "Counterparty", "MonaCoin", "DECENT", "The ChampCoin", "Viacoin", "Emercoin", "Crown", "Sprouts", "ION", "Namecoin", "Clams", "BitBay", "OKCash", "Unobtanium", "Diamond", "Skycoin", "MonetaryUnit", "SpreadCoin", "Mooncoin", "Expanse", "SIBCoin", "ZenCash", "PotCoin", "Radium", "Burst", "LBRY Credits", "Shift","DigitalNote", "Neblio", "Einsteinium", "Compcoin", "Omni", "ATC Coin", "Energycoin", "Rubycoin", "Gambit", "E-coin", "SaluS", "Groestlcoin", "BlackCoin", "Golos", "GridCoin"]
+# Preprocess data and compute MDS
+def dim_red_computation_custom (matrix):
+    #data standardization
+    std_scale = preprocessing.StandardScaler().fit(matrix)
+    matrix= std_scale.transform(matrix)
 
+    matrix = check_symmetric(matrix, tol=1e-30)
 
-for crypto in cryptonames:
-    dataset = preprocess_and_save_Data(crypto,dateFormat=True,save=False)
-    #del dataset['Date']
-    vol_list = list(dataset['Volume'])
-    market_list = list(dataset['Market Cap'])
-    open_list = list(dataset['Open'])
-    close_list = list(dataset['Close'])
-    high_list = list(dataset['High'])
-    low_list = list(dataset['Low'])
-    date_list = list(dataset['Date'])
+    mds = manifold.MDS(n_components=2, dissimilarity='precomputed',random_state=13)
+    pos = mds.fit(matrix).embedding_
 
+    return pos
 
-    volume_standard_input_list.append(vol_list)
-    market_standard_input_list.append(market_list)
-    open_standard_input_list.append(open_list)
-    close_standard_input_list.append(close_list)
-    high_standard_input_list.append(high_list)
-    low_standard_input_list.append(low_list)
-    date_input_list.append(date_list)
-
-
-list_of_lists.append(volume_standard_input_list)
-list_of_lists.append(market_standard_input_list)
-list_of_lists.append(open_standard_input_list)
-list_of_lists.append(close_standard_input_list)
-list_of_lists.append(high_standard_input_list)
-list_of_lists.append(low_standard_input_list)
-
-
-names = ['volume', 'market_cap', 'open', 'close','high','low']
-years = ['2017', '2016', '2015']
-'''
-for i,list_ in enumerate(list_of_lists):
-    final_dict_ = compute_similarity_t0(list_, final_dict)
-    with open('similarities/data_'+names[i]+'.json', 'w') as f:
-        json.dump(final_dict_,f)
-'''
 
 def index_of_first_of_the_year(date_input_list_of_cryptos):
     date_indexes_list = []
@@ -258,14 +351,7 @@ def compute_similarity_year(standard_input_list, final_dict, date_indexes_list, 
                     # from the last day of 2015 to the first day
                     min_index = date_indexes_list[i]['2016']+1
                     max_index = date_indexes_list[i][year]+1
-                '''
-                print (i)
-                print (len(v_i[min_index:max_index]))
-                print (date_indexes_list[i][year])
-                print (j)
-                print (len(v_j[min_index:max_index]))
-                print (date_indexes_list[j][year])
-                '''
+
                 val = my_corrcoef(v_i[min_index:max_index], v_j[min_index:max_index])
 
                 #val = np.linalg.norm(np.asarray(v_i[:min_nums]) - np.asarray(v_j[:min_nums])) #[-1,1]
@@ -273,7 +359,10 @@ def compute_similarity_year(standard_input_list, final_dict, date_indexes_list, 
                 if (max < val):
                     max = val
             else:
-                val = -1
+                if (i==j):
+                    val = 1
+                else:
+                    val = -1
 
             final_dict['links'].append( {"source": i, "target": j, "value": val} )
     # Normalization w.r.t. max
@@ -281,8 +370,83 @@ def compute_similarity_year(standard_input_list, final_dict, date_indexes_list, 
         link['value'] = link['value']/max
     return final_dict
 
+final_dict = import_data ('dataset/100List.csv')
+
+# ESEMPIO:
+volume_standard_input_list=[]
+market_standard_input_list=[]
+high_standard_input_list=[]
+low_standard_input_list=[]
+open_standard_input_list=[]
+close_standard_input_list=[]
+date_input_list=[]
+
+list_of_lists = []
+
+cryptonames = ["Bitcoin", "Ethereum", "Bitcoin Cash", "Ripple", "Dash", "Litecoin", "NEM", "IOTA", "Monero", "Ethereum Classic", "NEO", "BitConnect", "Lisk", "Zcash", "Stratis", "Waves", "Ark","Steem", "Bytecoin", "Decred", "BitShares", "Stellar Lumens", "Hshare", "Komodo", "PIVX", "Factom", "Byteball Bytes", "Nexus", "Siacoin", "DigiByte", "BitcoinDark", "GameCredits", "GXShares", "Lykke", "Dogecoin", "Blocknet", "Syscoin", "Verge", "FirstCoin", "Nxt", "I-O Coin", "Ubiq", "Particl","NAV Coin", "Rise", "Vertcoin", "Bitdeal", "FairCoin", "Metaverse ETP", "Gulden", "ZCoin", "CloakCoin", "NoLimitCoin", "Elastic", "Peercoin", "Aidos Kuneen", "ReddCoin", "LEOcoin", "Counterparty", "MonaCoin", "DECENT", "The ChampCoin", "Viacoin", "Emercoin", "Crown", "Sprouts", "ION", "Namecoin", "Clams", "BitBay", "OKCash", "Unobtanium", "Diamond", "Skycoin", "MonetaryUnit", "SpreadCoin", "Mooncoin", "Expanse", "SIBCoin", "ZenCash", "PotCoin", "Radium", "Burst", "LBRY Credits", "Shift","DigitalNote", "Neblio", "Einsteinium", "Compcoin", "Omni", "ATC Coin", "Energycoin", "Rubycoin", "Gambit", "E-coin", "SaluS", "Groestlcoin", "BlackCoin", "Golos", "GridCoin"]
+
+
+for crypto in cryptonames:
+    dataset = preprocess_and_save_Data(crypto,dateFormat=True,save=False)
+    #del dataset['Date']
+    vol_list = list(dataset['Volume'])
+    market_list = list(dataset['Market Cap'])
+    open_list = list(dataset['Open'])
+    close_list = list(dataset['Close'])
+    high_list = list(dataset['High'])
+    low_list = list(dataset['Low'])
+    date_list = list(dataset['Date'])
+
+
+    volume_standard_input_list.append(vol_list)
+    market_standard_input_list.append(market_list)
+    open_standard_input_list.append(open_list)
+    close_standard_input_list.append(close_list)
+    high_standard_input_list.append(high_list)
+    low_standard_input_list.append(low_list)
+    date_input_list.append(date_list)
+
+
+list_of_lists.append(volume_standard_input_list)
+list_of_lists.append(market_standard_input_list)
+list_of_lists.append(open_standard_input_list)
+list_of_lists.append(close_standard_input_list)
+list_of_lists.append(high_standard_input_list)
+list_of_lists.append(low_standard_input_list)
+
+
+names = ['volume', 'market_cap', 'open', 'close','high','low']
+years = ['2017', '2016', '2015']
+
+
 date_indexes_list = index_of_first_of_the_year (date_input_list)
-#print (date_indexes_list)
+
+# dissimilarity matrix for volume
+matrix = compute_dissimilarity_t0_for_mds(list_of_lists[0])
+#print (matrix)
+pos_custom = dim_red_computation_custom(matrix)
+
+# MDS COMPUTATION PART: used to compute nodes_id only
+dim_reduction_alg = 'mds'
+nodes_id, pos, standard_input_list = dim_red_computation(final_dict, dim_reduction_alg=dim_reduction_alg)
+final_dict = compute_distance(pos, standard_input_list, final_dict, dim_red_flag=True)
+#########
+
+#plot_dim_red(nodes_id, pos)
+plot_dim_red(nodes_id, pos_custom)
+
+pos_dict = {} # {}
+for i,node in enumerate(final_dict['nodes']):
+    pos_dict[i] = [pos_custom[i][0], pos_custom[i][1]]
+
+with open('positions.json', 'w') as f:
+    json.dump(pos_dict,f)
+
+
+for i,list_ in enumerate(list_of_lists):
+    final_dict_ = compute_similarity_t0(list_, final_dict)
+    with open('similarities/data_'+names[i]+'.json', 'w') as f:
+        json.dump(final_dict_,f)
 
 for i,list_ in enumerate(list_of_lists):
     for year in years:
