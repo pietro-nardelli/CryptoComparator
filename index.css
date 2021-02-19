@@ -5,9 +5,12 @@ body {
   position: relative;
   width: 100%;
   overflow-x: hidden;
-  zoom: 0.8;
+  zoom: 1;
 }
 
+#scale-zoom {
+  zoom: 0.8;
+}
 menu {
   background-color: rgb(53, 53, 53);
   background-position: 100%;
@@ -349,7 +352,7 @@ menu {
     #my_dataviz {
       position:absolute;
       float: left;
-      margin-top: 550px;
+      margin-top: 0px;
       /* style="font-family : inherit;" */
     }
     #my_dataviz_boxplot {
