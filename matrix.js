@@ -118,8 +118,7 @@ function fullMatrix(file_json) {
     svg_matrix.selectAll("*").remove();
   }
   //data_close_2015
-  //d3.json("similarities/"+file_json+".json", function(crypto_top_100) {
-  d3.json("similarities/data_volume_2016.json", function(crypto_top_100) {
+  d3.json("similarities/"+file_json+".json", function(crypto_top_100) {
     var matrix = [],
         nodes = crypto_top_100.nodes,
         n = nodes.length;
@@ -312,8 +311,7 @@ function matrixReduction(node_name, file_json, slider_value) {
     svg_matrix.selectAll("*").remove();
   }
 
-  //d3.json("similarities/"+file_json+".json", function(crypto_top_100) {
-  d3.json("similarities/data_volume_2016.json", function(crypto_top_100) {
+  d3.json("similarities/"+file_json+".json", function(crypto_top_100) {
     var matrix = [],
         nodes = crypto_top_100.nodes,
         n = nodes.length;
