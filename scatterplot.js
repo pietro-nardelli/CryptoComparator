@@ -21,14 +21,14 @@ function create_scatterplot() {
             mydata = data
 
             var x = d3.scaleLinear()
-                  .domain([-2, 10])
+                  .domain([-1, 3])
                   .range([0, width_s]);
             svgg.append("g")
                   .attr("transform", "translate(0," + height_s + ")")
                   .call(d3.axisBottom(x));
 
             var y = d3.scaleLinear()
-                  .domain([-10, 3])
+                  .domain([-1, 2])
                   .range([height_s, 0]);
             svgg.append("g")
                   .call(d3.axisLeft(y));
@@ -46,7 +46,7 @@ function create_scatterplot() {
                         .attr("x", x(data[i][0]))
                         .attr("y", y(data[i][1]))
                         .text(function () { return cryptonames[i] })
-                        .style("fill", "rgba(255,255,255,0.5)")
+                        .style("fill", "rgba(255,255,255,0.2)")
                         .attr("id", i)
             };
       })

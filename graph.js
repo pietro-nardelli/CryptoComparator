@@ -357,14 +357,18 @@ function create_graph(ididix) {
     if (reshape_flag == 1) {
       reshape_flag = 0
       for (var i = 0; i < 6; i++) {
-        arr_similarity_matrix[i] = reshape(arr_similarity_matrix[i])
+        try {
+          arr_similarity_matrix[i] = reshape(arr_similarity_matrix[i])
+        } catch (error) {
+          window.location.reload();
+        }    
       }
     }
     update_reg_links(index_of_similarity_in_use)
 
 
     console.log("SIMIL1!")
-
+ 
     //console.log(arr_similarity_matrix)
 
     nodes = name_arr;

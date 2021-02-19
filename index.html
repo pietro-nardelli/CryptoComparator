@@ -9,6 +9,8 @@
 <body>
   <head>
     <title>D3 Sample</title>
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+      <META HTTP-EQUIV="Expires" CONTENT="-1">
   </head>
   <body>
     <!--<h3 style="text-align: center;">PROGETTO VA!</h3>-->
@@ -94,7 +96,13 @@ window.onclick = function(event) {
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
 <script src="graph.js" defer ></script>
-<script src="chart.js" defer ></script>
+<script src="chart.js" defer ></script> <!-- ?filever=<?=filesize('/chart.js')?> -->
 <script src="matrix.js" defer ></script>
 <script src="scatterplot.js" defer ></script>
+<!-- <script>window.onload = function() {
+    if(!window.location.hash) {
+        window.location = window.location + '#loaded';
+        window.location.reload();
+    }
+}</script> -->
 <!-- <script src="app.js" defer></script>-->
