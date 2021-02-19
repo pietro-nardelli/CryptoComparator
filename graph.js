@@ -19,6 +19,11 @@
 - TODO animationhell
 */
 
+var T_ARR = [ 0.95,0.95,0.95,0.95,0.95,0.8,
+              0.8,0.75,0.95,0.95,0.95,0.95,
+              0.95,0.95,0.95,0.95,0.95,0.95,
+              0.95,0.95,0.95,0.95,0.95,0.60   ]
+
 
 
 ///DATABASE
@@ -57,13 +62,20 @@ stroke_width_node_circle = '100px'
 radius_node_circle = '15  '
 
 ///SLIDER
-var initial_threshold = 0.95; //THRESHOLD MIN x creare il nodo!
-var initial_threshold_slider = 0.95; //THRESHOLD BASE OF THE SLIDER
-var fix_val_slider = 2 //2 if 0.95, 0 if 0.9, 0.5 if 0.8 ..
+var initial_threshold = 0.5; //THRESHOLD MIN x creare il nodo!
+var initial_threshold_slider = 0.5; //THRESHOLD BASE OF THE SLIDER
+var fix_val_slider = 0.2 //2 if 0.95, 0 if 0.9, 0.5 if 0.8 ..
+
+// output.innerHTML=0.95
+// actual_t = 0.95
+fix_val_slider = 2
+initial_threshold_slider = 0.95
+initial_threshold = 0.95
+
 var slider = document.getElementById("myRange");
 var output = document.getElementById("demo");
 output.innerHTML = rr(slider.value / (1000 * fix_val_slider) + initial_threshold_slider);
-actual_t = initial_threshold_slider; //slider initial value is ?  //NOT USED ANYMORE
+var actual_t = initial_threshold_slider; //slider initial value is ?  //NOT USED ANYMORE
 // Useful to avoid refresh of the matrix too many times
 function mouseDownOnSlider() {
   mouse_down_on_slider = 1; //Click
@@ -133,10 +145,10 @@ function get_random_simmetric(n) {
 
 var matrix_prova = [];
 
-create_100100_matrix("close", matrix_prova);
+//create_100100_matrix("close", matrix_prova);
 
 function create_100100_matrix(json_file, matrix) {
-  d3.json("similarities/data_" + json_file + ".json", function (data) {
+  d3.json("similarities/data_" + json_file +".json", function (data) {
     var nodes = data.nodes,
       n = nodes.length;
     // Compute index per node.
@@ -188,15 +200,25 @@ function reshape(q) {
   return w;
 }
 
+function getJ(i) {
+  if(i<6)   return 0
+  if(i<12)  return 1
+  if(i<18)  return 2
+  return 3
+}
 
 //N buttons of similarity we want to use, to give to each link
 n_similarities = 6
 arr_similarity_matrix = []
+year_arr = ["","_2015","_2016","_2017"]
 arr_path = ["close", "high", "low", "market_cap", "open", "volume"]
-for (var i = 0; i < n_similarities; i++) {
+
+for (var i = 0; i < n_similarities*4; i++) {
   var aux = []
   //get_random_simmetric(100);
-  create_100100_matrix(arr_path[i], aux)
+
+  console.log(String(arr_path[i%6])+year_arr[getJ(i)])
+  create_100100_matrix( String(arr_path[i%6])+year_arr[getJ(i)], aux)
   arr_similarity_matrix[i] = aux
 }
 
@@ -213,6 +235,7 @@ function get_top_n(arr, n) {
     .slice(0, n);
 }
 
+
 //get n node from the hat and give them to node namecoin in datareg
 //if nodes are over a threshold from the(TODO each) similarity matrix we assign a link
 function get_links(namecoin, similarity_idx) {
@@ -226,8 +249,7 @@ function get_links(namecoin, similarity_idx) {
   // console.log(namecoin_similarity_arr)
   for (var i = 0; i < 100; i++) {   //was in n_links to keep n links max, now 100 coins
     //namecoin = name_arr[i*4] //Math.round(Math.random()*100)]
-
-    if (namecoin_similarity_arr[i] > initial_threshold && i != namecoin_idx) //!!! THRESHOLD MINIMA PER CREARE IL NODO
+    if (namecoin_similarity_arr[i] >= initial_threshold && i != namecoin_idx) //!!! THRESHOLD MINIMA PER CREARE IL NODO
       links = links.concat(name_arr[i])
   }
   return links
@@ -341,6 +363,15 @@ document.getElementById("SIMIL5").addEventListener("click", function () {
 
 document.getElementById("SIMIL0").addEventListener("click", function () {
   data_json = "data_close";
+
+  output.innerHTML=0.95
+  actual_t = 0.95
+  fix_val_slider = 2
+  initial_threshold_slider = 0.95
+  initial_threshold = 0.95
+
+  slider_update(actual_t)
+
   create_graph(0)
 })
 
@@ -348,101 +379,103 @@ document.getElementById("SIMIL0").addEventListener("click", function () {
 
 document.getElementById("SIMIL1_15").addEventListener("click", function () {
   data_json = "data_high_2015"
-  create_graph(1)
+  create_graph(7)
 })
 
 document.getElementById("SIMIL2_15").addEventListener("click", function () {
   data_json = "data_low_2015";
-  create_graph(2)
+  create_graph(8)
 })
 
 document.getElementById("SIMIL3_15").addEventListener("click", function () {
   data_json = "data_market_cap_2015";
-  create_graph(3)
+  create_graph(9)
 })
 
 document.getElementById("SIMIL4_15").addEventListener("click", function () {
   data_json = "data_open_2015";
-  create_graph(4)
+  create_graph(10)
 })
 
 document.getElementById("SIMIL5_15").addEventListener("click", function () {
   data_json = "data_volume_2015";
-  create_graph(5)
+  create_graph(11)
 })
 
 document.getElementById("SIMIL0_15").addEventListener("click", function () {
   data_json = "data_close_2015";
-  create_graph(0)
+  create_graph(6)
 })
 
 ////
 document.getElementById("SIMIL1_16").addEventListener("click", function () {
   data_json = "data_high_2016"
-  create_graph(1)
+  create_graph(13)
 })
 
 document.getElementById("SIMIL2_16").addEventListener("click", function () {
   data_json = "data_low_2016";
-  create_graph(2)
+  create_graph(14)
 })
 
 document.getElementById("SIMIL3_16").addEventListener("click", function () {
   data_json = "data_market_cap_2016";
-  create_graph(3)
+  create_graph(15)
 })
 
 document.getElementById("SIMIL4_16").addEventListener("click", function () {
   data_json = "data_open_2016";
-  create_graph(4)
+  create_graph(16)
 })
 
 document.getElementById("SIMIL5_16").addEventListener("click", function () {
   data_json = "data_volume_2016";
-  create_graph(5)
+  create_graph(17)
 })
 
 document.getElementById("SIMIL0_16").addEventListener("click", function () {
   data_json = "data_close_2016";
-  create_graph(0)
+  create_graph(12)
 })
 //////
 
 document.getElementById("SIMIL1_17").addEventListener("click", function () {
   data_json = "data_high_2017"
-  create_graph(1)
+  create_graph(19)
 })
 
 document.getElementById("SIMIL2_17").addEventListener("click", function () {
   data_json = "data_low_2017";
-  create_graph(2)
+  create_graph(20)
 })
 
 document.getElementById("SIMIL3_17").addEventListener("click", function () {
   data_json = "data_market_cap_2017";
-  create_graph(3)
+  create_graph(21)
 })
 
 document.getElementById("SIMIL4_17").addEventListener("click", function () {
   data_json = "data_open_2017";
-  create_graph(4)
+  create_graph(22)
 })
 
 document.getElementById("SIMIL5_17").addEventListener("click", function () {
   data_json = "data_volume_2017";
-  create_graph(5)
+  create_graph(23)
 })
 
 document.getElementById("SIMIL0_17").addEventListener("click", function () {
   data_json = "data_close_2017";
-  create_graph(0)
+  create_graph(18)
 })
 
 
 
-var reshape_flag = 1;
+var reshape_flag = 1; //1 iterazione quando apre la pagina
 
 function create_graph(ididix) {
+
+
 
   d3v3.csv("similarities/data_close.json", function () {  // per ogni namecoin prendo i relativi link to add dal datareg
 
@@ -452,15 +485,15 @@ function create_graph(ididix) {
 
     if (reshape_flag == 1) {
       reshape_flag = 0
-      for (var i = 0; i < 6; i++) {
+      for (var i = 0; i < 24; i++) {  //24!!!!
         try {
           arr_similarity_matrix[i] = reshape(arr_similarity_matrix[i])
         } catch (error) {
-          window.location.reload();
+          window.location.reload();  
         }    
       }
     }
-    update_reg_links(index_of_similarity_in_use)
+    update_reg_links(index_of_similarity_in_use)  
 
 
     console.log("SIMIL1!")
