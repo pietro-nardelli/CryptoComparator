@@ -24,7 +24,7 @@ var need_candlestick = false;
 //how many graphs do I want to create?
 
 number_of_graphs=3
-number_of_boxplot=2
+// number_of_boxplot=2
 
 rel_or_abs = 'absolute'
 clicked = true
@@ -37,10 +37,10 @@ for(i=0;i<number_of_graphs;i++){
     .attr("height", height1 + margin1.top + margin1.bottom).append("g").attr("transform","translate(" + margin1.left + "," + margin1.top + ")").attr("id", i)
 }
 
-for(i=0;i<number_of_boxplot;i++){
-    svg_arr_boxplot[i] = d3.select("#my_dataviz_boxplot").append("svg").attr("width", width1 + margin1.left + margin1.right)
-    .attr("height", height1 + margin1.top + margin1.bottom).append("g").attr("transform","translate(" + margin1.left + "," + margin1.top + ")").attr("id", i)
-}
+// for(i=0;i<number_of_boxplot;i++){
+//     svg_arr_boxplot[i] = d3.select("#my_dataviz_boxplot").append("svg").attr("width", width1 + margin1.left + margin1.right)
+//     .attr("height", height1 + margin1.top + margin1.bottom).append("g").attr("transform","translate(" + margin1.left + "," + margin1.top + ")").attr("id", i)
+// }
 
 
 //----------FUNZIONE CHIAMATA ONCLICK PER OGNI CRYPTO---------------------------------------
@@ -1109,6 +1109,7 @@ function get_max(value1,value2){
     if(value1>=value2) return value1
     else return value2
 }
+
 function get_min(value1,value2){
     if(value1>=value2) return value2
     else return value1
