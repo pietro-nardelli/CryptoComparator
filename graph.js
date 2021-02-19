@@ -344,6 +344,102 @@ document.getElementById("SIMIL0").addEventListener("click", function () {
   create_graph(0)
 })
 
+///////
+
+document.getElementById("SIMIL1_15").addEventListener("click", function () {
+  data_json = "data_high_2015"
+  create_graph(1)
+})
+
+document.getElementById("SIMIL2_15").addEventListener("click", function () {
+  data_json = "data_low_2015";
+  create_graph(2)
+})
+
+document.getElementById("SIMIL3_15").addEventListener("click", function () {
+  data_json = "data_market_cap_2015";
+  create_graph(3)
+})
+
+document.getElementById("SIMIL4_15").addEventListener("click", function () {
+  data_json = "data_open_2015";
+  create_graph(4)
+})
+
+document.getElementById("SIMIL5_15").addEventListener("click", function () {
+  data_json = "data_volume_2015";
+  create_graph(5)
+})
+
+document.getElementById("SIMIL0_15").addEventListener("click", function () {
+  data_json = "data_close_2015";
+  create_graph(0)
+})
+
+////
+document.getElementById("SIMIL1_16").addEventListener("click", function () {
+  data_json = "data_high_2016"
+  create_graph(1)
+})
+
+document.getElementById("SIMIL2_16").addEventListener("click", function () {
+  data_json = "data_low_2016";
+  create_graph(2)
+})
+
+document.getElementById("SIMIL3_16").addEventListener("click", function () {
+  data_json = "data_market_cap_2016";
+  create_graph(3)
+})
+
+document.getElementById("SIMIL4_16").addEventListener("click", function () {
+  data_json = "data_open_2016";
+  create_graph(4)
+})
+
+document.getElementById("SIMIL5_16").addEventListener("click", function () {
+  data_json = "data_volume_2016";
+  create_graph(5)
+})
+
+document.getElementById("SIMIL0_16").addEventListener("click", function () {
+  data_json = "data_close_2016";
+  create_graph(0)
+})
+//////
+
+document.getElementById("SIMIL1_17").addEventListener("click", function () {
+  data_json = "data_high_2017"
+  create_graph(1)
+})
+
+document.getElementById("SIMIL2_17").addEventListener("click", function () {
+  data_json = "data_low_2017";
+  create_graph(2)
+})
+
+document.getElementById("SIMIL3_17").addEventListener("click", function () {
+  data_json = "data_market_cap_2017";
+  create_graph(3)
+})
+
+document.getElementById("SIMIL4_17").addEventListener("click", function () {
+  data_json = "data_open_2017";
+  create_graph(4)
+})
+
+document.getElementById("SIMIL5_17").addEventListener("click", function () {
+  data_json = "data_volume_2017";
+  create_graph(5)
+})
+
+document.getElementById("SIMIL0_17").addEventListener("click", function () {
+  data_json = "data_close_2017";
+  create_graph(0)
+})
+
+
+
 var reshape_flag = 1;
 
 function create_graph(ididix) {
