@@ -9,6 +9,8 @@
 <body>
   <head>
     <title>D3 Sample</title>
+    <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+      <META HTTP-EQUIV="Expires" CONTENT="-1">
   </head>
   <body>
     <!--<h3 style="text-align: center;">PROGETTO VA!</h3>-->
@@ -36,18 +38,43 @@
           </select>
         </p>
       </div>
-    <div style="position: absoulte; margin-left: 10px;border: 2px solid rgb(209, 153, 0) ; width: 550px; ">
+    <div style="position: absoulte; margin-left: 10px;border: 2px solid rgb(209, 153, 0) ; width: 650px; ">
         <input style=" width: 350px" type="range" min="0" max="100" value="0" class="slider" id="myRange" >
         <br>
         <div style="float: left;">Value: <span id="demo"></span></div>
         <br>
-        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL1">SIMIL1!</button>
-        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL2">SIMIL2!</button>
-        <button type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;" id="SIMIL3">SIMIL3!</button>
-        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL4">SIMIL4!</button>
-        <button type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;" id="SIMIL5">SIMIL5!</button>
-        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL0">SIMIL0!</button>
+        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL1">SIMIL1_!</button>
+        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL2">SIMIL2_!</button>
+        <button type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;" id="SIMIL3">SIMIL3_!</button>
+        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL4">SIMIL4_!</button>
+        <button type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;" id="SIMIL5">SIMIL5_!</button>
+        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL0">SIMIL0_!</button>
+      
+        <br>
+        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL1_15">SIMIL10!</button>
+        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL2_15">SIMIL20!</button>
+        <button type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;" id="SIMIL3_15">SIMIL30!</button>
+        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL4_15">SIMIL40!</button>
+        <button type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;" id="SIMIL5_15">SIMIL50!</button>
+        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL0_15">SIMIL00!</button>
+
+        <br>
+        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL1_16">SIMIL11!</button>
+        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL2_16">SIMIL21!</button>
+        <button type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;" id="SIMIL3_16">SIMIL31!</button>
+        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL4_16">SIMIL41!</button>
+        <button type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;" id="SIMIL5_16">SIMIL51!</button>
+        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL0_16">SIMIL01!</button>
+      
+        <br>
+        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL1_17">SIMIL12!</button>
+        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL2_17">SIMIL22!</button>
+        <button type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;" id="SIMIL3_17">SIMIL32!</button>
+        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL4_17">SIMIL42!</button>
+        <button type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;" id="SIMIL5_17">SIMIL52!</button>
+        <button type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;" id="SIMIL0_17">SIMIL02!</button>
       </div>
+
     </div>
     <div id="graph_div" data-refresh-interval="500"></div>
     <div id="matrix_div"> <div id="legend_matrix"></div> </div>
@@ -96,8 +123,17 @@ window.onclick = function(event) {
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Inter&display=swap" rel="stylesheet">
 <script src="graph.js" defer ></script>
-<script src="chart.js" defer ></script>
+<script src="chart.js" defer ></script> <!-- ?filever=<?=filesize('/chart.js')?> -->
 <script src="matrix.js" defer ></script>
 <script src="scatterplot.js" defer ></script>
+<<<<<<< HEAD
 
+=======
+<!-- <script>window.onload = function() {
+    if(!window.location.hash) {
+        window.location = window.location + '#loaded';
+        window.location.reload();
+    }
+}</script> -->
+>>>>>>> 95450e1e613b5e20365e1b28ed641711f88ce72c
 <!-- <script src="app.js" defer></script>-->
