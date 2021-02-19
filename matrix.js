@@ -27,7 +27,6 @@ var svg_matrix = d3.select("#matrix_div").append("svg")
 d3.select("#svg_matrix")
     .on("mouseleave", mouseleave_matrix);
 
-
 function mouseleave_matrix() {
   d3.selectAll(".row text").classed("non-active-x", false);
   d3.selectAll(".column text").classed("non-active-y", false);
@@ -233,6 +232,10 @@ function fullMatrix(file_json) {
       d3.selectAll(".row text").classed("non-active-x", function(d, i) { return i != p.y; });
       d3.selectAll(".column text").classed("non-active-y", function(d, i) { return i != p.x; });
 
+      var window_color = "rgb(2, 200, 255)"
+      var value_to_show = p.z.toFixed(3);
+      if (p.z == -1) window_color = "grey";
+      if (p.z == -1) value_to_show = "&#8709;";
 
       var g = svg_matrix.append('g').attr("id", "similarity");
       g.append('rect')
@@ -240,7 +243,7 @@ function fullMatrix(file_json) {
       .attr("y", function(d) { return x_m(p.y)+10; })
       .attr("width", 120)
       .attr("height", 47)
-      .style("fill", "rgb(2, 200, 255)")
+      .style("fill", window_color)
       .style("opacity", "0.9");
       //.style("rx", "0px");
 
@@ -261,7 +264,7 @@ function fullMatrix(file_json) {
       .attr("x", function(d) { return x_m(p.x)-40; })
       .attr("y", function(d) { return x_m(p.y)+55; })
       .style("font-size", "15px")
-      .text(p.z.toFixed(3));
+      .html(value_to_show);
 
     }
 
@@ -476,6 +479,12 @@ function matrixReduction(node_name, file_json, slider_value) {
       d3.selectAll(".row text").classed("non-active-x", function(d, i) { return d[i].x != p.y; });
       d3.selectAll(".column text").classed("non-active-y", function(d, i) { return d[i].x != p.x; });
 
+      var window_color = "rgb(2, 200, 255)"
+      var value_to_show = p.z.toFixed(3);
+      if (p.z == -1) window_color = "grey";
+      if (p.z == -1) value_to_show = "&#8709;";
+
+
       for (var i = 0; i<n; i++) {
         if (matrix[0][i].x == p.x){
           var simil_x = i;
@@ -494,7 +503,7 @@ function matrixReduction(node_name, file_json, slider_value) {
       .attr("y", function(d) { return x_m(simil_y)+50; })
       .attr("width", 120)
       .attr("height", 49)
-      .style("fill", "rgb(2, 200, 255)")
+      .style("fill", window_color)
       .style("opacity", "0.9");
       //.style("rx", "0px");
 
@@ -515,7 +524,7 @@ function matrixReduction(node_name, file_json, slider_value) {
       .attr("x", function(d) { return x_m(simil_x)-40; })
       .attr("y", function(d) { return x_m(simil_y)+95; })
       .style("font-size", "15px")
-      .text(p.z.toFixed(3));
+      .html(value_to_show);
     }
 
     function mouseout() {
