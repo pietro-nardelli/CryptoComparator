@@ -9,7 +9,7 @@ from sklearn import manifold
 from sklearn import preprocessing
 from sklearn.decomposition import PCA
 from sklearn.utils.validation import check_symmetric
-
+import math
 
 
 import numpy as np
@@ -331,8 +331,9 @@ def compute_similarity_year(standard_input_list, final_dict, date_indexes_list, 
             # 264 if year 2017
             # 630 if year 2016
             # 995 if year 2015
-
             # E.g. Crown crypto 925 if year 2015: some values are lost.
+
+            if ( i == 57 ): print (date_indexes_list[j])
             if (date_indexes_list[i][year] == date_indexes_list[j][year] and date_indexes_list[i][year] != 0 and date_indexes_list[i][year] !=0):
 
                 v_j = standard_input_list[j]
@@ -356,6 +357,7 @@ def compute_similarity_year(standard_input_list, final_dict, date_indexes_list, 
 
                 #val = np.linalg.norm(np.asarray(v_i[:min_nums]) - np.asarray(v_j[:min_nums])) #[-1,1]
                 val = ( val + 1 )/2 # Normalize between [0,1]
+                if ( math.isnan(val) ): val = -1
                 if (max < val):
                     max = val
             else:
@@ -421,6 +423,8 @@ years = ['2017', '2016', '2015']
 
 date_indexes_list = index_of_first_of_the_year (date_input_list)
 
+
+
 # dissimilarity matrix for volume
 matrix = compute_dissimilarity_t0_for_mds(list_of_lists[0])
 #print (matrix)
@@ -443,10 +447,14 @@ with open('positions.json', 'w') as f:
     json.dump(pos_dict,f)
 
 
+
+final_dict_ = compute_similarity_year(list_of_lists[1], final_dict, date_indexes_list, "2016")
+
 for i,list_ in enumerate(list_of_lists):
     final_dict_ = compute_similarity_t0(list_, final_dict)
     with open('similarities/data_'+names[i]+'.json', 'w') as f:
         json.dump(final_dict_,f)
+
 
 for i,list_ in enumerate(list_of_lists):
     for year in years:
