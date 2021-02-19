@@ -16,6 +16,7 @@ var svgg = d3.select("#scatterplot")
 var mydata = []
 
 create_scatterplot()
+
 function create_scatterplot() {
       d3v3.json("positions.json", function (data) {
             mydata = data
@@ -41,13 +42,23 @@ function create_scatterplot() {
                         .attr("cy", y(data[i][1]))
                         .attr("r", 2)
                         .style("fill", "#69b3a2")
-                        .attr("id", i);
-                  g.append("text")
-                        .attr("x", x(data[i][0]))
-                        .attr("y", y(data[i][1]))
-                        .text(function () { return cryptonames[i] })
-                        .style("fill", "rgba(255,255,255,0.2)")
                         .attr("id", i)
+                        .on('mouseover', function (d,i) {
+                        d3.select(this).transition().duration('100').attr("r", 7);
+
+                        div.transition().duration(100).style("opacity", 1);
+                        div.html(cryptonames[i]).style("left", (d3.event.pageX + 10) + "px").style("top", (d3.event.pageY - 15) + "px");})
+
+                        .on('mouseout', function (d) {
+                              d3.select(this).transition().duration('200').attr("r", 2);
+                              div.transition().duration(100).style("opacity", 0);
+                         });
+                  // g.append("text")
+                  //       .attr("x", x(data[i][0]))
+                  //       .attr("y", y(data[i][1]))
+                  //       .text(function () { return cryptonames[i] })
+                  //       .style("fill", "rgba(255,255,255,0.2)")
+                  //       .attr("id", i)
             };
       })
 
