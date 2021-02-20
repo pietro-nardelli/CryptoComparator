@@ -45,6 +45,7 @@ for(i=0;i<number_of_graphs;i++){
 
 //----------FUNZIONE CHIAMATA ONCLICK PER OGNI CRYPTO---------------------------------------
 
+createSingleGraphsOfMyCrypto("Bitcoin")
 
 document.getElementById("MyBtn").addEventListener("click", function() {
 
@@ -128,7 +129,9 @@ function functionOnClickSingle(rel_or_abs){
     //PER ORA IL CONFRONTO E' FRA QUELLA CHE CLICCO,E Dogecoin.
     already_draw=true
     single_chart=true
-    name1 = last_clicked.name
+    
+    name1 = last_clicked.name //@@@@@@@@@@@@@@@@@@@@@
+
     var path_1 = 'dataset/' + String(name1)+ '.csv';
 
     var _data_ = d3.csv(path_1, function(data1) {
