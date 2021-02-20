@@ -1,5 +1,12 @@
 //TO THINK
 /*
+scatter interattivo
+cursore on mouseover
+grafi iniziali vuoti/bianco se 1 solo?
+similitudini menù a tendina
+*/
+
+/*
 - potremmo graficare similarità particolari evidenziandole
   nel grafo e nella matrice nella sottorete creata
 + DOne rami in base alla similarità random YHEEAA done
@@ -23,7 +30,6 @@ var T_ARR = [ 0.95,0.95,0.95,0.95,0.95,0.8,
               0.8,0.75,0.95,0.95,0.95,0.95,
               0.95,0.95,0.95,0.95,0.95,0.95,
               0.95,0.95,0.95,0.95,0.95,0.60   ]
-
 
 
 ///DATABASE
@@ -62,19 +68,22 @@ stroke_width_node_circle = '100px'
 radius_node_circle = '15  '
 
 ///SLIDER
-var initial_threshold = 0.5; //THRESHOLD MIN x creare il nodo!
-var initial_threshold_slider = 0.5; //THRESHOLD BASE OF THE SLIDER
-var fix_val_slider = 0.2 //2 if 0.95, 0 if 0.9, 0.5 if 0.8 ..
+var initial_threshold = 0.95; //THRESHOLD MIN x creare il nodo!
+var initial_threshold_slider = initial_threshold; //THRESHOLD BASE OF THE SLIDER
+var fix_val_slider = (1-initial_threshold)*100 //2 if 0.95, 0 if 0.9, 0.5 if 0.8 ..
 
 // output.innerHTML=0.95
 // actual_t = 0.95
-fix_val_slider = 2
-initial_threshold_slider = 0.95
-initial_threshold = 0.95
 
 var slider = document.getElementById("myRange");
-var output = document.getElementById("demo");
-output.innerHTML = rr(slider.value / (1000 * fix_val_slider) + initial_threshold_slider);
+var output = document.getElementById("demo");   //0 - 0.1   0.9 + 0.1*x x = 1
+                                                          // 0.95 + 0.1*x x=5
+                                                          // 0.8 + 0.1*x   x=(1 - initial)*10
+                                                          //
+output.innerHTML = String(90+slider.value/10)+"%("+
+                      rr((slider.value*fix_val_slider / 1000)  + initial_threshold_slider)
+                      +")";
+
 var actual_t = initial_threshold_slider; //slider initial value is ?  //NOT USED ANYMORE
 // Useful to avoid refresh of the matrix too many times
 function mouseDownOnSlider() {
@@ -92,9 +101,9 @@ var mouse_down_on_slider = -1; // No click/unclick
 function rr(v) { return Number(v.toFixed(3)) } //3rd decimal n
 
 slider.oninput = function () {
-
-  actual_t = rr((this.value / (1000 * fix_val_slider)) + initial_threshold_slider); // slider range 0-100 norm in 0 1
-  output.innerHTML = actual_t;
+  //console.log(this.value* fix_val_slider / 10000)
+  actual_t = rr( ((this.value* fix_val_slider / 10000) ) + initial_threshold_slider); // slider range 0-100 norm in 0 1
+  output.innerHTML = String(90+slider.value/10)+"%("+ actual_t +")";
   slider_update(actual_t)
 }
 
@@ -331,9 +340,7 @@ function getThreshold(source, target, similarity_idx) {
   return ret
 }
 
-//update_reg_links(0); !! CI SERVE PURE QUESTO PRIMA?
-create_graph(0)
-var data_json = "data_close" //first attribute
+
 
 
 document.getElementById("SIMIL1").addEventListener("click", function () {
@@ -363,19 +370,11 @@ document.getElementById("SIMIL5").addEventListener("click", function () {
 
 document.getElementById("SIMIL0").addEventListener("click", function () {
   data_json = "data_close";
-
-  output.innerHTML=0.95
-  actual_t = 0.95
-  fix_val_slider = 2
-  initial_threshold_slider = 0.95
-  initial_threshold = 0.95
-
-  slider_update(actual_t)
-
   create_graph(0)
 })
 
 ///////
+
 
 document.getElementById("SIMIL1_15").addEventListener("click", function () {
   data_json = "data_high_2015"
@@ -461,22 +460,39 @@ document.getElementById("SIMIL4_17").addEventListener("click", function () {
 
 document.getElementById("SIMIL5_17").addEventListener("click", function () {
   data_json = "data_volume_2017";
+
   create_graph(23)
 })
 
 document.getElementById("SIMIL0_17").addEventListener("click", function () {
   data_json = "data_close_2017";
+
   create_graph(18)
 })
 
+function set_slider_params(idx) {
+  initial_threshold = T_ARR[idx]; //THRESHOLD MIN x creare il nodo!
+  initial_threshold_slider = initial_threshold; //THRESHOLD BASE OF THE SLIDER
+  fix_val_slider = (1-initial_threshold)*100
+  output.innerHTML=String(90+slider.value/10)+"%("+initial_threshold+")";
+  slider.value=0
+  actual_t = initial_threshold
+  slider_update(actual_t)
+}
 
 
-var reshape_flag = 1; //1 iterazione quando apre la pagina
+var reshape_flag = 1; //1 iterazione quando apre la pagina DA METTERE PRIMA DEL CREATE_GRAPH
+//update_reg_links(0); !! CI SERVE PURE QUESTO PRIMA?
+create_graph(0)
+var data_json = "data_close" //first attribute
 
 function create_graph(ididix) {
 
-
-
+  if(reshape_flag != 1) //quindi se non è la prima volta
+  {console.log("ASDA")
+  console.log(reshape_flag)
+  set_slider_params(ididix)
+  }
   d3v3.csv("similarities/data_close.json", function () {  // per ogni namecoin prendo i relativi link to add dal datareg
 
     svg.selectAll("*").remove()
@@ -489,15 +505,15 @@ function create_graph(ididix) {
         try {
           arr_similarity_matrix[i] = reshape(arr_similarity_matrix[i])
         } catch (error) {
-          window.location.reload();  
-        }    
+          window.location.reload();
+        }
       }
     }
-    update_reg_links(index_of_similarity_in_use)  
+    update_reg_links(index_of_similarity_in_use)
 
 
     console.log("SIMIL1!")
- 
+
     //console.log(arr_similarity_matrix)
 
     nodes = name_arr;
@@ -602,7 +618,7 @@ function create_graph(ididix) {
 
     });
 
-    slider_update(actual_t)
+    //slider_update(actual_t)
   });
 }
 

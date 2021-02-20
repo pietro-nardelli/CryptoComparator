@@ -448,8 +448,6 @@ with open('positions.json', 'w') as f:
 
 
 
-final_dict_ = compute_similarity_year(list_of_lists[1], final_dict, date_indexes_list, "2016")
-
 for i,list_ in enumerate(list_of_lists):
     final_dict_ = compute_similarity_t0(list_, final_dict)
     with open('similarities/data_'+names[i]+'.json', 'w') as f:
