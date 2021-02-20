@@ -1,5 +1,12 @@
 //TO THINK
 /*
+scatter interattivo
+cursore on mouseover
+grafi iniziali vuoti/bianco se 1 solo?
+similitudini menù a tendina
+*/
+
+/*
 - potremmo graficare similarità particolari evidenziandole
   nel grafo e nella matrice nella sottorete creata
 + DOne rami in base alla similarità random YHEEAA done
@@ -611,7 +618,7 @@ function create_graph(ididix) {
 
     });
 
-    slider_update(actual_t)
+    //slider_update(actual_t)
   });
 }
 
