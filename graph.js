@@ -79,7 +79,11 @@ var slider = document.getElementById("myRange");
 var output = document.getElementById("demo");   //0 - 0.1   0.9 + 0.1*x x = 1
                                                           // 0.95 + 0.1*x x=5
                                                           // 0.8 + 0.1*x   x=(1 - initial)*10
+<<<<<<< HEAD
                                                           //
+=======
+                                                          // 
+>>>>>>> bf7bdbb10fcff72692dfe39cc08beca5ff6ed062
 output.innerHTML = String(90+slider.value/10)+"%("+
                       rr((slider.value*fix_val_slider / 1000)  + initial_threshold_slider)
                       +")";
@@ -466,14 +470,22 @@ document.getElementById("SIMIL5_17").addEventListener("click", function () {
 
 document.getElementById("SIMIL0_17").addEventListener("click", function () {
   data_json = "data_close_2017";
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> bf7bdbb10fcff72692dfe39cc08beca5ff6ed062
   create_graph(18)
 })
 
 function set_slider_params(idx) {
   initial_threshold = T_ARR[idx]; //THRESHOLD MIN x creare il nodo!
   initial_threshold_slider = initial_threshold; //THRESHOLD BASE OF THE SLIDER
+<<<<<<< HEAD
   fix_val_slider = (1-initial_threshold)*100
+=======
+  fix_val_slider = (1-initial_threshold)*100    
+>>>>>>> bf7bdbb10fcff72692dfe39cc08beca5ff6ed062
   output.innerHTML=String(90+slider.value/10)+"%("+initial_threshold+")";
   slider.value=0
   actual_t = initial_threshold
@@ -789,3 +801,5 @@ function ontick(n) {
 
   svg.selectAll(".node circle").transition().duration(1000).attr("transform", "translate(1200,100)")
 }
+
+
