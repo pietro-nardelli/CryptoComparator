@@ -227,7 +227,7 @@ for (var i = 0; i < n_similarities*4; i++) {
   var aux = []
   //get_random_simmetric(100);
 
-  console.log(String(arr_path[i%6])+year_arr[getJ(i)])
+  //console.log(String(arr_path[i%6])+year_arr[getJ(i)])
   create_100100_matrix( String(arr_path[i%6])+year_arr[getJ(i)], aux)
   arr_similarity_matrix[i] = aux
 }
@@ -475,27 +475,35 @@ function set_slider_params(idx) {
   initial_threshold = T_ARR[idx]; //THRESHOLD MIN x creare il nodo!
   initial_threshold_slider = initial_threshold; //THRESHOLD BASE OF THE SLIDER
   fix_val_slider = (1-initial_threshold)*100
-  fix_val_slider = (1-initial_threshold)*100
-
   output.innerHTML=String(90+slider.value/10)+"%("+initial_threshold+")";
   slider.value=0
   actual_t = initial_threshold
-  slider_update(actual_t)
+  //slider_update(actual_t)
 }
 
 
 var reshape_flag = 1; //1 iterazione quando apre la pagina DA METTERE PRIMA DEL CREATE_GRAPH
 //update_reg_links(0); !! CI SERVE PURE QUESTO PRIMA?
-create_graph(0)
 var data_json = "data_close" //first attribute
+var actual_graph_used = -1
+
+create_graph(0)
 
 function create_graph(ididix) {
 
+
+  console.log("last clicked è:")
+  console.log(last_clicked==""?"nessuno":last_clicked.name)
+
+
+  if(actual_graph_used==1212)return
+  actual_graph_used=ididix
   if(reshape_flag != 1) //quindi se non è la prima volta
-  {console.log("ASDA")
-  console.log(reshape_flag)
+  {console.log("cambio valori slider iniziali,e reshape flag è:"+String(reshape_flag))
   set_slider_params(ididix)
   }
+
+
   d3v3.csv("similarities/data_close.json", function () {  // per ogni namecoin prendo i relativi link to add dal datareg
 
     svg.selectAll("*").remove()
@@ -515,7 +523,7 @@ function create_graph(ididix) {
     update_reg_links(index_of_similarity_in_use)
 
 
-    console.log("SIMIL1!")
+    //console.log("SIMIL1!")
 
     //console.log(arr_similarity_matrix)
 
@@ -575,7 +583,8 @@ function create_graph(ididix) {
       })
       .on('click', function (d) {
 
-        if (last_clicked == d) {
+        
+        if (last_clicked == d || last_clicked.name==d.name) {
           last_clicked = ""
           fullMatrix(data_json)
           on_mouseout_function()
@@ -588,6 +597,7 @@ function create_graph(ididix) {
 
         last_clicked = d;
 
+        //console.log(data_json)
         matrixReduction(d.name, data_json, actual_t);
         //createGraphsOfMyCrypto(d.name);
         createSingleGraphsOfMyCrypto(d.name);
@@ -622,7 +632,12 @@ function create_graph(ididix) {
     });
 
     //slider_update(actual_t)
+    if(last_clicked!=""){
+    on_mouseout_function(last_clicked)
+    on_mouseover_function(last_clicked)
+    }
   });
+  
 }
 
 function blink() {
