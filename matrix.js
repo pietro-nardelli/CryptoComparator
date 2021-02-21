@@ -305,6 +305,7 @@ function fullMatrix(file_json) {
     }
 
   });
+  firstTime = false;
 }
 
 
@@ -583,5 +584,4 @@ function full_matrix_or_reducted(last_clicked, data_json, actual_t){
   if (mouse_down_on_slider == 0) {
     mouse_down_on_slider = -1;
   }
-  firstTime = false;
 }

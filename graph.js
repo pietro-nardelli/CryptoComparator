@@ -478,6 +478,7 @@ function set_slider_params(idx) {
   output.innerHTML=String(90+slider.value/10)+"%("+initial_threshold+")";
   slider.value=0
   actual_t = initial_threshold
+  full_matrix_or_reducted(last_clicked, data_json, actual_t);
   //slider_update(actual_t)
 }
 
@@ -598,7 +599,8 @@ function create_graph(ididix) {
         last_clicked = d;
 
         //console.log(data_json)
-        matrixReduction(d.name, data_json, actual_t);
+        //matrixReduction(d.name, data_json, actual_t);
+        full_matrix_or_reducted(last_clicked, data_json, actual_t);
         //createGraphsOfMyCrypto(d.name);
         createSingleGraphsOfMyCrypto(d.name);
         //createBoxPlotOfMyCrypto(d.name);
