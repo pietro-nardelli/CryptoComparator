@@ -15,6 +15,7 @@ var x_m = d3.scaleBand().range([0, width]),
     c = d3.scaleSequential(d3.interpolateSpectral)
     .domain([1,0]);
 */
+// d3.interpolateRdYlBu
   c = d3.scaleSequential(d3.interpolateInferno)
       .domain([0,1]);
 
@@ -280,7 +281,11 @@ function fullMatrix(file_json) {
       // when the i-th x of d element is equal to p.y (or p.x) return true.
       d3.selectAll(".row text").classed("activeReduced", function(d, i) { return d[i].x == p.y; });
       d3.selectAll(".column text").classed("activeReduced", function(d, i) { return d[i].x == p.x; });
-      createGraphsOfMyCrypto(nodes[p.y].Name,nodes[p.x].Name)
+
+      crypto_name_matrix1 = nodes[p.y].Name;
+      crypto_name_matrix2 = nodes[p.x].Name;
+      createGraphsOfMyCrypto(nodes[p.y].Name,nodes[p.x].Name);
+      create_scatterplot(crypto_name_matrix1,crypto_name_matrix2);
     }
 
     d3.select("#order").on("change", function() {
@@ -540,10 +545,11 @@ function matrixReduction(node_name, file_json, slider_value) {
       d3.selectAll(".row text").classed("activeReduced", function(d, i) { return d[i].x == p.y; });
       d3.selectAll(".column text").classed("activeReduced", function(d, i) { return d[i].x == p.x; });
 
-      crypto_name_matrix1 = nodes[p.y].Name
-      crypto_name_matrix2 = nodes[p.x].Name
+      crypto_name_matrix1 = nodes[p.y].Name;
+      crypto_name_matrix2 = nodes[p.x].Name;
 
-      createGraphsOfMyCrypto(crypto_name_matrix1, crypto_name_matrix2)
+      createGraphsOfMyCrypto(crypto_name_matrix1, crypto_name_matrix2);
+      create_scatterplot(crypto_name_matrix1,crypto_name_matrix2);
     }
 
     d3.select("#order").on("change", function() {
