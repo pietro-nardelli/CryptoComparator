@@ -27,10 +27,10 @@ Cambiare value slider , 90% ?
 - TODO animationhell
 */
 
-var T_ARR1 = [ 0.666672100974757,0.9368,0.95,0.95,0.95,0.6666,
+var T_ARR1 = [0.666672100974757,0.9368,0.95,0.95,0.95,0.6666,
               0.3,0.3,0.3,0.3,0.3,0.3,
               0.5,0.5,0.5,0.5,0.5,0.5,
-              0.9,0.9,0.9,0.9,0.9,0.9   ]
+              0.9,0.9,0.9,0.9,0.9,0.9]
 
    
 var T_ARR =    [0.9258215989245593, 0.9160405042808755, 0.9287826381387896, 0.936899679455302, 0.925929462364907, 0.666672100974757,
@@ -600,6 +600,7 @@ function create_graph(ididix) {
           last_clicked = ""
           fullMatrix(data_json)
           on_mouseout_function()
+          create_scatterplot()
           return
         }
 
@@ -616,7 +617,7 @@ function create_graph(ididix) {
         createSingleGraphsOfMyCrypto(d.name);
         //createBoxPlotOfMyCrypto(d.name);
         //blink()
-
+        
         
       });
 
@@ -725,8 +726,9 @@ function on_mouseover_function(d) {
       .style('fill', fill_node_text);
 
     target_arr_names = target_arr_names.concat(target_name)
+    
   }
-  return target_arr_names
+  create_scatterplot_from_graph( target_arr_names.concat(d.name))
 }
 
 
