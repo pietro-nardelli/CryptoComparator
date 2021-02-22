@@ -4,6 +4,7 @@ scatter interattivo
 cursore on mouseover
 grafi iniziali vuoti/bianco se 1 solo?
 similitudini menù a tendina
+Cambiare value slider , 90% ?
 */
 
 /*
@@ -26,10 +27,20 @@ similitudini menù a tendina
 - TODO animationhell
 */
 
-var T_ARR = [ 0.95,0.95,0.95,0.95,0.95,0.8,
-              0.8,0.75,0.95,0.95,0.95,0.95,
-              0.95,0.95,0.95,0.95,0.95,0.95,
-              0.95,0.95,0.95,0.95,0.95,0.60   ]
+var T_ARR = [ 0.666672100974757,0.9368,0.95,0.95,0.95,0.6666,
+              0.3,0.3,0.3,0.3,0.3,0.3,
+              0.5,0.5,0.5,0.5,0.5,0.5,
+              0.9,0.9,0.9,0.9,0.9,0.9   ]
+
+   
+var T_ARR1 =    [0.9258215989245593, 0.9160405042808755, 0.9287826381387896, 0.936899679455302, 0.925929462364907, 0.666672100974757,
+  0.11579229728595952,0.12609404056304097,0.10226246941063888,0.10934962002702181,0.11551346331676565,0.3654305802084671,
+  0.06644471580952299,0.0662827433551127,0.06451481322929004,0.07106426047662956,0.06706740242648263,0.25875661189361066,
+  0.43470956073676836,0.439847184716891,0.4294995693621586,0.6167563070011337,0.44263249763380497,0.423165853649523   ]
+
+
+
+
 
 
 ///DATABASE
@@ -593,8 +604,8 @@ function create_graph(ididix) {
         }
 
         on_mouseout_function(d)
-        on_mouseover_function(d)
-
+        arr_tar_names = on_mouseover_function(d)
+        print(arr_tar_names)
 
         last_clicked = d;
 
@@ -606,7 +617,7 @@ function create_graph(ididix) {
         //createBoxPlotOfMyCrypto(d.name);
         //blink()
 
-
+        
       });
 
 
@@ -697,6 +708,7 @@ function on_mouseover_function(d) {
   //e li ricolora, ovvero cerchi e testi
   n = link_target_node[0].length
   target_name = "";
+  var target_arr_names = []
   for (var a = 0; a <= n - 1; a++) {
     if (link_target_node[0][a] != undefined)
       target_name = link_target_node[0][a].getAttribute("target");
@@ -711,8 +723,10 @@ function on_mouseover_function(d) {
       .data(nodes)
       .filter(function (x) { return x.name == target_name })
       .style('fill', fill_node_text);
-  }
 
+    target_arr_names = target_arr_names.concat(target_name)
+  }
+  return target_arr_names
 }
 
 
