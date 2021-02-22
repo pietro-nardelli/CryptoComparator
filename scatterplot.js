@@ -19,9 +19,8 @@ var svgg = d3.select("#scatterplot")
 var mydata = []
 var window_color = "rgb(2, 200, 255)"
 
-// create_scatterplot()
 
-create_scatterplot("Bitcoin","Dogecoin")
+//create_scatterplot()
 
 function create_scatterplot(name1=null,name2=null) {
       svgg.selectAll("*").remove(); 
@@ -174,6 +173,111 @@ function create_scatterplot(name1=null,name2=null) {
       
 
           }
+
+
+            
+
+
+      })
+
+}
+
+// names_array_test = ["Siacoin", "DigiByte", "BitcoinDark", "GameCredits", "GXShares", "Lykke",
+// "Dogecoin", "Blocknet", "Syscoin", "Verge", "FirstCoin", "Nxt", "I-O Coin", "Ubiq", "Particl",
+// "NAV Coin", "Rise", "Vertcoin", "Bitdeal", "FairCoin", "Metaverse ETP", "Gulden",]
+
+//create_scatterplot_from_graph(names_array_test)
+
+function create_scatterplot_from_graph(name_array) {
+svgg.selectAll("*").remove(); 
+
+
+d3v3.json("mds_positions.json", function (data) {
+      
+      
+      var x = d3.scaleLinear()
+            .domain([-1, 3])
+            .range([0, width_s]);
+      svgg.append("g")
+            .attr("transform", "translate(0," + height_s + ")")
+            .call(d3.axisBottom(x));
+
+      var y = d3.scaleLinear()
+            .domain([-1, 2])
+            .range([height_s, 0]);
+      svgg.append("g")
+            .call(d3.axisLeft(y));
+
+      var index_array = []
+
+      for(i=0; i<name_array.length; i++){
+            for(j=0;j<cryptonames.length;j++){
+                  if(name_array[i]==cryptonames[j]){
+                        index_array.push(j)
+                        break
+                  }
+            }
+      }
+
+for (var i = 0; i < 100; i++) {
+
+      bool = index_array.includes(i)
+
+      if(!bool){
+            var g = svgg.append('g')
+            let crypto_name = cryptonames[i]
+
+            var dot = g.append("circle")
+                  .attr("cx", x(data[i][0]))
+                  .attr("cy", y(data[i][1]))
+                  .attr("r", 4)
+                  .style("fill", "#808080")
+                  .attr("id", crypto_name)
+                  .attr("opacity", "0.2")
+
+            }
+      else{
+
+            var g = svgg.append('g')
+            let crypto_name = cryptonames[i]
+
+            g.append("text")
+                  .text(crypto_name)
+                  .attr("x", x(data[i][0])+10)
+                  .attr("y", y(data[i][1]))
+                  .attr("font_family", "sans-serif")  // Font type
+                  .attr("font-size", "14px")  // Font size
+                  .attr("fill", "white") 
+                  .attr("opacity", "1.0")
+                  .attr("hidden", true)
+
+            var dot = g.append("circle")
+                  .attr("cx", x(data[i][0]))
+                  .attr("cy", y(data[i][1]))
+                  .attr("r", 4)
+                  .style("fill", "#FF6600")
+                  .attr("id", crypto_name)
+                  .attr("opacity", "1.0")
+                  .on('mouseover', 
+            function (d,i) {
+                  d3.select(this).transition().duration('100').attr("r", 11);
+
+            })
+
+
+            .on('mouseout', function (d) {
+                  d3.select(this).transition().duration('200').attr("r", 4);
+                  g.style("opacity", "0.0")
+            });
+
+            
+            }
+
+
+      };
+
+
+
 
 
             

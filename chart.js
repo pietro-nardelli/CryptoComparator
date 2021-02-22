@@ -28,6 +28,9 @@ number_of_graphs=3
 
 rel_or_abs = 'absolute'
 clicked = true
+single_chart=true
+already_draw=true
+
 //let's create the svgs for each graph!
 var svg_arr=[]
 var svg_arr_boxplot=[]
@@ -37,18 +40,12 @@ for(i=0;i<number_of_graphs;i++){
     .attr("height", height1 + margin1.top + margin1.bottom).append("g").attr("transform","translate(" + margin1.left + "," + margin1.top + ")").attr("id", i)
 }
 
-// for(i=0;i<number_of_boxplot;i++){
-//     svg_arr_boxplot[i] = d3.select("#my_dataviz_boxplot").append("svg").attr("width", width1 + margin1.left + margin1.right)
-//     .attr("height", height1 + margin1.top + margin1.bottom).append("g").attr("transform","translate(" + margin1.left + "," + margin1.top + ")").attr("id", i)
-// }
-
 
 //----------FUNZIONE CHIAMATA ONCLICK PER OGNI CRYPTO---------------------------------------
 
 createSingleGraphsOfMyCrypto("Bitcoin")
 
 document.getElementById("MyBtn").addEventListener("click", function() {
-
     if(already_draw){
         if(single_chart){
             clicked = !clicked;
@@ -80,9 +77,9 @@ document.getElementById("MyBtn").addEventListener("click", function() {
 function functionOnClick(rel_or_abs){
 
 
-    let name1 = last_clicked.name
+    let name1 = crypto_name_matrix1
     var path_1 = 'dataset/' + String(name1)+ '.csv';
-    let name2 = 'Dogecoin'
+    let name2 = crypto_name_matrix2
     var path_2 = 'dataset/' + String(name2)+ '.csv';
 
     var _data_ = d3.csv(path_1, function(data1) {
@@ -129,8 +126,10 @@ function functionOnClickSingle(rel_or_abs){
     //PER ORA IL CONFRONTO E' FRA QUELLA CHE CLICCO,E Dogecoin.
     already_draw=true
     single_chart=true
-    
-    name1 = last_clicked.name //@@@@@@@@@@@@@@@@@@@@@
+    if(last_clicked.name == undefined){
+        name1 = "Bitcoin"
+    }
+    else name1 = last_clicked.name //@@@@@@@@@@@@@@@@@@@@@
 
     var path_1 = 'dataset/' + String(name1)+ '.csv';
 
@@ -316,8 +315,8 @@ function create_scatterplot(svg,margin){
 
 
 //create_scatterplot(svg,margin1)
-var already_draw = false
-var single_chart = false
+// var already_draw = false
+// var single_chart = false
 
 function createGraphsOfMyCrypto(name1,name2='Dogecoin'){
     //PER ORA IL CONFRONTO E' FRA QUELLA CHE CLICCO,E Dogecoin.
