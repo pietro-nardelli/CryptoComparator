@@ -105,6 +105,7 @@ def import_data (path:str):
             temp_dict = {}
             for i in range(len(csv_headings)):
                 temp_dict[csv_headings[i]] = row[i]
+
                 # From Market Cap, clear special characters
                 if (i > 1):
                     temp = row[i].replace('$','').replace(',','').replace('%','')
@@ -114,13 +115,14 @@ def import_data (path:str):
                     # If change (24h), divide by 100 because it's a % value
                     elif (i == 6):
                         temp = float(temp)/100
-
+                
                     temp_dict[csv_headings[i]] = temp
+                
             # {"#": "1", "Name": "Bitcoin", "Market Cap": "60219183594", "Price": "3631.72", "Circulating Supply": "16581450", "Volume (24h)": "1226800000", "% Change (24h)": "-0.84"}
             dictionary['nodes'].append(temp_dict)
     return dictionary
 
-# Preprocess data and compute MDS
+# Preprocess data and compute MDS/PCA
 def dim_red_computation (dictionary, dim_reduction_alg='PCA'):
     standard_input_list = []
     nodes_id = []
@@ -142,9 +144,11 @@ def dim_red_computation (dictionary, dim_reduction_alg='PCA'):
     std_scale = preprocessing.StandardScaler().fit(standard_input_list)
     standard_input_list= std_scale.transform(standard_input_list)
 
+    # MDS based on Euclidean distance
     if (dim_reduction_alg == 'mds'):
         mds = manifold.MDS(n_components=2, dissimilarity="euclidean",random_state=13)
         pos = mds.fit(standard_input_list).embedding_
+    # PCA 
     elif (dim_reduction_alg == 'pca'):
         pca = PCA(n_components=2)
         pos = pca.fit_transform(standard_input_list)
@@ -288,12 +292,10 @@ def compute_dissimilarity_t0_for_mds(standard_input_list):
             else:
                 matrix[r][c] = 1 - matrix[r][c]/max
     matrix = np.array(matrix, dtype=np.float64)
-    print (matrix)
     return matrix
 
 # Preprocess data and compute MDS
 def dim_red_computation_custom (matrix):
-    #data standardization
     std_scale = preprocessing.StandardScaler().fit(matrix)
     matrix= std_scale.transform(matrix)
 
@@ -333,7 +335,6 @@ def compute_similarity_year(standard_input_list, final_dict, date_indexes_list, 
             # 995 if year 2015
             # E.g. Crown crypto 925 if year 2015: some values are lost.
 
-            if ( i == 57 ): print (date_indexes_list[j])
             if (date_indexes_list[i][year] == date_indexes_list[j][year] and date_indexes_list[i][year] != 0 and date_indexes_list[i][year] !=0):
 
                 v_j = standard_input_list[j]
@@ -374,7 +375,6 @@ def compute_similarity_year(standard_input_list, final_dict, date_indexes_list, 
 
 final_dict = import_data ('dataset/100List.csv')
 
-# ESEMPIO:
 volume_standard_input_list=[]
 market_standard_input_list=[]
 high_standard_input_list=[]
@@ -390,7 +390,6 @@ cryptonames = ["Bitcoin", "Ethereum", "Bitcoin Cash", "Ripple", "Dash", "Litecoi
 
 for crypto in cryptonames:
     dataset = preprocess_and_save_Data(crypto,dateFormat=True,save=False)
-    #del dataset['Date']
     vol_list = list(dataset['Volume'])
     market_list = list(dataset['Market Cap'])
     open_list = list(dataset['Open'])
@@ -425,39 +424,52 @@ date_indexes_list = index_of_first_of_the_year (date_input_list)
 
 
 
-# dissimilarity matrix for volume
+# dissimilarity matrix for Volume
 matrix = compute_dissimilarity_t0_for_mds(list_of_lists[0])
-#print (matrix)
 pos_custom = dim_red_computation_custom(matrix)
 
-# MDS COMPUTATION PART: used to compute nodes_id only
-dim_reduction_alg = 'mds'
+# PCA COMPUTATION PART: used to compute also nodes_id and plot MDS
+# It's based only on market cap, circulating supply and % change (24h)
+dim_reduction_alg = 'pca'
 nodes_id, pos, standard_input_list = dim_red_computation(final_dict, dim_reduction_alg=dim_reduction_alg)
 final_dict = compute_distance(pos, standard_input_list, final_dict, dim_red_flag=True)
-#########
-
-#plot_dim_red(nodes_id, pos)
+# Plot both PCA and MDS (custom)
+plot_dim_red(nodes_id, pos)
 plot_dim_red(nodes_id, pos_custom)
 
-pos_dict = {} # {}
+# Save MDS positions 
+pos_dict = {}
 for i,node in enumerate(final_dict['nodes']):
     pos_dict[i] = [pos_custom[i][0], pos_custom[i][1]]
-
-with open('positions.json', 'w') as f:
+with open('mds_positions.json', 'w') as f:
     json.dump(pos_dict,f)
 
+# Save PCA positions 
+pos_dict = {}
+for i,node in enumerate(final_dict['nodes']):
+    pos_dict[i] = [pos[i][0], pos[i][1]]
+with open('pca_positions.json', 'w') as f:
+    json.dump(pos_dict,f)
+
+# All attributes (except Name) are not used anymore: remove them from dictionary
+for i, node in enumerate(final_dict['nodes']):
+    final_dict['nodes'][i].pop('Market Cap', None)
+    final_dict['nodes'][i].pop('Price', None)
+    final_dict['nodes'][i].pop('Circulating Supply', None)
+    final_dict['nodes'][i].pop('Volume (24h)', None)
+    final_dict['nodes'][i].pop('% Change (24h)', None)
 
 
+
+# Save similarities w.r.t. t0
 for i,list_ in enumerate(list_of_lists):
     final_dict_ = compute_similarity_t0(list_, final_dict)
     with open('similarities/data_'+names[i]+'.json', 'w') as f:
         json.dump(final_dict_,f)
 
-
+# Save similarities w.r.t. year
 for i,list_ in enumerate(list_of_lists):
     for year in years:
         final_dict_ = compute_similarity_year(list_, final_dict, date_indexes_list, year)
         with open('similarities/data_'+names[i]+'_'+year+'.json', 'w') as f:
             json.dump(final_dict_,f)
-
-#final_dict_ = compute_similarity_year(list_of_lists[3], final_dict, date_indexes_list, '2015')

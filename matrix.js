@@ -572,7 +572,7 @@ function matrixReduction(node_name, file_json, slider_value) {
   });
 }
 
-function full_matrix_or_reducted(last_clicked, data_json, actual_t){
+function full_matrix_or_reduced(last_clicked, data_json, actual_t){
   if (!firstTime) {
     if (last_clicked == "" && mouse_down_on_slider==-1){
       fullMatrix(data_json);

@@ -92,7 +92,7 @@ function mouseDownOnSlider() {
 }
 function mouseUpOnSlider() {
   mouse_down_on_slider = 0; // Unclick
-  full_matrix_or_reducted(last_clicked, data_json, actual_t);
+  full_matrix_or_reduced(last_clicked, data_json, actual_t);
 }
 slider.addEventListener("mousedown", mouseDownOnSlider);
 slider.addEventListener("mouseup", mouseUpOnSlider);
@@ -120,7 +120,7 @@ function slider_update(t) {
     .filter(function (x) { return x.k >= t })
     .style("stroke", color_links)
 
-  full_matrix_or_reducted(last_clicked, data_json, t);
+  full_matrix_or_reduced(last_clicked, data_json, t);
   if (last_clicked != "") {
     on_mouseover_function(last_clicked)
   }
@@ -478,7 +478,7 @@ function set_slider_params(idx) {
   output.innerHTML=String(90+slider.value/10)+"%("+initial_threshold+")";
   slider.value=0
   actual_t = initial_threshold
-  full_matrix_or_reducted(last_clicked, data_json, actual_t);
+  full_matrix_or_reduced(last_clicked, data_json, actual_t);
   //slider_update(actual_t)
 }
 
@@ -600,7 +600,7 @@ function create_graph(ididix) {
 
         //console.log(data_json)
         //matrixReduction(d.name, data_json, actual_t);
-        full_matrix_or_reducted(last_clicked, data_json, actual_t);
+        full_matrix_or_reduced(last_clicked, data_json, actual_t);
         //createGraphsOfMyCrypto(d.name);
         createSingleGraphsOfMyCrypto(d.name);
         //createBoxPlotOfMyCrypto(d.name);

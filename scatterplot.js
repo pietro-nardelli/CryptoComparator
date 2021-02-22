@@ -27,7 +27,7 @@ function create_scatterplot(name1=null,name2=null) {
       svgg.selectAll("*").remove(); 
 
 
-      d3v3.json("positions.json", function (data) {
+      d3v3.json("mds_positions.json", function (data) {
             
             
             var x = d3.scaleLinear()
