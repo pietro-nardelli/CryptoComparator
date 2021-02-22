@@ -278,7 +278,7 @@ def compute_dissimilarity_t0_for_mds(standard_input_list):
             val = my_corrcoef(v_i[:min_nums], v_j[:min_nums])
             #val = np.linalg.norm(np.asarray(v_i[:min_nums]) - np.asarray(v_j[:min_nums])) #[-1,1]
             val = ( val + 1 )/2 # Normalize between [0,1]
-            val = round(val.astype(np.float64),1)
+            val = val.astype(np.float64)
             if (max < val):
                 max = val
 
@@ -296,13 +296,9 @@ def compute_dissimilarity_t0_for_mds(standard_input_list):
 
 # Preprocess data and compute MDS
 def dim_red_computation_custom (matrix):
-    std_scale = preprocessing.StandardScaler().fit(matrix)
-    matrix= std_scale.transform(matrix)
-
-    matrix = check_symmetric(matrix, tol=1e-30)
-
     mds = manifold.MDS(n_components=2, dissimilarity='precomputed',random_state=13)
-    pos = mds.fit(matrix).embedding_
+    mds_fit = mds.fit(matrix)
+    pos = mds.fit_transform(matrix)
 
     return pos
 
@@ -373,6 +369,31 @@ def compute_similarity_year(standard_input_list, final_dict, date_indexes_list, 
         link['value'] = link['value']/max
     return final_dict
 
+
+def slider_threshold(final_dict):
+    number_of_links = 1500
+    matrix_list = []
+    max_index = 0
+    for i,d in enumerate(final_dict['links']):
+        matrix_list.append(d['value'])
+    
+    # Sort the list and choose the index for threshold if there're too many -1
+    matrix_list.sort(reverse=True)
+    flag_less_links = False
+    for i,v in enumerate(matrix_list):
+        if (v > -1):
+            max_index = i
+        else: flag_less_links = True
+    
+    # Choose number of links 
+    if (not(flag_less_links)):
+        threshold = matrix_list[number_of_links-1]
+    else:
+        threshold = matrix_list[max_index]
+    
+    return threshold
+
+
 final_dict = import_data ('dataset/100List.csv')
 
 volume_standard_input_list=[]
@@ -407,16 +428,15 @@ for crypto in cryptonames:
     low_standard_input_list.append(low_list)
     date_input_list.append(date_list)
 
-
-list_of_lists.append(volume_standard_input_list)
-list_of_lists.append(market_standard_input_list)
-list_of_lists.append(open_standard_input_list)
 list_of_lists.append(close_standard_input_list)
 list_of_lists.append(high_standard_input_list)
 list_of_lists.append(low_standard_input_list)
+list_of_lists.append(market_standard_input_list)
+list_of_lists.append(open_standard_input_list)
+list_of_lists.append(volume_standard_input_list)
 
 
-names = ['volume', 'market_cap', 'open', 'close','high','low']
+names = ['close','high', 'low', 'market_cap', 'open', 'volume']
 years = ['2017', '2016', '2015']
 
 
@@ -426,6 +446,7 @@ date_indexes_list = index_of_first_of_the_year (date_input_list)
 
 # dissimilarity matrix for Volume
 matrix = compute_dissimilarity_t0_for_mds(list_of_lists[0])
+print (matrix[27][28])
 pos_custom = dim_red_computation_custom(matrix)
 
 # PCA COMPUTATION PART: used to compute also nodes_id and plot MDS
@@ -460,10 +481,12 @@ for i, node in enumerate(final_dict['nodes']):
     final_dict['nodes'][i].pop('% Change (24h)', None)
 
 
-
+    
+threshold_array = []
 # Save similarities w.r.t. t0
 for i,list_ in enumerate(list_of_lists):
     final_dict_ = compute_similarity_t0(list_, final_dict)
+    threshold_array.append(slider_threshold(final_dict_))
     with open('similarities/data_'+names[i]+'.json', 'w') as f:
         json.dump(final_dict_,f)
 
@@ -471,5 +494,8 @@ for i,list_ in enumerate(list_of_lists):
 for i,list_ in enumerate(list_of_lists):
     for year in years:
         final_dict_ = compute_similarity_year(list_, final_dict, date_indexes_list, year)
+        threshold_array.append(slider_threshold(final_dict_))
         with open('similarities/data_'+names[i]+'_'+year+'.json', 'w') as f:
             json.dump(final_dict_,f)
+
+print (threshold_array)
