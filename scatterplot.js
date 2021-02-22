@@ -20,7 +20,7 @@ var mydata = []
 var window_color = "rgb(2, 200, 255)"
 
 
-//create_scatterplot()
+create_scatterplot()
 
 function create_scatterplot(name1=null,name2=null) {
       svgg.selectAll("*").remove(); 
