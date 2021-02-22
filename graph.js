@@ -728,8 +728,7 @@ function on_mouseover_function(d) {
     target_arr_names = target_arr_names.concat(target_name)
     
   }
-  create_scatterplot_from_graph( target_arr_names)
-
+  create_scatterplot_from_graph( target_arr_names.concat(d.name))
 }
 
 
