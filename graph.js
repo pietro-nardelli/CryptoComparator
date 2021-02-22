@@ -617,7 +617,7 @@ function create_graph(ididix) {
         createSingleGraphsOfMyCrypto(d.name);
         //createBoxPlotOfMyCrypto(d.name);
         //blink()
-        create_scatterplot_from_graph( [last_clicked.name])
+        
         
       });
 
@@ -726,8 +726,9 @@ function on_mouseover_function(d) {
       .style('fill', fill_node_text);
 
     target_arr_names = target_arr_names.concat(target_name)
+    
   }
-  return target_arr_names
+  create_scatterplot_from_graph( target_arr_names.concat(d.name))
 }
 
 
