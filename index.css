@@ -2,18 +2,32 @@ body {
   background-color: rgb(53, 53, 53);
   font-family: "Nunito","PT Serif", serif;
   /*margin: 1em auto 4em auto;*/
-  position: relative;
-  width: 100%;
   overflow-x: hidden;
-  zoom: 1;
+  overflow-y: hidden;
+
 }
 
 #scale-zoom {
-  zoom: 0.8;
+  zoom: 0.755;
+  }
+#menu {
+  position: fixed; 
+  display: block;
+  background-color: rgb(40, 40, 40);
+  /*border: 2px solid rgb(209, 153, 0); */
+  width: 100%; 
+  height: 40px;
+  margin-top: -10px;
+  margin-left: -11px;
+  border: 1px solid;
+  padding: 10px;
+  /*
+  box-shadow: 5px 5px;
+  */
 }
-menu {
-  background-color: rgb(53, 53, 53);
-  background-position: 100%;
+h3 {
+  display: inline;
+  color: #434343;
 }
 
 .button {
@@ -89,9 +103,15 @@ menu {
 
   #svg_graph {
       background-color: rgb(53, 53, 53);
+      margin-top: 25px;
       zoom: 0.36;
       border: 5px solid rgb(255, 153, 0);
+      width: 2900px;
+      margin-left: 0px;
       float: left;
+      position: relative;
+      margin-top: 165px;
+      
   }
 
   .input {
@@ -229,15 +249,16 @@ menu {
         color: #e6550d;
       }
       #matrix_div {
+        position: absolute;
         width: 625px;
-        height: 542px;
-        border: 1px solid rgb(255, 102, 0);
-        margin-left: 976px;
+        height: 541px;
+        border: 1px solid rgb(255, 153, 0);
+        margin-left: 1060px;
+        margin-top: 59px;
       }
 
       #svg_matrix {
         display: block
-        width: 600px;
       }
 
       .axis path, .axis line {
@@ -335,9 +356,8 @@ menu {
       }
       #legend_matrix{
         position: absolute;
-        margin-left: 0px;
-        right: 190px;
-        top: 405px;
+        margin-left: 670px;
+        margin-top: 290px;
         width: 25px;
       }
       #svg_legend_matrix{
@@ -352,16 +372,18 @@ menu {
     #my_dataviz {
       position:absolute;
       float: left;
-      margin-top: 0px;
+      margin-top: 5px;
+      border: 1px solid rgb(255, 153, 0);
+      width: 975px;
       /* style="font-family : inherit;" */
     }
     #my_dataviz_boxplot {
       position:absolute;
       margin-top: 550px;
-      margin-left: 865px;
+      margin-left: 1000px;
       width: 600px;
       height: 300px;
-      style="font-family : inherit;
+      font-family : inherit;
     }
 
       /* The container <div> - needed to position the dropdown content */
@@ -395,3 +417,22 @@ menu {
 
       /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
       .show {display:block;}
+
+      #scatterplot {
+        position: absolute;
+        margin-left: 1445px;
+        width: 775px;
+        height: 405px;
+        border: 2px solid rgb(209, 153, 0);
+        zoom: 0.9;
+        margin-top: 677px;
+      }
+
+      /* width */
+
+        /*
+        #twitter-widget-0{
+          overflow-y: hidden;
+        }*/
+        
+        /*class="timeline-Viewport"*/
