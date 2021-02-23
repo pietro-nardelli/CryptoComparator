@@ -22,7 +22,6 @@ var height1 = 270 - margin1.top - margin1.bottom;
 
 var need_candlestick = false;
 //how many graphs do I want to create?
-
 number_of_graphs=3
 // number_of_boxplot=2
 
@@ -30,7 +29,7 @@ rel_or_abs = 'absolute'
 clicked = true
 single_chart=true
 already_draw=true
-
+change_graphs=false
 //let's create the svgs for each graph!
 var svg_arr=[]
 var svg_arr_boxplot=[]
@@ -52,29 +51,48 @@ document.getElementById("MyBtn").addEventListener("click", function() {
             if(clicked) {
                 rel_or_abs = 'absolute';
                 document.getElementById("MyBtn").innerHTML = rel_or_abs+' scale';
-                functionOnClickSingle(rel_or_abs)
+                functionOnClickSingle(rel_or_abs,change_graphs)
             }
             else rel_or_abs = 'relative'
             document.getElementById("MyBtn").innerHTML = rel_or_abs+' scale';
-            functionOnClickSingle(rel_or_abs)
+            functionOnClickSingle(rel_or_abs,change_graphs)
         }
         else{
             clicked = !clicked;
             if(clicked) {
                 rel_or_abs = 'absolute';
                 document.getElementById("MyBtn").innerHTML = rel_or_abs+' scale';
-                functionOnClick(rel_or_abs)
+                functionOnClick(rel_or_abs,change_graphs)
             }
             else rel_or_abs = 'relative'
             document.getElementById("MyBtn").innerHTML = rel_or_abs+' scale';
-            functionOnClick(rel_or_abs)
+            functionOnClick(rel_or_abs,change_graphs)
 
         }
     }
   });
 
 
-function functionOnClick(rel_or_abs){
+document.getElementById("MyBtn2").addEventListener("click", function() {
+    if(already_draw){
+        if(single_chart){
+            change_graphs = !change_graphs
+            functionOnClickSingle(rel_or_abs,change_graphs)
+        }
+        else
+        {
+            change_graphs = !change_graphs
+            functionOnClick(rel_or_abs,change_graphs)
+
+        }
+
+    }
+});
+
+
+
+
+function functionOnClick(rel_or_abs=null,change_graphs=change_graphs){
 
 
     let name1 = crypto_name_matrix1
@@ -93,6 +111,8 @@ function functionOnClick(rel_or_abs){
 
             attr_to_plot = ["close", "market cap", "volume", "high", "low", "open"]
 
+            if(change_graphs) n=5
+            else n=2
 
             if(need_candlestick==false){
                 var data_final1 = {"name": name1,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
@@ -105,11 +125,11 @@ function functionOnClick(rel_or_abs){
             data_final2, _ = preprocess_data(data2,need_candlestick=need_candlestick,data_summary=false,data_final2)
 
 
-            draw_multilines_time_chart(svg_arr[0],margin1, data_final1,data_final2, attr_to_plot[0], [1,2], 0,number_of_graphs,rel_or_abs=rel_or_abs)
+            draw_multilines_time_chart(svg_arr[0],margin1, data_final1,data_final2, attr_to_plot[n-2], [1,2], 0,number_of_graphs,rel_or_abs=rel_or_abs)
 
-            draw_multilines_time_chart(svg_arr[1],margin1, data_final1,data_final2, attr_to_plot[1], [0,2], 1,number_of_graphs,rel_or_abs=rel_or_abs)
+            draw_multilines_time_chart(svg_arr[1],margin1, data_final1,data_final2, attr_to_plot[n-1], [0,2], 1,number_of_graphs,rel_or_abs=rel_or_abs)
 
-            draw_multilines_time_chart(svg_arr[2],margin1, data_final1,data_final2, attr_to_plot[2], [0,1], 2,number_of_graphs,rel_or_abs=rel_or_abs)
+            draw_multilines_time_chart(svg_arr[2],margin1, data_final1,data_final2, attr_to_plot[n], [0,1], 2,number_of_graphs,rel_or_abs=rel_or_abs)
 
             // draw_multilines_time_chart(svg_arr[3],margin1, data_final1,data_final2, attr_to_plot[3], [0,1,2], 3,number_of_graphs,rel_or_abs=rel_or_abs)
 
@@ -121,15 +141,14 @@ function functionOnClick(rel_or_abs){
 }
 
 
-function functionOnClickSingle(rel_or_abs){
+function functionOnClickSingle(rel_or_abs=null,change_graphs=change_graphs){
 
-    //PER ORA IL CONFRONTO E' FRA QUELLA CHE CLICCO,E Dogecoin.
     already_draw=true
     single_chart=true
     if(last_clicked.name == undefined){
         name1 = "Bitcoin"
     }
-    else name1 = last_clicked.name //@@@@@@@@@@@@@@@@@@@@@
+    else name1 = last_clicked.name 
 
     var path_1 = 'dataset/' + String(name1)+ '.csv';
 
@@ -142,12 +161,12 @@ function functionOnClickSingle(rel_or_abs){
 
         attr_to_plot = ["close", "market cap", "volume", "high", "low", "open"]
 
+        if(change_graphs) n=5
+        else n=2
 
-        if(need_candlestick==false){
+        if(need_candlestick==false)
+        {
             var data_final1 = {"name": name1,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
-
-            print('the blue line is '+ name1)
-
         }
         else var data_final1 = {"key": keyword,"values": []}
 
@@ -156,13 +175,11 @@ function functionOnClickSingle(rel_or_abs){
 
 
 
-        draw_time_chart(svg_arr[0], margin1, data_final1, attr_to_plot[0], [1,2], 0 , number_of_graphs, rel_or_abs=rel_or_abs)
+        draw_time_chart(svg_arr[0], margin1, data_final1, attr_to_plot[n-2], [1,2], 0 , number_of_graphs, rel_or_abs=rel_or_abs)
 
-        draw_time_chart(svg_arr[1], margin1, data_final1, attr_to_plot[1], [0,2], 1 , number_of_graphs, rel_or_abs=rel_or_abs)
+        draw_time_chart(svg_arr[1], margin1, data_final1, attr_to_plot[n-1], [0,2], 1 , number_of_graphs, rel_or_abs=rel_or_abs)
 
-        draw_time_chart(svg_arr[2], margin1, data_final1, attr_to_plot[2], [0,1], 2 , number_of_graphs, rel_or_abs=rel_or_abs)
-
-       // draw_time_chart(svg_arr[3], margin1, data_final1, attr_to_plot[3], [0,1,2], 3 , number_of_graphs, rel_or_abs=rel_or_abs)
+        draw_time_chart(svg_arr[2], margin1, data_final1, attr_to_plot[n], [0,1], 2 , number_of_graphs, rel_or_abs=rel_or_abs)
 
 
     })
@@ -263,8 +280,7 @@ function create_boxplot(svg,margin1,data_final,attr,color){
 //--------------------------------------------------------------------------------------------------------------------
 
 
-function createGraphsOfMyCrypto(name1,name2='Dogecoin'){
-    //PER ORA IL CONFRONTO E' FRA QUELLA CHE CLICCO,E Dogecoin.
+function createGraphsOfMyCrypto(name1,name2='Dogecoin',change_graphs=false){
     already_draw=true
     single_chart=false
     var path_1 = 'dataset/' + String(name1)+ '.csv';
@@ -282,13 +298,13 @@ function createGraphsOfMyCrypto(name1,name2='Dogecoin'){
 
             attr_to_plot = ["close", "market cap", "volume", "high", "low", "open"]
 
+            if(change_graphs) n=5
+            else n=2
 
             if(need_candlestick==false){
                 var data_final1 = {"name": name1,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
                 var data_final2 = {"name": name2,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
 
-                print('the blue line is '+ name1)
-                print('the red line is '+ name2)
 
             }
             else var data_final = {"key": keyword,"values": []}
@@ -296,17 +312,14 @@ function createGraphsOfMyCrypto(name1,name2='Dogecoin'){
             data_final1, _ = preprocess_data(data1,need_candlestick=need_candlestick,data_summary=false,data_final1)
             data_final2, _ = preprocess_data(data2,need_candlestick=need_candlestick,data_summary=false,data_final2)
 
-            // create_boxplot(svg_arr_boxplot[0],margin,data_final1,attr_to_plot[0],color=1)
-            // create_boxplot(svg_arr_boxplot[1],margin,data_final2,attr_to_plot[0],color=2)
 
 
-            draw_multilines_time_chart(svg_arr[0],margin1, data_final1,data_final2, attr_to_plot[0], [1,2], 0,number_of_graphs,rel_or_abs=rel_or_abs)
+            draw_multilines_time_chart(svg_arr[0],margin1, data_final1,data_final2, attr_to_plot[n-2], [1,2], 0,number_of_graphs,rel_or_abs=rel_or_abs)
 
-            draw_multilines_time_chart(svg_arr[1],margin1, data_final1,data_final2, attr_to_plot[1], [0,2], 1,number_of_graphs,rel_or_abs=rel_or_abs)
+            draw_multilines_time_chart(svg_arr[1],margin1, data_final1,data_final2, attr_to_plot[n-1], [0,2], 1,number_of_graphs,rel_or_abs=rel_or_abs)
 
-            draw_multilines_time_chart(svg_arr[2],margin1, data_final1,data_final2, attr_to_plot[2], [0,1], 2,number_of_graphs,rel_or_abs=rel_or_abs)
+            draw_multilines_time_chart(svg_arr[2],margin1, data_final1,data_final2, attr_to_plot[n], [0,1], 2,number_of_graphs,rel_or_abs=rel_or_abs)
 
-           // draw_multilines_time_chart(svg_arr[3],margin1, data_final1,data_final2, attr_to_plot[3], [0,1,2], 3,number_of_graphs,rel_or_abs=rel_or_abs)
 
 
 
@@ -317,7 +330,7 @@ function createGraphsOfMyCrypto(name1,name2='Dogecoin'){
 
 }
 
-function createSingleGraphsOfMyCrypto(name1){
+function createSingleGraphsOfMyCrypto(name1,change_graphs=false){
     //PER ORA IL CONFRONTO E' FRA QUELLA CHE CLICCO,E Dogecoin.
     already_draw=true
     single_chart=true
@@ -333,25 +346,22 @@ function createSingleGraphsOfMyCrypto(name1){
 
 
         attr_to_plot = ["close", "market cap", "volume", "high", "low", "open"]
-
+        if(change_graphs) n=5
+        else n=2
 
         if(need_candlestick==false){
             var data_final1 = {"name": name1,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
-
-            print('the blue line is '+ name1)
 
         }
         else var data_final = {"key": keyword,"values": []}
 
         data_final1, _ = preprocess_data(data1,need_candlestick=need_candlestick,data_summary=false,data_final1)
 
-        create_boxplot(svg_arr_boxplot[0],margin,data_final1,'market cap',1)
+        draw_time_chart(svg_arr[0], margin1, data_final1, attr_to_plot[n-2], [1,2], 0 , number_of_graphs, rel_or_abs=rel_or_abs)
 
-        draw_time_chart(svg_arr[0], margin1, data_final1, attr_to_plot[0], [1,2], 0 , number_of_graphs, rel_or_abs=rel_or_abs)
+        draw_time_chart(svg_arr[1], margin1, data_final1, attr_to_plot[n-1], [0,2], 1 , number_of_graphs, rel_or_abs=rel_or_abs)
 
-        draw_time_chart(svg_arr[1], margin1, data_final1, attr_to_plot[1], [0,2], 1 , number_of_graphs, rel_or_abs=rel_or_abs)
-
-        draw_time_chart(svg_arr[2], margin1, data_final1, attr_to_plot[2], [0,1], 2 , number_of_graphs, rel_or_abs=rel_or_abs)
+        draw_time_chart(svg_arr[2], margin1, data_final1, attr_to_plot[n], [0,1], 2 , number_of_graphs, rel_or_abs=rel_or_abs)
 
         //draw_time_chart(svg_arr[3], margin1, data_final1, attr_to_plot[3], [0,1,2], 3 , number_of_graphs, rel_or_abs=rel_or_abs)
 
