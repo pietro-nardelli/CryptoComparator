@@ -603,6 +603,7 @@ function create_graph(ididix) {
           fullMatrix(data_json)
           on_mouseout_function()
           create_scatterplot()
+          createSingleGraphsOfMyCrypto("Bitcoin")
           return
         }
 
