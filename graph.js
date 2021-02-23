@@ -1,10 +1,11 @@
 //TO THINK
 /*
-scatter interattivo
+X scatter interattivo
 cursore on mouseover
-grafi iniziali vuoti/bianco se 1 solo?
-similitudini menù a tendina
+X grafi iniziali vuoti/bianco se 1 solo?
+X similitudini menù a tendina 
 Cambiare value slider , 90% ?
+Text dello scatter
 */
 
 /*
@@ -27,16 +28,16 @@ Cambiare value slider , 90% ?
 - TODO animationhell
 */
 
-var T_ARR1 = [0.666672100974757,0.9368,0.95,0.95,0.95,0.6666,
-              0.3,0.3,0.3,0.3,0.3,0.3,
-              0.5,0.5,0.5,0.5,0.5,0.5,
-              0.9,0.9,0.9,0.9,0.9,0.9]
+var T_ARR1 = [0.666672100974757, 0.9368, 0.95, 0.95, 0.95, 0.6666,
+  0.3, 0.3, 0.3, 0.3, 0.3, 0.3,
+  0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+  0.9, 0.9, 0.9, 0.9, 0.9, 0.9]
 
-   
-var T_ARR =    [0.9258215989245593, 0.9160405042808755, 0.9287826381387896, 0.936899679455302, 0.925929462364907, 0.666672100974757,
-        0.11579229728595952,0.12609404056304097,0.10226246941063888,0.10934962002702181,0.11551346331676565,0.3654305802084671,
-        0.06644471580952299,0.0662827433551127,0.06451481322929004,0.07106426047662956,0.06706740242648263,0.25875661189361066,
-        0.83470956073676836,0.939847184716891,0.9294995693621586,0.9167563070011337,0.91263249763380497,0.623165853649523   ]
+
+var T_ARR = [0.9258215989245593, 0.9160405042808755, 0.9287826381387896, 0.936899679455302, 0.925929462364907, 0.666672100974757,
+  0.0, 0.0, 0.0, 0.0, 0.0, 0.1654305802084671,
+  0.06644471580952299, 0.0662827433551127, 0.06451481322929004, 0.07106426047662956, 0.06706740242648263, 0.25875661189361066,
+  0.93470956073676836, 0.879847184716891, 0.9294995693621586, 0.9167563070011337, 0.91263249763380497, 0.623165853649523]
 
 
 
@@ -81,20 +82,20 @@ radius_node_circle = '15  '
 ///SLIDER
 var initial_threshold = 0.95; //THRESHOLD MIN x creare il nodo!
 var initial_threshold_slider = initial_threshold; //THRESHOLD BASE OF THE SLIDER
-var fix_val_slider = (1-initial_threshold)*100 //2 if 0.95, 0 if 0.9, 0.5 if 0.8 ..
+var fix_val_slider = (1 - initial_threshold) * 100 //2 if 0.95, 0 if 0.9, 0.5 if 0.8 ..
 
 // output.innerHTML=0.95
 // actual_t = 0.95
 
 var slider = document.getElementById("myRange");
 var output = document.getElementById("demo");   //0 - 0.1   0.9 + 0.1*x x = 1
-                                                          // 0.95 + 0.1*x x=5
-                                                          // 0.8 + 0.1*x   x=(1 - initial)*10
+// 0.95 + 0.1*x x=5
+// 0.8 + 0.1*x   x=(1 - initial)*10
 
-                                                          //
-output.innerHTML = String(90+slider.value/10)+"%("+
-                      rr((slider.value*fix_val_slider / 1000)  + initial_threshold_slider)
-                      +")";
+//
+output.innerHTML = String(90 + slider.value / 10) + "%(" +
+  rr((slider.value * fix_val_slider / 1000) + initial_threshold_slider)
+  + ")";
 
 var actual_t = initial_threshold_slider; //slider initial value is ?  //NOT USED ANYMORE
 // Useful to avoid refresh of the matrix too many times
@@ -114,8 +115,8 @@ function rr(v) { return Number(v.toFixed(3)) } //3rd decimal n
 
 slider.oninput = function () {
   //console.log(this.value* fix_val_slider / 10000)
-  actual_t = rr( ((this.value* fix_val_slider / 10000) ) + initial_threshold_slider); // slider range 0-100 norm in 0 1
-  output.innerHTML = String(90+slider.value/10)+"%("+ actual_t +")";
+  actual_t = rr(((this.value * fix_val_slider / 10000)) + initial_threshold_slider); // slider range 0-100 norm in 0 1
+  output.innerHTML = String(90 + slider.value / 10) + "%(" + actual_t + ")";
   slider_update(actual_t)
 }
 
@@ -169,7 +170,7 @@ var matrix_prova = [];
 //create_100100_matrix("close", matrix_prova);
 
 function create_100100_matrix(json_file, matrix) {
-  d3.json("similarities/data_" + json_file +".json", function (data) {
+  d3.json("similarities/data_" + json_file + ".json", function (data) {
     var nodes = data.nodes,
       n = nodes.length;
     // Compute index per node.
@@ -222,24 +223,24 @@ function reshape(q) {
 }
 
 function getJ(i) {
-  if(i<6)   return 0
-  if(i<12)  return 1
-  if(i<18)  return 2
+  if (i < 6) return 0
+  if (i < 12) return 1
+  if (i < 18) return 2
   return 3
 }
 
 //N buttons of similarity we want to use, to give to each link
 n_similarities = 6
 arr_similarity_matrix = []
-year_arr = ["","_2015","_2016","_2017"]
+year_arr = ["", "_2015", "_2016", "_2017"]
 arr_path = ["close", "high", "low", "market_cap", "open", "volume"]
 
-for (var i = 0; i < n_similarities*4; i++) {
+for (var i = 0; i < n_similarities * 4; i++) {
   var aux = []
   //get_random_simmetric(100);
 
   //console.log(String(arr_path[i%6])+year_arr[getJ(i)])
-  create_100100_matrix( String(arr_path[i%6])+year_arr[getJ(i)], aux)
+  create_100100_matrix(String(arr_path[i % 6]) + year_arr[getJ(i)], aux)
   arr_similarity_matrix[i] = aux
 }
 
@@ -485,9 +486,9 @@ document.getElementById("SIMIL0_17").addEventListener("click", function () {
 function set_slider_params(idx) {
   initial_threshold = T_ARR[idx]; //THRESHOLD MIN x creare il nodo!
   initial_threshold_slider = initial_threshold; //THRESHOLD BASE OF THE SLIDER
-  fix_val_slider = (1-initial_threshold)*100
-  output.innerHTML=String(90+slider.value/10)+"%("+initial_threshold+")";
-  slider.value=0
+  fix_val_slider = (1 - initial_threshold) * 100
+  output.innerHTML = String(90 + slider.value / 10) + "%(" + initial_threshold + ")";
+  slider.value = 0
   actual_t = initial_threshold
   full_matrix_or_reduced(last_clicked, data_json, actual_t);
   //slider_update(actual_t)
@@ -505,14 +506,15 @@ function create_graph(ididix) {
 
 
   console.log("last clicked è:")
-  console.log(last_clicked==""?"nessuno":last_clicked.name)
+  console.log(last_clicked == "" ? "nessuno" : last_clicked.name)
 
 
-  if(actual_graph_used==1212)return
-  actual_graph_used=ididix
-  if(reshape_flag != 1) //quindi se non è la prima volta
-  {console.log("cambio valori slider iniziali,e reshape flag è:"+String(reshape_flag))
-  set_slider_params(ididix)
+  if (actual_graph_used == 1212) return
+  actual_graph_used = ididix
+  if (reshape_flag != 1) //quindi se non è la prima volta
+  {
+    console.log("cambio valori slider iniziali,e reshape flag è:" + String(reshape_flag))
+    set_slider_params(ididix)
   }
 
 
@@ -595,8 +597,8 @@ function create_graph(ididix) {
       })
       .on('click', function (d) {
 
-        
-        if (last_clicked == d || last_clicked.name==d.name) {
+
+        if (last_clicked == d || last_clicked.name == d.name) {
           last_clicked = ""
           fullMatrix(data_json)
           on_mouseout_function()
@@ -617,8 +619,8 @@ function create_graph(ididix) {
         createSingleGraphsOfMyCrypto(d.name);
         //createBoxPlotOfMyCrypto(d.name);
         //blink()
-        
-        
+
+
       });
 
 
@@ -646,12 +648,12 @@ function create_graph(ididix) {
     });
 
     //slider_update(actual_t)
-    if(last_clicked!=""){
-    on_mouseout_function(last_clicked)
-    on_mouseover_function(last_clicked)
+    if (last_clicked != "") {
+      on_mouseout_function(last_clicked)
+      on_mouseover_function(last_clicked)
     }
   });
-  
+
 }
 
 function blink() {
@@ -726,9 +728,9 @@ function on_mouseover_function(d) {
       .style('fill', fill_node_text);
 
     target_arr_names = target_arr_names.concat(target_name)
-    
+
   }
-  create_scatterplot_from_graph( target_arr_names.concat(d.name))
+  create_scatterplot_from_graph(target_arr_names.concat(d.name))
 }
 
 
