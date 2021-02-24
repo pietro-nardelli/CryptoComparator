@@ -14,8 +14,8 @@ var cryptonames = ["Bitcoin", "Ethereum", "Bitcoin Cash", "Ripple", "Dash", "Lit
                 "Gambit", "E-coin", "SaluS", "Groestlcoin", "BlackCoin", "Golos", "GridCoin"]
 
 //-----------------dimensione dei grafici----------------
-var margin1 = {top: 10, right: 30, bottom: 30, left: 60};
-var width1 = 300 - margin1.left - margin1.right;
+var margin1 = {top: 10, right: 30, bottom: 30, left: 80};
+var width1 = 325 - margin1.left - margin1.right;
 var height1 = 270 - margin1.top - margin1.bottom;
 //-------------------------------------------------------
 
@@ -39,6 +39,8 @@ for(i=0;i<number_of_graphs;i++){
     svg_arr[i] = d3.select("#my_dataviz").append("svg").attr("width", width1 + margin1.left + margin1.right)
     .attr("height", height1 + margin1.top + margin1.bottom).append("g").attr("transform","translate(" + margin1.left + "," + margin1.top + ")").attr("id", i)
 }
+
+
 
 
 //----------FUNZIONE CHIAMATA ONCLICK PER OGNI CRYPTO---------------------------------------
@@ -390,10 +392,10 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
     .attr("fill", "rgb(2, 200, 255)")
     .attr("opacity", 0.1);
 
-    svg.append("circle").attr("cx",10).attr("cy",20).attr("r", 4).style("fill", 'rgb(255, 102, 0)')
-    svg.append("circle").attr("cx",10).attr("cy",30).attr("r", 4).style("fill", "white")
-    svg.append("text").attr("x", 25).attr("y", 20).text(data_final1['name'] + ' ' + attr).style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", 'rgb(255, 102, 0)')
-    svg.append("text").attr("x", 25).attr("y", 30).text(data_final2['name'] + ' ' + attr).style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", "white")
+    svg.append("circle").attr("cx",10).attr("cy",20).attr("r", 4).style("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value)
+    svg.append("circle").attr("cx",10).attr("cy",30).attr("r", 4).style("fill", "white").style("opacity", opacity_value)
+    svg.append("text").attr("x", 25).attr("y", 20).text(data_final1['name'] + ' ' + attr).style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value)
+    svg.append("text").attr("x", 25).attr("y", 30).text(data_final2['name'] + ' ' + attr).style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", "white").style("opacity", opacity_value)
 
     var data = []
     var data2 = []
@@ -518,9 +520,25 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
 
                 xAxis_array[i].transition().duration(1000).call(d3.axisBottom(x_array[i]).ticks(7))
                 xAxis_array[i].selectAll("text").style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)").attr('fill', 'white');
-                ;
+                
                 yAxis_array[i].transition().duration(1000).call(d3.axisLeft(y_array[i]).ticks(5))
                 yAxis_array[i].selectAll("text").attr('fill', 'white');
+                for(j=0;j<yAxis_array[i].selectAll("text")._groups[0].length; j++){
+                    if(yAxis_array[i].selectAll("text")._groups[0][j.toString()].innerHTML.length>8){
+                        text_tick = yAxis_array[i].selectAll("text")._groups[0][j.toString()].innerHTML
+                        arr_text = text_tick.split(",")
+                        significant_text = arr_text[0]
+                        if(arr_text.length-1==2){//i have millions!
+                            if(arr_text[1][0]!="0") yAxis_array[i].selectAll("text")._groups[0][j.toString()].innerHTML=significant_text+","+arr_text[1][0] + "mil"
+                            else yAxis_array[i].selectAll("text")._groups[0][j.toString()].innerHTML=significant_text + "mil"
+                        }
+                        else if(arr_text.length-1 ==3){//billions!
+                            if(arr_text[1][0]!="0") yAxis_array[i].selectAll("text")._groups[0][j.toString()].innerHTML=significant_text+","+arr_text[1][0] +"bil"
+                            else yAxis_array[i].selectAll("text")._groups[0][j.toString()].innerHTML=significant_text +"bil"
+                        }
+            
+                    } //////////////
+                }
                 line_array[i].select(".line").transition().duration(1000).attr("d", d3.line().x(function(d) {
                     return x_array[i](d.date) }).y(function(d) { return y_array[i](d.value) }))
                     line2_array[i].select(".line").transition().duration(1000).attr("d", d3.line().x(function(d) {
@@ -540,9 +558,28 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
                 y_array[i].domain([0, max_for_cod]).range([ height1, 0 ]);
                 xAxis_array[i].transition().duration(1000).call(d3.axisBottom(x_array[i]).ticks(7))
                 xAxis_array[i].selectAll("text").style("text-anchor", "end").attr("dx", "-.8em").attr("dy", ".15em").attr("transform", "rotate(-65)").attr('fill', 'white');
-                yAxis_array[i].transition().duration(1000).call(d3.axisLeft(y_array[i]).ticks(5))
-                yAxis_array[i].selectAll("text").attr('fill', 'white');
 
+                local_yaxis = d3.axisLeft(y_array[i]).ticks(5)
+                
+
+                yAxis_array[i].transition().duration(1000).call(local_yaxis)
+                yAxis_array[i].selectAll("text").attr('fill', 'white');
+                for(j=0;j<yAxis_array[i].selectAll("text")._groups[0].length; j++){
+                    if(yAxis_array[i].selectAll("text")._groups[0][j.toString()].innerHTML.length>8){
+                        var text_tick = yAxis_array[i].selectAll("text")._groups[0][j.toString()].innerHTML
+                        var arr_text = text_tick.split(",")
+                        var significant_text = arr_text[0]
+                        if(arr_text.length-1==2){//i have millions!
+                            if(arr_text[1][0]!="0") yAxis_array[i].selectAll("text")._groups[0][j.toString()].innerHTML=significant_text+","+arr_text[1][0] + "mil"
+                            else yAxis_array[i].selectAll("text")._groups[0][j.toString()].innerHTML=significant_text + "mil"
+                        }
+                        else if(arr_text.length-1 ==3){//billions!
+                            if(arr_text[1][0]!="0") yAxis_array[i].selectAll("text")._groups[0][j.toString()].innerHTML=significant_text+","+arr_text[1][0] +"bil"
+                            else yAxis_array[i].selectAll("text")._groups[0][j.toString()].innerHTML=significant_text +"bil"
+                        }
+            
+                    } //////////////
+                }
                 line_array[i].select('.line').transition().duration(1000).
                 attr("d", d3.line()
                 .x(function(d) { return x_array[i](d.date) })
@@ -574,13 +611,11 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
 
 
     // Add Y axis
-    var y = d3.scaleLinear()
-    .domain([0, d3.max(data, function(d) { return +d.value; })])
-    .range([ height1, 0 ]);
+    var y = d3.scaleLinear().domain([0, d3.max(data, function(d) { return +d.value; })]).range([ height1, 0 ]);
     y.domain([0,true_max_y])
 
-    var yAxis = svg.append("g")
-    .call(d3.axisLeft(y).ticks(5));
+    var yAxis = svg.append("g").call(d3.axisLeft(y).ticks(5));
+
     yAxis.selectAll("text").attr('fill', 'white');
 
     // Add a clipPath: everything out of this area won't be drawn.
@@ -636,8 +671,8 @@ function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_gr
     .attr("fill", "rgb(2, 200, 255)")
     .attr("opacity", 0.1);
 
-    svg.append("circle").attr("cx",10).attr("cy",20).attr("r", 4).style("fill", 'rgb(255, 102, 0)')
-    svg.append("text").attr("x", 25).attr("y", 20).text(data_final['name'] + ' ' + attr).style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", 'rgb(255, 102, 0)')
+    svg.append("circle").attr("cx",10).attr("cy",20).attr("r", 4).style("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value)
+    svg.append("text").attr("x", 25).attr("y", 20).text(data_final['name'] + ' ' + attr).style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value)
 
 
     //print(data_final['date'].length)
