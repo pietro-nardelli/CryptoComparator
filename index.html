@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <!-- <script src="slider.js"></script> -->
 <style>
   @import "index.css";
@@ -122,8 +123,7 @@
         <div id="legend_matrix"></div>
       </div>
       <div id="scatterplot"></div>
-      <div
-        style="position:absolute;margin-left: 1700px; margin-top: 60px; stroke: rgb(255, 255, 255); border: 1px solid rgb(209, 153, 0) ; width: 300px; height: 540px;">
+      <div id="twitter-div">
         <a class="twitter-timeline" data-lang="en" data-width="300" data-height="535" data-dnt="true" data-theme="dark"
           href="https://twitter.com/CryptoBoomNews">Tweets </a>
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
@@ -181,7 +181,7 @@ window.onclick = function(event) {
   <script src="matrix.js" defer></script>
   <script src="scatterplot.js" defer></script>
 
-  <script>
+  <script>    
     function twitterCss() {
       var cssLink = document.createElement("link");
       cssLink.href = "twitter.css";

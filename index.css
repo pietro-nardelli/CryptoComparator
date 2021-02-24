@@ -9,16 +9,21 @@ body {
 
 #scale-zoom {
   zoom: 0.755;
+  height: 609px;
   }
+
 #menu {
-  position: fixed; 
+  position: relative; 
   display: block;
   background-color: rgb(40, 40, 40);
   /*border: 2px solid rgb(209, 153, 0); */
-  width: 100%; 
+
+  width: 2050px;
+  
   height: 40px;
   margin-top: -10px;
   margin-left: -11px;
+  margin-right: -11px;
   border: 1px solid;
   padding: 10px;
   /*
@@ -110,7 +115,7 @@ h3 {
       margin-left: 0px;
       float: left;
       position: relative;
-      margin-top: 165px;
+      margin-top: 12px;
       
   }
 
@@ -254,7 +259,7 @@ h3 {
         height: 541px;
         border: 1px solid rgb(255, 153, 0);
         margin-left: 1060px;
-        margin-top: 59px;
+        margin-top: 5px;
       }
 
       #svg_matrix {
@@ -371,7 +376,6 @@ h3 {
       /****************************** MATTEO */
     #my_dataviz {
       position:absolute;
-      float: left;
       margin-top: 5px;
       border: 1px solid rgb(255, 153, 0);
       width: 975px;
@@ -425,14 +429,81 @@ h3 {
         height: 405px;
         border: 2px solid rgb(209, 153, 0);
         zoom: 0.9;
-        margin-top: 677px;
+        margin-top: 616px;
+      }
+      #twitter-div {
+        position:absolute;
+        margin-left: 1700px; 
+        margin-top: 5px; 
+        stroke: rgb(255, 255, 255); 
+        border: 1px solid rgb(209, 153, 0); 
+        width: 300px; 
+        height: 540px;
       }
 
-      /* width */
+/* RESPONSIVE DESIGN */
+@media only screen and (max-width: 1535px) {
+  body {
+    overflow-x: auto;
+  }
+  menu {
+    width: 2700px;
+  }
+  
 
-        /*
-        #twitter-widget-0{
-          overflow-y: hidden;
-        }*/
-        
-        /*class="timeline-Viewport"*/
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+    }
+
+    /* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: #888;
+    }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+}
+
+@media only screen and (max-height: 744px) {
+  body {
+    overflow-y: auto;
+  }
+
+
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+    }
+
+    /* Track */
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+  
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+    /* Handle */
+    ::-webkit-scrollbar-thumb {
+      background: #888;
+    }
+  
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
+
+}
