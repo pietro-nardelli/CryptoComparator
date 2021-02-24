@@ -30,6 +30,7 @@ clicked = true
 single_chart=true
 already_draw=true
 change_graphs=false
+//opacity_param=1.0
 //let's create the svgs for each graph!
 var svg_arr=[]
 var svg_arr_boxplot=[]
@@ -42,7 +43,7 @@ for(i=0;i<number_of_graphs;i++){
 
 //----------FUNZIONE CHIAMATA ONCLICK PER OGNI CRYPTO---------------------------------------
 
-createSingleGraphsOfMyCrypto("Bitcoin")
+createSingleGraphsOfMyCrypto("Bitcoin",false,true)
 
 document.getElementById("MyBtn").addEventListener("click", function() {
     if(already_draw){
@@ -188,8 +189,6 @@ function functionOnClickSingle(rel_or_abs=null,change_graphs=change_graphs){
 
 
 //--------------------------------------------------------------------------------------------------------------------
-
-
 function create_boxplot(svg,margin1,data_final,attr,color){
     //for(i=0;i<svg_arr_boxplot.length;i++){ svg_arr_boxplot[i].selectAll("*").remove(); }
     return  //na merda
@@ -275,12 +274,10 @@ function create_boxplot(svg,margin1,data_final,attr,color){
     .attr("y2", function(d){ return(y(d))} )
     .attr("stroke", col2)
 }
-
-
 //--------------------------------------------------------------------------------------------------------------------
 
 
-function createGraphsOfMyCrypto(name1,name2='Dogecoin',change_graphs=false){
+function createGraphsOfMyCrypto(name1,name2='Dogecoin',change_graphs=false,reset=false){
     already_draw=true
     single_chart=false
     var path_1 = 'dataset/' + String(name1)+ '.csv';
@@ -301,6 +298,10 @@ function createGraphsOfMyCrypto(name1,name2='Dogecoin',change_graphs=false){
             if(change_graphs) n=5
             else n=2
 
+            if(reset) opacity_param = 0.0
+            else opacity_param=1.0
+    
+
             if(need_candlestick==false){
                 var data_final1 = {"name": name1,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
                 var data_final2 = {"name": name2,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
@@ -314,11 +315,11 @@ function createGraphsOfMyCrypto(name1,name2='Dogecoin',change_graphs=false){
 
 
 
-            draw_multilines_time_chart(svg_arr[0],margin1, data_final1,data_final2, attr_to_plot[n-2], [1,2], 0,number_of_graphs,rel_or_abs=rel_or_abs)
+            draw_multilines_time_chart(svg_arr[0],margin1, data_final1,data_final2, attr_to_plot[n-2], [1,2], 0,number_of_graphs,rel_or_abs=rel_or_abs,opacity_value=opacity_param)
 
-            draw_multilines_time_chart(svg_arr[1],margin1, data_final1,data_final2, attr_to_plot[n-1], [0,2], 1,number_of_graphs,rel_or_abs=rel_or_abs)
+            draw_multilines_time_chart(svg_arr[1],margin1, data_final1,data_final2, attr_to_plot[n-1], [0,2], 1,number_of_graphs,rel_or_abs=rel_or_abs,opacity_value=opacity_param)
 
-            draw_multilines_time_chart(svg_arr[2],margin1, data_final1,data_final2, attr_to_plot[n], [0,1], 2,number_of_graphs,rel_or_abs=rel_or_abs)
+            draw_multilines_time_chart(svg_arr[2],margin1, data_final1,data_final2, attr_to_plot[n], [0,1], 2,number_of_graphs,rel_or_abs=rel_or_abs,opacity_value=opacity_param)
 
 
 
@@ -330,7 +331,7 @@ function createGraphsOfMyCrypto(name1,name2='Dogecoin',change_graphs=false){
 
 }
 
-function createSingleGraphsOfMyCrypto(name1,change_graphs=false){
+function createSingleGraphsOfMyCrypto(name1,change_graphs=false,reset=false){
     //PER ORA IL CONFRONTO E' FRA QUELLA CHE CLICCO,E Dogecoin.
     already_draw=true
     single_chart=true
@@ -346,8 +347,12 @@ function createSingleGraphsOfMyCrypto(name1,change_graphs=false){
 
 
         attr_to_plot = ["close", "market cap", "volume", "high", "low", "open"]
+
         if(change_graphs) n=5
         else n=2
+
+        if(reset) opacity_param = 0.0
+        else opacity_param=1.0
 
         if(need_candlestick==false){
             var data_final1 = {"name": name1,"date": [], "high": [],"low": [],"market cap": [],"open": [],"close": [],"volume": []}
@@ -357,13 +362,11 @@ function createSingleGraphsOfMyCrypto(name1,change_graphs=false){
 
         data_final1, _ = preprocess_data(data1,need_candlestick=need_candlestick,data_summary=false,data_final1)
 
-        draw_time_chart(svg_arr[0], margin1, data_final1, attr_to_plot[n-2], [1,2], 0 , number_of_graphs, rel_or_abs=rel_or_abs)
+        draw_time_chart(svg_arr[0], margin1, data_final1, attr_to_plot[n-2], [1,2], 0 , number_of_graphs, rel_or_abs=rel_or_abs,opacity_value=opacity_param)
 
-        draw_time_chart(svg_arr[1], margin1, data_final1, attr_to_plot[n-1], [0,2], 1 , number_of_graphs, rel_or_abs=rel_or_abs)
+        draw_time_chart(svg_arr[1], margin1, data_final1, attr_to_plot[n-1], [0,2], 1 , number_of_graphs, rel_or_abs=rel_or_abs,opacity_value=opacity_param)
 
-        draw_time_chart(svg_arr[2], margin1, data_final1, attr_to_plot[n], [0,1], 2 , number_of_graphs, rel_or_abs=rel_or_abs)
-
-        //draw_time_chart(svg_arr[3], margin1, data_final1, attr_to_plot[3], [0,1,2], 3 , number_of_graphs, rel_or_abs=rel_or_abs)
+        draw_time_chart(svg_arr[2], margin1, data_final1, attr_to_plot[n], [0,1], 2 , number_of_graphs, rel_or_abs=rel_or_abs,opacity_value=opacity_param)
 
 
     })
@@ -372,7 +375,7 @@ function createSingleGraphsOfMyCrypto(name1,change_graphs=false){
 }
 //FUNZIONE PER DISEGNARE GRAFICI INTERAGIBILI E INTERCONNESSI, CON DUE LINEE SOPRA
 
-function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,param,id_graph,number_of_graphs,rel_or_abs){
+function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,param,id_graph,number_of_graphs,rel_or_abs,opacity_value=1.0){
     //FUNZIONE PER DISEGNARE GRAFICI INTERCONNESSI FRA LORO
     //-----------------------------------------------------
     //id is the identification number for the graph.
@@ -603,22 +606,11 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
     //line2.append("g").attr("class", "brush").call(brush);
 
     // Add the line
-    line.append("path").datum(data).attr("class", "line").attr("fill", "none").attr("stroke", 'rgb(255, 102, 0)').style("opacity",1.0)
+    line.append("path").datum(data).attr("class", "line").attr("fill", "none").attr("stroke", 'rgb(255, 102, 0)').style("opacity",opacity_value)
     .attr("stroke-width", 1.5).attr("d", d3.line().x(function(d) { return x(d.date) }).y(function(d) { return y(d.value) }))
 
-    line2.append("path").datum(data2).attr("class", "line").attr("fill", "none").attr("stroke", "white").style("opacity",1.0)
+    line2.append("path").datum(data2).attr("class", "line").attr("fill", "none").attr("stroke", "white").style("opacity",opacity_value)
     .attr("stroke-width", 1.5).attr("d", d3.line().x(function(d) { return x(d.date) }).y(function(d) { return y(d.value) }))
-
-    // svg.append("text")
-    // .attr("x", (width1 / 2))
-    // .attr("y", 20 - (margin1.top / 2))
-    // .attr("text-anchor", "middle")
-    // .attr("opacity", 0.8)
-    // .attr("fill", 'white')
-    // .style("font-size", "16px")
-    // .style("text-decoration", "underline")
-    // .text(attr + ' value Chart');
-
 
 
     data_charts.push([x,xAxis,line,y,yAxis,data,line2,data2])
@@ -628,7 +620,7 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
 
 //FUNZIONE PER DISEGNARE GRAFICI INTERAGIBILI E INTERCONNESSI, MA CON SOLO UNA LINEA SOPRA
 
-function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_graphs,rel_or_abs){
+function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_graphs,rel_or_abs,opacity_value=1.0){
     //FUNZIONE PER DISEGNARE GRAFICI INTERCONNESSI FRA LORO
     //-----------------------------------------------------
     //id is the identification number for the graph.
@@ -802,7 +794,7 @@ function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_gr
     line.append("g").attr("class", "brush").call(brush);
 
     // Add the line
-    line.append("path").datum(data).attr("class", "line").attr("fill", "none").attr("stroke", 'rgb(255, 102, 0)').style("opacity",1.0)
+    line.append("path").datum(data).attr("class", "line").attr("fill", "none").attr("stroke", 'rgb(255, 102, 0)').style("opacity",opacity_value)
     .attr("stroke-width", 1.5).attr("d", d3.line().x(function(d) { return x(d.date) }).y(function(d) { return y(d.value) }))
 
     // svg.append("text")
