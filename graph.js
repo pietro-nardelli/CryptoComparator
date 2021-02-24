@@ -484,7 +484,7 @@ document.getElementById("SIMIL0_17").addEventListener("click", function () {
 })
 
 function set_slider_params(idx) {
-  initial_threshold = T_ARR[idx]; //THRESHOLD MIN x creare il nodo!
+  initial_threshold = rr(T_ARR[idx]); //THRESHOLD MIN x creare il nodo!
   initial_threshold_slider = initial_threshold; //THRESHOLD BASE OF THE SLIDER
   fix_val_slider = (1 - initial_threshold) * 100
   output.innerHTML = String(90 + slider.value / 10) + "%(" + initial_threshold + ")";
