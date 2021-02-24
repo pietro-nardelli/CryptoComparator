@@ -14,8 +14,8 @@ var cryptonames = ["Bitcoin", "Ethereum", "Bitcoin Cash", "Ripple", "Dash", "Lit
                 "Gambit", "E-coin", "SaluS", "Groestlcoin", "BlackCoin", "Golos", "GridCoin"]
 
 //-----------------dimensione dei grafici----------------
-var margin1 = {top: 10, right: 30, bottom: 30, left: 80};
-var width1 = 325 - margin1.left - margin1.right;
+var margin1 = {top: 10, right: 0, bottom: 30, left: 80};
+var width1 = 300 - margin1.left - margin1.right;
 var height1 = 270 - margin1.top - margin1.bottom;
 //-------------------------------------------------------
 
@@ -394,8 +394,8 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
 
     svg.append("circle").attr("cx",10).attr("cy",20).attr("r", 4).style("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value)
     svg.append("circle").attr("cx",10).attr("cy",30).attr("r", 4).style("fill", "white").style("opacity", opacity_value)
-    svg.append("text").attr("x", 25).attr("y", 20).text(data_final1['name'] + ' ' + attr).style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value)
-    svg.append("text").attr("x", 25).attr("y", 30).text(data_final2['name'] + ' ' + attr).style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", "white").style("opacity", opacity_value)
+    svg.append("text").attr("x", 25).attr("y", 20).text(data_final1['name'] + ' ' + attr+"(in $)").style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value)
+    svg.append("text").attr("x", 25).attr("y", 30).text(data_final2['name'] + ' ' + attr+"(in $)").style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", "white").style("opacity", opacity_value)
 
     var data = []
     var data2 = []
@@ -672,7 +672,7 @@ function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_gr
     .attr("opacity", 0.1);
 
     svg.append("circle").attr("cx",10).attr("cy",20).attr("r", 4).style("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value)
-    svg.append("text").attr("x", 25).attr("y", 20).text(data_final['name'] + ' ' + attr).style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value)
+    svg.append("text").attr("x", 25).attr("y", 20).text(data_final['name'] + ' ' + attr+"(in $)").style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value)
 
 
     //print(data_final['date'].length)
