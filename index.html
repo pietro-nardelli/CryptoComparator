@@ -31,17 +31,19 @@
       <div id="menu">
         <!--<h3>Cryptocurrency comparator</h3>-->
         <a href="."><img src="logo.png" style="width: 200px; margin-top: -5px;"></a>
-        <div style="position: absolute; margin-left: 200px;margin-top: -47px; margin-bottom: 23px;">
-          <div style="margin-left: 100px; display: inline; color: white;">Value: <span id="demo"></span>
+        <div style="position: absolute; margin-left: 200px; margin-top: -47px; margin-bottom: 23px;">
+          <div style="margin-left: 100px; display: inline-block; color: white; width: 550px;">Similarity: <span id="demo"></span>
             <input style=" width: 350px;" type="range" min="0" max="100" value="0" class="slider" id="myRange">
           </div>
-          <div style="position: absoulte; margin-left: 150px; color: white; display: inline;">
-            <label for="t0">t0</label>
+          <div style="position: absoulte; margin-left: 60px; color: white; display: inline-block; width: 250px;" >
+            Compare by:
             <input type="radio" id="t0_radio" name="radio_selection" value="t0" checked="checked"
               onchange="changeVisualization()">
-            <label for="year">year</label>
+              <label for="t0">Time zero</label>
             <input type="radio" id="year_radio" name="radio_selection" value="year" onchange="changeVisualization()">
-
+            <label for="year">Year</label>
+          </div>
+          <div style="position: absoulte; margin-left: 60px; color: white; display: inline-block; width: 300px; ">
             Attribute:
             <select id="attribute_selection" onchange="changeVisualization()">
               <option value="high" style="font-family : inherit;">High</option>
@@ -58,13 +60,21 @@
               <option value="2015" style="font-family : inherit;">2015</option>
             </select>
           </div>
-          <div style="position: absoulte; margin-left: 100px; color: white; display: inline;">
+          <div style="position: absoulte; margin-left: 50px; color: white; display: inline;">
             Matrix order:
             <select id="order">
               <option value="count" style="font-family : inherit;">Frequency</option>
               <option value="name" style="font-family : inherit;">Name</option>
             </select>
           </div>
+          <div class="info-button-container">
+            <img src="information-button.svg" class="info-button">
+          </div>
+          <span class="extra-info">
+            A little column extra info. Aaand just a little bit more
+          </span>
+
+          <!-- DA ELIMINARE: RICORDA A PIETRO-->
           <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
             id="SIMIL1">data_high__!</button>
           <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
@@ -131,12 +141,11 @@
     </div>
     <div id="my_dataviz" data-refresh-interval="500"></div>
     <!--<div id="my_dataviz_boxplot" data-refresh-interval="500"></div>-->
-    <div id="my_davaviz_buttons">
+    <div id="my_dataviz_buttons">
     <button type="button" id='MyBtn'
-      style="position: absoulte; margin-top: 30px; margin-left:0px; zoom: 0.8; font-family : inherit;">absolute
+      style="position: absoulte; width: 90px; margin-top: 25px; margin-left:2px; zoom: 0.75; font-family : inherit;">Absolute <br />
       scale</button> <!-- VA MESSO DA UN'ALTRA PARTE -->
-      <br />
-      <button type="button" id='MyBtn2' style="position: absoulte; margin-left: 0px; margin-top: 30px;font-family : inherit;" onclick="nextChartClick()">></button>  <!-- VA MESSO DA UN'ALTRA PARTE -->
+      <button type="button" id='MyBtn2' style="position: absoulte; margin-left: 10px; margin-top: 10px; zoom: 0.75; font-family : inherit;" onclick="nextChartClick()">Next (1/2)</button>  <!-- VA MESSO DA UN'ALTRA PARTE -->
     </div>
 
 
@@ -194,11 +203,11 @@ window.onclick = function(event) {
     function nextChartClick() {
       if (next_chart == false) {
         next_chart = true;
-        document.getElementById("MyBtn2").innerHTML = "<";
+        document.getElementById("MyBtn2").innerHTML = "Next (2/2)";
       }
       else {
         next_chart = false;
-        document.getElementById("MyBtn2").innerHTML = ">";
+        document.getElementById("MyBtn2").innerHTML = "Next (1/2)";
       }
     }
   </script>
