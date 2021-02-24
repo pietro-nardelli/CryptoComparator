@@ -129,14 +129,15 @@
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
       </div>
     </div>
-
     <div id="my_dataviz" data-refresh-interval="500"></div>
     <!--<div id="my_dataviz_boxplot" data-refresh-interval="500"></div>-->
+    <div id="my_davaviz_buttons">
     <button type="button" id='MyBtn'
-      style="position: absoulte; margin-top: 30px; margin-left: 1100px; zoom: 0.8; font-family : inherit;">absolute
+      style="position: absoulte; margin-top: 30px; margin-left:0px; zoom: 0.8; font-family : inherit;">absolute
       scale</button> <!-- VA MESSO DA UN'ALTRA PARTE -->
-      <button type="button" id='MyBtn2' style="position: absoulte; margin-left: 300px; font-family : inherit;">slide</button>  <!-- VA MESSO DA UN'ALTRA PARTE -->
-
+      <br />
+      <button type="button" id='MyBtn2' style="position: absoulte; margin-left: 0px; margin-top: 30px;font-family : inherit;" onclick="nextChartClick()">></button>  <!-- VA MESSO DA UN'ALTRA PARTE -->
+    </div>
 
 
   </body>
@@ -188,5 +189,16 @@ window.onclick = function(event) {
       cssLink.rel = "stylesheet";
       cssLink.type = "text/css";
       document.getElementById('twitter-widget-0').contentDocument.body.appendChild(cssLink);
+    }
+    var next_chart = false;
+    function nextChartClick() {
+      if (next_chart == false) {
+        next_chart = true;
+        document.getElementById("MyBtn2").innerHTML = "<";
+      }
+      else {
+        next_chart = false;
+        document.getElementById("MyBtn2").innerHTML = ">";
+      }
     }
   </script>

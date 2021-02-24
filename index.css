@@ -8,7 +8,7 @@ body {
 }
 
 #scale-zoom {
-  zoom: 0.755;
+  zoom: 0.75;
   height: 609px;
   }
 
@@ -376,9 +376,21 @@ h3 {
       /****************************** MATTEO */
     #my_dataviz {
       position:absolute;
-      margin-top: 5px;
+      margin-top: 3px;
       border: 1px solid rgb(255, 153, 0);
-      width: 975px;
+      border-right: none;
+      width: 900px;
+      height: 273px;
+      /* style="font-family : inherit;" */
+    }
+    #my_davaviz_buttons {
+      position:absolute;
+      margin-left: 900px;
+      margin-top: 3px;
+      border: 1px solid rgb(255, 153, 0);
+      border-left: none;
+      width: 70px;
+      height: 273px;
       /* style="font-family : inherit;" */
     }
     #my_dataviz_boxplot {
@@ -429,7 +441,7 @@ h3 {
         height: 405px;
         border: 2px solid rgb(209, 153, 0);
         zoom: 0.9;
-        margin-top: 616px;
+        margin-top: 612px;
       }
       #twitter-div {
         position:absolute;
@@ -442,7 +454,7 @@ h3 {
       }
 
 /* RESPONSIVE DESIGN */
-@media only screen and (max-width: 1535px) {
+@media only screen and (max-width: 1530px) {
   body {
     overflow-x: auto;
   }
@@ -476,7 +488,7 @@ h3 {
   }
 }
 
-@media only screen and (max-height: 744px) {
+@media only screen and (max-height: 740px) {
   body {
     overflow-y: auto;
   }

@@ -1,5 +1,5 @@
 var firstTime = true;
-var margin = {top: 30, right: 380, bottom: 200, left: 120},
+var margin = {top: 30, right: 380, bottom: 85, left: 120},
     width = 430,
     height = 430;
 
