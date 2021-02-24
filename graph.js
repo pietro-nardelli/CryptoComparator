@@ -94,7 +94,7 @@ var output = document.getElementById("demo");   //0 - 0.1   0.9 + 0.1*x x = 1
 
 //
 output.innerHTML = String(90 + slider.value / 10) + "%(" +
-  rr((slider.value * fix_val_slider / 1000) + initial_threshold_slider).toFixed(3)
+  rr((slider.value * fix_val_slider / 1000) + initial_threshold_slider)
   + ")";
 
 var actual_t = initial_threshold_slider; //slider initial value is ?  //NOT USED ANYMORE
@@ -111,11 +111,11 @@ slider.addEventListener("mouseup", mouseUpOnSlider);
 var mouse_down_on_slider = -1; // No click/unclick
 //
 
-function rr(v) { return Number(v.toFixed(3)) } //3rd decimal n
+function rr(v) { return v.toFixed(3) } //3rd decimal n
 
 slider.oninput = function () {
   //console.log(this.value* fix_val_slider / 10000)
-  actual_t = rr(((this.value * fix_val_slider / 10000)) + initial_threshold_slider).toFixed(3); // slider range 0-100 norm in 0 1
+  actual_t = rr(((this.value * fix_val_slider / 10000)) + initial_threshold_slider); // slider range 0-100 norm in 0 1
   output.innerHTML = String(90 + slider.value / 10) + "%(" + actual_t + ")";
   slider_update(actual_t)
 }
@@ -484,10 +484,10 @@ document.getElementById("SIMIL0_17").addEventListener("click", function () {
 })
 
 function set_slider_params(idx) {
-  initial_threshold = T_ARR[idx].toFixed(3); //THRESHOLD MIN x creare il nodo!
+  initial_threshold = rr(T_ARR[idx]); //THRESHOLD MIN x creare il nodo!
   initial_threshold_slider = initial_threshold; //THRESHOLD BASE OF THE SLIDER
   fix_val_slider = (1 - initial_threshold) * 100
-  output.innerHTML = String(90 + slider.value.toFixed(3) / 10) + "%(" + initial_threshold + ")";
+  output.innerHTML = String(90 + slider.value / 10) + "%(" + initial_threshold + ")";
   slider.value = 0
   actual_t = initial_threshold
   full_matrix_or_reduced(last_clicked, data_json, actual_t);
