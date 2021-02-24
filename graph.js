@@ -115,7 +115,7 @@ function rr(v) { return Number(v.toFixed(3)) } //3rd decimal n
 
 slider.oninput = function () {
   //console.log(this.value* fix_val_slider / 10000)
-  actual_t = rr(((this.value * fix_val_slider / 10000)) + initial_threshold_slider); // slider range 0-100 norm in 0 1
+  actual_t = rr(((this.value * fix_val_slider / 10000)) + initial_threshold_slider).toFixed(3); // slider range 0-100 norm in 0 1
   output.innerHTML = String(90 + slider.value / 10) + "%(" + actual_t + ")";
   slider_update(actual_t)
 }
