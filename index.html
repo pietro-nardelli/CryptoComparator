@@ -67,14 +67,22 @@
               <option value="name" style="font-family : inherit;">Name</option>
             </select>
           </div>
-          <div class="info-button-container">
-            <img src="information-button.svg" class="info-button">
+          <div id="info-button-container">
+            <img src="information-button.svg" id="info-button">
           </div>
-          <span class="extra-info">
+          <div id="graph-info">
             A little column extra info. Aaand just a little bit more
-          </span>
-
-          <!-- DA ELIMINARE: RICORDA A PIETRO-->
+          </div>
+          <div id="matrix-info">
+            A little column extra info. Aaand just a little bit more
+          </div>
+          <div id="charts-info">
+            A little column extra info. Aaand just a little bit more
+          </div>
+          <div id="scatterplot-info">
+            A little column extra info. Aaand just a little bit more
+          </div>
+          <!-- DA ELIMINARE: RICORDA A PIETRO -->
           <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
             id="SIMIL1">data_high__!</button>
           <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
@@ -134,7 +142,7 @@
       </div>
       <div id="scatterplot"></div>
       <div id="twitter-div">
-        <a class="twitter-timeline" data-lang="en" data-width="300" data-height="535" data-dnt="true" data-theme="dark"
+        <a class="twitter-timeline" data-lang="en" data-width="295" data-height="535" data-dnt="true" data-theme="dark"
           href="https://twitter.com/CryptoBoomNews">Tweets </a>
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
       </div>
@@ -143,7 +151,7 @@
     <!--<div id="my_dataviz_boxplot" data-refresh-interval="500"></div>-->
     <div id="my_dataviz_buttons">
     <button type="button" id='MyBtn'
-      style="position: absoulte; width: 90px; margin-top: 25px; margin-left:2px; zoom: 0.75; font-family : inherit;">Absolute <br />
+      style="position: absoulte; width: 90px; margin-top: 25px; margin-left:2px; zoom: 0.75; font-family : inherit; z-index: 10;">Absolute <br />
       scale</button> <!-- VA MESSO DA UN'ALTRA PARTE -->
       <button type="button" id='MyBtn2' style="position: absoulte; margin-left: 10px; margin-top: 10px; zoom: 0.75; font-family : inherit;" onclick="nextChartClick()">Next (1/2)</button>  <!-- VA MESSO DA UN'ALTRA PARTE -->
     </div>

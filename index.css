@@ -8,7 +8,7 @@ body {
 }
 
 #scale-zoom {
-  zoom: 0.75;
+  zoom: 0.74;
   height: 609px;
   position: relative;
   }
@@ -436,9 +436,9 @@ h3 {
 
       #scatterplot {
         position: absolute;
-        margin-left: 1445px;
-        width: 775px;
-        height: 405px;
+        margin-left: 1465px;
+        width: 757px;
+        height: 410px;
         border: 2px solid rgb(209, 153, 0);
         zoom: 0.9;
         margin-top: 612px;
@@ -453,21 +453,27 @@ h3 {
         height: 540px;
       }
 
-      
-      .info-button-container {
+      /* INFO BUTTON CONTAINER */
+      #info-button-container {
         position: absolute;
         width: 30px;
         margin-left: 1800px;
-        margin-top: -23px;
+        margin-top: -27px;
+      }
+            
+      #info-button-container:hover  {
+        opacity: 0.2;
       }
 
-      .info-button {
+      #info-button {
         width: 100%;
       }
+      
+      
 
-      .extra-info {
+      #graph-info {
         position: absolute;
-        display: block;
+        display:block;
         visibility: hidden;
         line-height: 30px;
         font-size: 20px;
@@ -482,17 +488,88 @@ h3 {
         margin-left: -199px;
         
         transition: 1s ease;
+      } 
+      #matrix-info {
+        position: absolute;
+        display:block;
+        visibility: hidden;
+        line-height: 30px;
+        font-size: 20px;
+        color: white;
+        z-index: 10;
+        opacity: 0;
+        background-color: rgb(40, 40, 40);
+        padding: 0 0 0 5px;
+        width: 620px;
+        height: 540px;
+        margin-top: 25px;
+        margin-left: 861px;
+        
+        transition: 1s ease;
+      }
+      
+      #charts-info {
+        position: absolute;
+        display:block;
+        visibility: hidden;
+        line-height: 30px;
+        font-size: 20px;
+        color: white;
+        z-index: 10;
+        opacity: 0;
+        background-color: rgb(40, 40, 40);
+        padding: 0 0 0 5px;
+        width: 1306px;
+        height: 370px;
+        margin-top: 570px;
+        margin-left: -199px;
+        
+        transition: 1s ease;
       }
 
-      .info-button-container:hover + .extra-info {
+      #scatterplot-info {
+        position: absolute;
+        display:block;
+        visibility: hidden;
+        line-height: 30px;
+        font-size: 20px;
+        color: white;
+        z-index: 10;
+        opacity: 0;
+        background-color: rgb(40, 40, 40);
+        padding: 0 0 0 5px;
+        width: 675px;
+        height: 370px;
+        margin-top: 570px;
+        margin-left: 1122px;
+        
+        transition: 1s ease;
+      }
+      #info-button-container:hover ~ #graph-info{
         visibility: visible;
 
         opacity: 0.9;
         text-align: left !important;
       }
-      .info-button-container:hover  {
-        opacity: 0.2;
+      #info-button-container:hover ~ #matrix-info{
+        visibility: visible;
+
+        opacity: 0.9;
+        text-align: left !important;
       }
+      #info-button-container:hover ~ #charts-info{
+        visibility: visible;
+
+        opacity: 0.9;
+        text-align: left !important;
+      }
+      #info-button-container:hover ~ #scatterplot-info{
+        visibility: visible;
+
+        opacity: 0.9;
+        text-align: left !important;
+      }
+
 
 /* RESPONSIVE DESIGN */
 @media only screen and (max-width: 1530px) {
