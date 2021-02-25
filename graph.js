@@ -537,8 +537,6 @@ function create_graph(ididix) {
 
     svg.selectAll("*").remove()
 
-    opacity=1
-
     svg.append("circle").attr("cx",70).attr("cy",80).attr("r", 12)
     .style("fill", fill_node_circle)
 
@@ -546,8 +544,16 @@ function create_graph(ididix) {
     .style("font-size", "35px").attr("alignment-baseline","middle")
     .attr("fill", fill_node_text)
     
-    svg.append("circle").attr("cx",70).attr("cy",140).attr("r", 12)
-    .style("fill", color_links)
+    svg.append("line")
+    .style("stroke", color_links)
+    .style("stroke-width", 7)
+    .attr("x1", 55)
+    .attr("y1", 125 )
+    .attr("x2", 77)
+    .attr("y2", 146);
+    
+    // .attr("cx",70).attr("cy",140).attr("r", 12)
+    // .style("fill", color_links)
 
     svg.append("text").attr("x", 90).attr("y", 140).text("Similarity link")
     .style("font-size", "35px").attr("alignment-baseline","middle")
