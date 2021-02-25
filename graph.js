@@ -41,9 +41,6 @@ var T_ARR = [0.9258215989245593, 0.9160405042808755, 0.9287826381387896, 0.93689
 
 
 
-
-
-
 ///DATABASE
 var data_reg = {}  //REG NAME ID ECC
 var name_arr = []  //ARR with names only
@@ -93,9 +90,9 @@ var output = document.getElementById("demo");   //0 - 0.1   0.9 + 0.1*x x = 1
 // 0.8 + 0.1*x   x=(1 - initial)*10
 
 //
-output.innerHTML = String(90 + slider.value / 10) + "%(" +
+output.innerHTML = //String(90 + slider.value / 10) + "%(" +
   rr((slider.value * fix_val_slider / 1000) + initial_threshold_slider)
-  + ")";
+  //+ ")";
 
 var actual_t = initial_threshold_slider; //slider initial value is ?  //NOT USED ANYMORE
 // Useful to avoid refresh of the matrix too many times
@@ -111,12 +108,29 @@ slider.addEventListener("mouseup", mouseUpOnSlider);
 var mouse_down_on_slider = -1; // No click/unclick
 //
 
-function rr(v) { return v.toFixed(3) } //3rd decimal n
+formatter = new Intl.NumberFormat('en-US', {
+  minimumFractionDigits: 3,      
+  maximumFractionDigits: 3,
+});
+
+ function rr(v) { 
+  return Number(String(v).slice(0, 5))
+} //3rd decimal n
+
+function getZeros(v) {
+  if (v==undefined) return 0
+  v = String(v).slice(0, 5)
+  rest = v.split(".")
+  if(rest == undefined || v==0 || v==1) return v.concat(".000")
+  if(rest[1].length==1) return v.concat("00")
+  if(rest[1].length==2) return v.concat("0")
+  return v
+}
 
 slider.oninput = function () {
   //console.log(this.value* fix_val_slider / 10000)
   actual_t = rr(((this.value * fix_val_slider / 10000)) + initial_threshold_slider); // slider range 0-100 norm in 0 1
-  output.innerHTML = String(90 + slider.value / 10) + "%(" + actual_t + ")";
+  output.innerHTML =  getZeros(actual_t)  ;
   slider_update(actual_t)
 }
 
@@ -488,7 +502,7 @@ function set_slider_params(idx) {
   initial_threshold = rr(T_ARR[idx]); //THRESHOLD MIN x creare il nodo!
   initial_threshold_slider = initial_threshold; //THRESHOLD BASE OF THE SLIDER
   fix_val_slider = (1 - initial_threshold) * 100
-  output.innerHTML = String(90 + slider.value / 10) + "%(" + initial_threshold + ")";
+  output.innerHTML =   getZeros(initial_threshold );
   slider.value = 0
   actual_t = initial_threshold
   full_matrix_or_reduced(last_clicked, data_json, actual_t);
@@ -522,6 +536,23 @@ function create_graph(ididix) {
   d3v3.csv("similarities/data_close.json", function () {  // per ogni namecoin prendo i relativi link to add dal datareg
 
     svg.selectAll("*").remove()
+
+    opacity=1
+
+    svg.append("circle").attr("cx",70).attr("cy",80).attr("r", 12)
+    .style("fill", fill_node_circle)
+
+    svg.append("text").attr("x", 90).attr("y", 80).text("Cryptocurrency")
+    .style("font-size", "35px").attr("alignment-baseline","middle")
+    .attr("fill", fill_node_text)
+    
+    svg.append("circle").attr("cx",70).attr("cy",140).attr("r", 12)
+    .style("fill", color_links)
+
+    svg.append("text").attr("x", 90).attr("y", 140).text("Similarity link")
+    .style("font-size", "35px").attr("alignment-baseline","middle")
+    .attr("fill", fill_node_text)
+
 
     index_of_similarity_in_use = ididix
 
@@ -604,7 +635,8 @@ function create_graph(ididix) {
           fullMatrix(data_json)
           on_mouseout_function()
           create_scatterplot()
-          createSingleGraphsOfMyCrypto("Bitcoin")
+          //createSingleGraphsOfMyCrypto("Bitcoin")
+          change_graphs=false
           return
         }
 
