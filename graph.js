@@ -80,7 +80,7 @@ stroke_width_node_circle = '100px'
 radius_node_circle = '15  '
 
 ///SLIDER
-var initial_threshold = 0.95; //THRESHOLD MIN x creare il nodo!
+var initial_threshold = T_ARR[0]; //THRESHOLD MIN x creare il nodo!
 var initial_threshold_slider = initial_threshold; //THRESHOLD BASE OF THE SLIDER
 var fix_val_slider = (1 - initial_threshold) * 100 //2 if 0.95, 0 if 0.9, 0.5 if 0.8 ..
 
@@ -355,7 +355,7 @@ function getThreshold(source, target, similarity_idx) {
 
 
 
-
+/*
 document.getElementById("SIMIL1").addEventListener("click", function () {
   data_json = "data_high"
   create_graph(1)
@@ -482,6 +482,7 @@ document.getElementById("SIMIL0_17").addEventListener("click", function () {
 
   create_graph(18)
 })
+*/
 
 function set_slider_params(idx) {
   initial_threshold = rr(T_ARR[idx]); //THRESHOLD MIN x creare il nodo!
@@ -505,15 +506,15 @@ create_graph(0)
 function create_graph(ididix) {
 
 
-  console.log("last clicked è:")
-  console.log(last_clicked == "" ? "nessuno" : last_clicked.name)
+  //console.log("last clicked è:")
+  //console.log(last_clicked == "" ? "nessuno" : last_clicked.name)
 
 
   if (actual_graph_used == 1212) return
   actual_graph_used = ididix
   if (reshape_flag != 1) //quindi se non è la prima volta
   {
-    console.log("cambio valori slider iniziali,e reshape flag è:" + String(reshape_flag))
+    //console.log("cambio valori slider iniziali,e reshape flag è:" + String(reshape_flag))
     set_slider_params(ididix)
   }
 
