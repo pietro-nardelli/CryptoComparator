@@ -25,7 +25,7 @@ var need_candlestick = false;
 number_of_graphs=3
 // number_of_boxplot=2
 
-rel_or_abs = 'absolute'
+rel_or_abs = 'Absolute'
 clicked = true
 single_chart=true
 already_draw=true
@@ -52,22 +52,22 @@ document.getElementById("MyBtn").addEventListener("click", function() {
         if(single_chart){
             clicked = !clicked;
             if(clicked) {
-                rel_or_abs = 'absolute';
+                rel_or_abs = 'Absolute';
                 document.getElementById("MyBtn").innerHTML = rel_or_abs+' scale';
                 functionOnClickSingle(rel_or_abs,change_graphs)
             }
-            else rel_or_abs = 'relative'
+            else rel_or_abs = 'Relative'
             document.getElementById("MyBtn").innerHTML = rel_or_abs+' scale';
             functionOnClickSingle(rel_or_abs,change_graphs)
         }
         else{
             clicked = !clicked;
             if(clicked) {
-                rel_or_abs = 'absolute';
+                rel_or_abs = 'Absolute';
                 document.getElementById("MyBtn").innerHTML = rel_or_abs+' scale';
                 functionOnClick(rel_or_abs,change_graphs)
             }
-            else rel_or_abs = 'relative'
+            else rel_or_abs = 'Relative'
             document.getElementById("MyBtn").innerHTML = rel_or_abs+' scale';
             functionOnClick(rel_or_abs,change_graphs)
 
@@ -506,8 +506,8 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
                 var min_line_2 = minArrObj(dataFiltered2_array[i],'value')
 
                 max_array[i] = get_max(max_line_1,max_line_2)
-                if(rel_or_abs=='relative') min_array[i] = get_min(min_line_1,min_line_2)
-                else if(rel_or_abs=='absolute') min_array[i]=0
+                if(rel_or_abs=='Relative') min_array[i] = get_min(min_line_1,min_line_2)
+                else if(rel_or_abs=='Absolute') min_array[i]=0
 
             }
 
@@ -744,8 +744,8 @@ function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_gr
                 })
 
                 max_array[i] = maxArrObj(dataFiltered_array[i],'value') //max_array = [max, max_new,max_new_2]
-                if(rel_or_abs=='relative') min_array[i] = minArrObj(dataFiltered_array[i],'value') //min_array = [min, min_new, min_new_2]
-                else if(rel_or_abs=='absolute') min_array[i]=0
+                if(rel_or_abs=='Relative') min_array[i] = minArrObj(dataFiltered_array[i],'value') //min_array = [min, min_new, min_new_2]
+                else if(rel_or_abs=='Absolute') min_array[i]=0
 
             }
 
