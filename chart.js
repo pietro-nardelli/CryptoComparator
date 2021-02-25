@@ -15,8 +15,8 @@ var cryptonames = ["Bitcoin", "Ethereum", "Bitcoin Cash", "Ripple", "Dash", "Lit
 
 //-----------------dimensione dei grafici----------------
 var margin1 = {top: 10, right: 0, bottom: 30, left: 80};
-var width1 = 300 - margin1.left - margin1.right;
-var height1 = 270 - margin1.top - margin1.bottom;
+var width1 = (360 - margin1.left - margin1.right)*zoom;
+var height1 = (330 - margin1.top - margin1.bottom)*zoom;
 //-------------------------------------------------------
 
 

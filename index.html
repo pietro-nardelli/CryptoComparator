@@ -82,7 +82,10 @@
           <div id="scatterplot-info">
             A little column extra info. Aaand just a little bit more
           </div>
-          <!-- DA ELIMINARE: RICORDA A PIETRO -->
+
+
+
+          <!-- DA ELIMINARE: RICORDA A PIETRO
           <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
             id="SIMIL1">data_high__!</button>
           <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
@@ -134,6 +137,7 @@
             id="SIMIL5_17">data_volume52!</button>
           <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
             id="SIMIL0_17">data_close02!</button>
+          -->
         </div>
       </div>
       <div id="graph_div" data-refresh-interval="500"></div>
@@ -147,38 +151,18 @@
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
       </div>
     </div>
+    <div id="div_on_mydataviz"></div>
     <div id="my_dataviz" data-refresh-interval="500"></div>
     <!--<div id="my_dataviz_boxplot" data-refresh-interval="500"></div>-->
     <div id="my_dataviz_buttons">
-    <button type="button" id='MyBtn'
-      style="position: absoulte; width: 90px; margin-top: 25px; margin-left:2px; zoom: 0.75; font-family : inherit; z-index: 10;">Absolute <br />
+      <button type="button" id='MyBtn'
+      style="position: absoulte; width: 90px; margin-top: 25px; margin-left:-30px; font-family : inherit; z-index: 10;">Absolute <br />
       scale</button> <!-- VA MESSO DA UN'ALTRA PARTE -->
-      <button type="button" id='MyBtn2' style="position: absoulte; margin-left: 10px; margin-top: 10px; zoom: 0.75; font-family : inherit;" onclick="nextChartClick()">Next (1/2)</button>  <!-- VA MESSO DA UN'ALTRA PARTE -->
+      <button type="button" id='MyBtn2' style="position: absoulte; margin-left: -20px; margin-top: 10px; font-family : inherit; " onclick="nextChartClick()">Next (1/2)</button>  <!-- VA MESSO DA UN'ALTRA PARTE -->
     </div>
 
 
   </body>
-  <!-- <script>
-/* When the user clicks on the button,
-toggle between hiding and showing the dropdown content */
-// function myFunction2() {
-//   document.getElementById("myDropdown2").classList.toggle("show");
-// }
-
-// Close the dropdown if the user clicks outside of it
-window.onclick = function(event) {
-  if (!event.target.matches('.dropbtn')) {
-    var dropdowns = document.getElementsByClassName("dropdown-content");
-    var i;
-    for (i = 0; i < dropdowns.length; i++) {
-      var openDropdown = dropdowns[i];
-      if (openDropdown.classList.contains('show')) {
-        openDropdown.classList.remove('show');
-      }
-    }
-  }
-}
-</script> -->
 
   <!-- TO USE V3 as d3v3 INSIDE d3 WITH v4-->
   <script src="https://d3js.org/d3.v3.min.js"></script>
@@ -200,6 +184,25 @@ window.onclick = function(event) {
   <script src="scatterplot.js" defer></script>
 
   <script>    
+    /* Zoom for different screen width*/
+    var window_width = window.innerWidth;
+    if (window_width >= 1366) {
+      var zoom = window_width/1536*0.74;
+
+      document.getElementById("scale-zoom").setAttribute("style", "zoom:"+zoom+";");
+      document.getElementById("div_on_mydataviz").setAttribute("style", "zoom:"+zoom+";");
+      document.getElementById("my_dataviz_buttons").setAttribute("style", "zoom:"+zoom+";");
+    }
+    else {
+      var window_width = 1366;
+      var zoom = window_width/1536*0.74;
+
+      document.getElementById("scale-zoom").setAttribute("style", "zoom:"+zoom+";");
+      document.getElementById("div_on_mydataviz").setAttribute("style", "zoom:"+zoom+";");
+      document.getElementById("my_dataviz_buttons").setAttribute("style", "zoom:"+zoom+";");
+    }
+
+    /* Twitter CSS when loeaded*/
     function twitterCss() {
       var cssLink = document.createElement("link");
       cssLink.href = "twitter.css";
@@ -207,6 +210,7 @@ window.onclick = function(event) {
       cssLink.type = "text/css";
       document.getElementById('twitter-widget-0').contentDocument.body.appendChild(cssLink);
     }
+    /* Next chart button change text*/
     var next_chart = false;
     function nextChartClick() {
       if (next_chart == false) {

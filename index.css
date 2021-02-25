@@ -19,7 +19,7 @@ body {
   background-color: rgb(40, 40, 40);
   /*border: 2px solid rgb(209, 153, 0); */
 
-  width: 2050px;
+  width: 2100px;
   
   height: 40px;
   margin-top: -10px;
@@ -377,20 +377,25 @@ h3 {
     #my_dataviz {
       position:absolute;
       margin-top: 3px;
-      border: 1px solid rgb(255, 153, 0);
+      /* style="font-family : inherit;" */
+    }
+    #div_on_mydataviz {
+      position:absolute;
+      margin-top: 4px;
+      border: 2px solid rgb(255, 153, 0);
       border-right: none;
-      width: 900px;
-      height: 273px;
+      width: 1300px;
+      height: 372px;
       /* style="font-family : inherit;" */
     }
     #my_dataviz_buttons {
       position:absolute;
-      margin-left: 900px;
-      margin-top: 3px;
-      border: 1px solid rgb(255, 153, 0);
+      margin-left: 1235px;
+      margin-top: 4px;
+      border: 2px solid rgb(255, 153, 0);
       border-left: none;
       width: 71px;
-      height: 273px;
+      height: 373px;
       /* style="font-family : inherit;" */
     }
     #my_dataviz_boxplot {
@@ -439,16 +444,16 @@ h3 {
         margin-left: 1465px;
         width: 757px;
         height: 410px;
-        border: 2px solid rgb(209, 153, 0);
+        border: 2px solid rgb(255, 153, 0);
         zoom: 0.9;
-        margin-top: 612px;
+        margin-top: 613px;
       }
       #twitter-div {
         position:absolute;
         margin-left: 1700px; 
         margin-top: 5px; 
         stroke: rgb(255, 255, 255); 
-        border: 1px solid rgb(209, 153, 0); 
+        border: 1px solid rgb(255, 153, 0);
         width: 300px; 
         height: 540px;
       }
@@ -519,8 +524,8 @@ h3 {
         opacity: 0;
         background-color: rgb(40, 40, 40);
         padding: 0 0 0 5px;
-        width: 1306px;
-        height: 370px;
+        width: 1294px;
+        height: 368px;
         margin-top: 570px;
         margin-left: -199px;
         
@@ -539,12 +544,14 @@ h3 {
         background-color: rgb(40, 40, 40);
         padding: 0 0 0 5px;
         width: 675px;
-        height: 370px;
-        margin-top: 570px;
+        height: 368px;
+        margin-top: 572px;
         margin-left: 1122px;
         
         transition: 1s ease;
       }
+
+
       #info-button-container:hover ~ #graph-info{
         visibility: visible;
 
@@ -572,14 +579,12 @@ h3 {
 
 
 /* RESPONSIVE DESIGN */
-@media only screen and (max-width: 1530px) {
+
+@media only screen and (max-height: 740px) {
   body {
-    overflow-x: auto;
+    overflow-y: auto;
   }
-  menu {
-    width: 2700px;
-  }
-  
+
 
   ::-webkit-scrollbar {
     width: 4px;
@@ -604,13 +609,14 @@ h3 {
   ::-webkit-scrollbar-thumb:hover {
     background: #555;
   }
+
 }
 
-@media only screen and (max-height: 740px) {
-  body {
-    overflow-y: auto;
-  }
 
+@media only screen and (max-width: 1366px) {
+  body {
+    overflow-x: auto;
+  }
 
   ::-webkit-scrollbar {
     width: 4px;
