@@ -385,7 +385,7 @@ h3 {
       border: 2px solid rgb(255, 153, 0);
       border-right: none;
       width: 1300px;
-      height: 372px;
+      height: 368px;
       /* style="font-family : inherit;" */
     }
     #my_dataviz_buttons {
@@ -394,8 +394,8 @@ h3 {
       margin-top: 4px;
       border: 2px solid rgb(255, 153, 0);
       border-left: none;
-      width: 71px;
-      height: 373px;
+      width: 80px;
+      height: 368px;
       /* style="font-family : inherit;" */
     }
     #my_dataviz_boxplot {
