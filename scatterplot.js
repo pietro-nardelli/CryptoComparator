@@ -1,6 +1,9 @@
 
 var mydata = [];
 
+var kind_dim = "mds"
+var global_arr_names = []
+
 // dimensions and margins
 var margin_s = { top: 10, right: 50, bottom: 30, left: 100 },
       width_s = 650 - margin_s.left - margin_s.right,
@@ -20,10 +23,36 @@ var mydata = []
 var window_color = "rgb(2, 200, 255)"
 
 fontsize = "24px"
-create_scatterplot(null,null,"mds")
+create_scatterplot(null,null,kind_dim)
 
-function create_scatterplot(name1=null,name2=null,dim_red="pca") {
+d3.select("#dim_reduction_selection_dropdown").on("change", function() {
+
+      kind_dim = this.value;
+      //crypto_name_matrix1 crypto_name_matrix2
+
+      if(already_draw){
+            
+            if(single_chart){
+                  if(global_arr_names.length!=0){
+                        create_scatterplot_from_graph(global_arr_names,kind_dim)
+                  }
+                  else{
+                        create_scatterplot(null,null,kind_dim)
+
+                  }
+            } 
+            else create_scatterplot(crypto_name_matrix1,crypto_name_matrix2,kind_dim)
+      }
+      else{
+            print("aaaaa")
+            create_scatterplot(null,null,kind_dim)
+      }
+    });
+
+
+function create_scatterplot(name1=null,name2=null,dim_red=kind_dim) {
       svgg.selectAll("*").remove(); 
+      global_arr_names = []
 
       if(dim_red=="mds") var path="mds_positions.json"
       else if(dim_red="pca") var path="pca_positions.json"
@@ -191,7 +220,12 @@ function create_scatterplot(name1=null,name2=null,dim_red="pca") {
 
 //create_scatterplot_from_graph(names_array_test)
 
-function create_scatterplot_from_graph(name_array,dim_red="pca") {
+
+
+function create_scatterplot_from_graph(name_array,dim_red=kind_dim) {
+
+global_arr_names = name_array
+
 svgg.selectAll("*").remove(); 
 if(dim_red=="mds") var path="mds_positions.json"
 else if(dim_red="pca") var path="pca_positions.json"

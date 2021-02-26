@@ -28,8 +28,9 @@ number_of_graphs=3
 rel_or_abs = 'Absolute'
 clicked = true
 single_chart=true
-already_draw=true
+already_draw=false
 change_graphs=false
+first_time_draw = true
 //opacity_param=1.0
 //let's create the svgs for each graph!
 var svg_arr=[]
@@ -48,6 +49,7 @@ for(i=0;i<number_of_graphs;i++){
 createSingleGraphsOfMyCrypto("Bitcoin",false,true)
 
 document.getElementById("MyBtn").addEventListener("click", function() {
+
     if(already_draw){
         if(single_chart){
             clicked = !clicked;
@@ -146,7 +148,7 @@ function functionOnClick(rel_or_abs=null,change_graphs=change_graphs){
 
 function functionOnClickSingle(rel_or_abs=null,change_graphs=change_graphs){
 
-    already_draw=true
+    //already_draw=true
     single_chart=true
     if(last_clicked.name == undefined){
         name1 = "Bitcoin"
@@ -335,7 +337,8 @@ function createGraphsOfMyCrypto(name1,name2='Dogecoin',change_graphs=false,reset
 
 function createSingleGraphsOfMyCrypto(name1,change_graphs=false,reset=false){
     //PER ORA IL CONFRONTO E' FRA QUELLA CHE CLICCO,E Dogecoin.
-    already_draw=true
+   if(!first_time_draw) already_draw=true
+
     single_chart=true
     var path_1 = 'dataset/' + String(name1)+ '.csv';
 
@@ -370,7 +373,7 @@ function createSingleGraphsOfMyCrypto(name1,change_graphs=false,reset=false){
 
         draw_time_chart(svg_arr[2], margin1, data_final1, attr_to_plot[n], [0,1], 2 , number_of_graphs, rel_or_abs=rel_or_abs,opacity_value=opacity_param)
 
-
+        first_time_draw=false
     })
 
 

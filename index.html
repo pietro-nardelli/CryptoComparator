@@ -173,6 +173,7 @@
     /* Next chart button change text*/
     var next_chart = false;
     function nextChartClick() {
+      if(already_draw){
       if (next_chart == false) {
         next_chart = true;
         document.getElementById("MyBtn2").innerHTML = "Next (2/2)";
@@ -182,4 +183,5 @@
         document.getElementById("MyBtn2").innerHTML = "Next (1/2)";
       }
     }
+  }
   </script>
