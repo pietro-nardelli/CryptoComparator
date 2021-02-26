@@ -71,73 +71,25 @@
             <img src="information-button.svg" id="info-button">
           </div>
           <div id="graph-info">
-            A little column extra info. Aaand just a little bit more
+            <span class="info-text">
+              Graph informations:
+            </span>
           </div>
           <div id="matrix-info">
-            A little column extra info. Aaand just a little bit more
+            <span class="info-text">
+              Matrix informations:
+            </span>
           </div>
           <div id="charts-info">
-            A little column extra info. Aaand just a little bit more
+            <span class="info-text">
+              Charts informations:
+            </span>
           </div>
           <div id="scatterplot-info">
-            A little column extra info. Aaand just a little bit more
+            <span class="info-text">
+              Scatterplot informations:
+            </span>
           </div>
-
-
-
-          <!-- DA ELIMINARE: RICORDA A PIETRO
-          <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
-            id="SIMIL1">data_high__!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
-            id="SIMIL2">data_low__!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;"
-            id="SIMIL3">data_market_cap__!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
-            id="SIMIL4">data_open__!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;"
-            id="SIMIL5">data_volume__!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
-            id="SIMIL0">data_close__!</button>
-
-          <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
-            id="SIMIL1_15">data_high10!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
-            id="SIMIL2_15">data_low20!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;"
-            id="SIMIL3_15">data_market_cap30!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
-            id="SIMIL4_15">data_open40!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;"
-            id="SIMIL5_15">data_volume50!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
-            id="SIMIL0_15">data_close00!</button>
-
-          <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
-            id="SIMIL1_16">data_high11!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
-            id="SIMIL2_16">data_low21!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;"
-            id="SIMIL3_16">data_market_cap31!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
-            id="SIMIL4_16">data_open41!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;"
-            id="SIMIL5_16">data_volume51!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
-            id="SIMIL0_16">data_close01!</button>
-
-          <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
-            id="SIMIL1_17">data_high12!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
-            id="SIMIL2_17">data_low22!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;"
-            id="SIMIL3_17">data_market_cap32!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
-            id="SIMIL4_17">data_open42!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 30px; font-family : inherit;"
-            id="SIMIL5_17">data_volume52!</button>
-          <button hidden type="button" style="position: absoulte; margin-left: 20px; font-family : inherit;"
-            id="SIMIL0_17">data_close02!</button>
-          -->
         </div>
       </div>
       <div id="graph_div" data-refresh-interval="500"></div>
@@ -150,6 +102,14 @@
           href="https://twitter.com/CryptoBoomNews">Tweets </a>
         <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
       </div>
+      
+      <div id="dim_reduction_selection">
+        Dimensionality reduction: <br />
+        <select id="dim_reduction_selection_dropdown">
+          <option value="mds" style="font-family : inherit;">MDS</option>
+          <option value="pca" style="font-family : inherit;">PCA</option>
+        </select>
+    </div>
     </div>
     <div id="div_on_mydataviz"></div>
     <div id="my_dataviz" data-refresh-interval="500"></div>

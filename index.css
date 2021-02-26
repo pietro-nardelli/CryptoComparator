@@ -458,6 +458,16 @@ h3 {
         height: 540px;
       }
 
+      #dim_reduction_selection {
+        position: absolute;
+        font-family: inherit;
+        color: white;
+        margin-top: 575px;
+        width: 100px;
+        margin-left: 1890px;
+        z-index: 12;
+      }
+
       /* INFO BUTTON CONTAINER */
       #info-button-container {
         position: absolute;
@@ -480,7 +490,7 @@ h3 {
         position: absolute;
         display:block;
         visibility: hidden;
-        line-height: 30px;
+        line-height: 540px;
         font-size: 20px;
         color: white;
         z-index: 10;
@@ -494,11 +504,12 @@ h3 {
         
         transition: 1s ease;
       } 
+
       #matrix-info {
         position: absolute;
         display:block;
         visibility: hidden;
-        line-height: 30px;
+        line-height: 540px;
         font-size: 20px;
         color: white;
         z-index: 10;
@@ -517,7 +528,7 @@ h3 {
         position: absolute;
         display:block;
         visibility: hidden;
-        line-height: 30px;
+        line-height: 374px;
         font-size: 20px;
         color: white;
         z-index: 10;
@@ -536,7 +547,7 @@ h3 {
         position: absolute;
         display:block;
         visibility: hidden;
-        line-height: 30px;
+        line-height: 368px;
         font-size: 20px;
         color: white;
         z-index: 10;
@@ -549,6 +560,12 @@ h3 {
         margin-left: 1142px;
         
         transition: 1s ease;
+      }
+
+      .info-text {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: normal;
       }
 
 
@@ -576,6 +593,7 @@ h3 {
         opacity: 0.9;
         text-align: center !important;
       }
+
 
 
 /* RESPONSIVE DESIGN */
