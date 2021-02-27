@@ -181,6 +181,7 @@ Input:
 Output:
     final_dict: the final dictionary with nodes[{#:..., Name:..., MarketCap: ..., }] and links[{source:..., target:..., value:...}]
 '''
+# NOT USED ANYMORE
 def compute_distance(pos, standard_input_list, final_dict, dim_red_flag):
     final_dict['links'] = []
     max = 0
@@ -246,7 +247,6 @@ def my_corrcoef( x, y ):
 def compute_similarity_t0(standard_input_list, final_dict):
     final_dict['links'] = []
     # Compute simple Euclidean distance
-    max = 0
     for i in range(len(standard_input_list)):
         v_i = standard_input_list[i]
         for j in range(i, len(standard_input_list)):
@@ -255,20 +255,14 @@ def compute_similarity_t0(standard_input_list, final_dict):
             val = my_corrcoef(v_i[:min_nums], v_j[:min_nums])
             #val = np.linalg.norm(np.asarray(v_i[:min_nums]) - np.asarray(v_j[:min_nums])) #[-1,1]
             val = ( val + 1 )/2 # Normalize between [0,1]
-            if (max < val):
-                max = val
 
             final_dict['links'].append( {"source": i, "target": j, "value": val} )
-    # Normalization w.r.t. max
-    for link in final_dict['links']:
-        link['value'] = link['value']/max
     return final_dict
 
 
 
 def compute_dissimilarity_t0_for_mds(standard_input_list):
     matrix = []
-    max = 0
     for i in range(len(standard_input_list)):
         row = []
         v_i = standard_input_list[i]
@@ -279,18 +273,17 @@ def compute_dissimilarity_t0_for_mds(standard_input_list):
             #val = np.linalg.norm(np.asarray(v_i[:min_nums]) - np.asarray(v_j[:min_nums])) #[-1,1]
             val = ( val + 1 )/2 # Normalize between [0,1]
             val = val.astype(np.float64)
-            if (max < val):
-                max = val
 
             row.append(val)
         matrix.append(row)
-    # Normalization w.r.t. max
+        
+    # Transform similarity to dissimilarity
     for r in range(len(matrix)):
         for c in range(len(matrix)):
             if ( r == c):
                 matrix[r][c] = 0
             else:
-                matrix[r][c] = 1 - matrix[r][c]/max
+                matrix[r][c] = 1 - matrix[r][c]
     matrix = np.array(matrix, dtype=np.float64)
     return matrix
 
@@ -320,7 +313,6 @@ def index_of_first_of_the_year(date_input_list_of_cryptos):
 def compute_similarity_year(standard_input_list, final_dict, date_indexes_list, year):
     final_dict['links'] = []
     # Compute simple Euclidean distance
-    max = 0
 
     for i in range(len(standard_input_list)):
         v_i = standard_input_list[i]
@@ -355,8 +347,6 @@ def compute_similarity_year(standard_input_list, final_dict, date_indexes_list, 
                 #val = np.linalg.norm(np.asarray(v_i[:min_nums]) - np.asarray(v_j[:min_nums])) #[-1,1]
                 val = ( val + 1 )/2 # Normalize between [0,1]
                 if ( math.isnan(val) ): val = -1
-                if (max < val):
-                    max = val
             else:
                 if (i==j):
                     val = 1
@@ -364,9 +354,6 @@ def compute_similarity_year(standard_input_list, final_dict, date_indexes_list, 
                     val = -1
 
             final_dict['links'].append( {"source": i, "target": j, "value": val} )
-    # Normalization w.r.t. max
-    for link in final_dict['links']:
-        link['value'] = link['value']/max
     return final_dict
 
 
@@ -446,14 +433,13 @@ date_indexes_list = index_of_first_of_the_year (date_input_list)
 
 # dissimilarity matrix for Volume
 matrix = compute_dissimilarity_t0_for_mds(list_of_lists[0])
-print (matrix[27][28])
 pos_custom = dim_red_computation_custom(matrix)
 
 # PCA COMPUTATION PART: used to compute also nodes_id and plot MDS
 # It's based only on market cap, circulating supply and % change (24h)
 dim_reduction_alg = 'pca'
 nodes_id, pos, standard_input_list = dim_red_computation(final_dict, dim_reduction_alg=dim_reduction_alg)
-final_dict = compute_distance(pos, standard_input_list, final_dict, dim_red_flag=True)
+#final_dict = compute_distance(pos, standard_input_list, final_dict, dim_red_flag=True) # commented, not useful
 # Plot both PCA and MDS (custom)
 plot_dim_red(nodes_id, pos)
 plot_dim_red(nodes_id, pos_custom)

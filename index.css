@@ -443,7 +443,7 @@ h3 {
         position: absolute;
         margin-left: 1490px;
         width: 732px;
-        height: 410px;
+        height: 408px;
         border: 2px solid rgb(255, 153, 0);
         zoom: 0.9;
         margin-top: 613px;
@@ -465,7 +465,7 @@ h3 {
         margin-top: 575px;
         width: 180px;
         margin-left: 1820px;
-        z-index: 12;
+        z-index: 9;
       }
 
       /* INFO BUTTON CONTAINER */
@@ -480,10 +480,46 @@ h3 {
         opacity: 0.2;
       }
 
+      #info-button-blink {
+        width: 100%;
+        -webkit-animation: glowing 3000ms infinite;
+        -moz-animation: glowing 3000ms infinite;
+        -o-animation: glowing 3000ms infinite;
+        animation: glowing 3000ms infinite;
+      }
+      
+
+      @-webkit-keyframes glowing {
+        0% {  -webkit-box-shadow: 0 0 3px #B20000; }
+        50% { -webkit-box-shadow: 0 0 40px #FF0000; }
+        100% {  -webkit-box-shadow: 0 0 3px #B20000; }
+      }
+
+      @-moz-keyframes glowing {
+        0% { -moz-box-shadow: 0 0 3px #B20000; }
+        50% { -moz-box-shadow: 0 0 40px #FF0000; }
+        100% {  -moz-box-shadow: 0 0 3px #B20000; }
+      }
+
+      @-o-keyframes glowing {
+        0% {  box-shadow: 0 0 3px #B20000; }
+        50% { box-shadow: 0 0 40px #FF0000; }
+        100% {  box-shadow: 0 0 3px #B20000; }
+      }
+
+      
+      @keyframes glowing {
+        0% {   filter: drop-shadow( 2px 2px 1px rgba(84, 84, 84, 0.7)); }
+        25% {    filter: drop-shadow( 2px 2px 1px rgb(204, 206, 206)); }
+        50% {   filter: drop-shadow( 2px 2px 1px rgba(84, 84, 84, 0.7)); }
+        75% {    filter: drop-shadow( 2px 2px 1px rgb(203, 203, 202)); }
+        100% {   filter: drop-shadow( 2px 2px 1px rgba(84, 84, 84, 0.7)); }
+      }
+      
+      
       #info-button {
         width: 100%;
       }
-      
       
 
       #graph-info {
@@ -528,15 +564,15 @@ h3 {
         position: absolute;
         display:block;
         visibility: hidden;
-        line-height: 374px;
+        line-height: 370px;
         font-size: 20px;
         color: white;
         z-index: 10;
         opacity: 0;
         background-color: rgb(40, 40, 40);
         padding: 0 0 0 5px;
-        width: 1300px;
-        height: 374px;
+        width: 1309px;
+        height: 370px;
         margin-top: 570px;
         margin-left: -182px;
         
@@ -547,7 +583,7 @@ h3 {
         position: absolute;
         display:block;
         visibility: hidden;
-        line-height: 368px;
+        line-height: 366px;
         font-size: 20px;
         color: white;
         z-index: 10;
@@ -555,7 +591,7 @@ h3 {
         background-color: rgb(40, 40, 40);
         padding: 0 0 0 5px;
         width: 655px;
-        height: 368px;
+        height: 366px;
         margin-top: 572px;
         margin-left: 1142px;
         
