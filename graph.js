@@ -51,7 +51,7 @@ var width = 2700;  //d3 object width
 var height = 1500; //d3 obj height
 
 //GRAPH VALUES
-var x_c = (width - 150) / 2;
+var x_c = (width - 100) / 2;
 var y_c = height / 2;
 var radius = 600;
 var theta = 2 * Math.PI / 100 //split 2pi into 2pi/n_nodes
@@ -538,11 +538,15 @@ function create_graph(ididix) {
 
     svg.selectAll("*").remove()
 
-    svg.append("circle").attr("cx",70).attr("cy",80).attr("r", 12)
+    svg.append("circle").attr("cx",70).attr("cy",80).attr("r", 12)  
     .style("fill", fill_node_circle).style("stroke","black").style("stroke-width","2px")
 
-    svg.append("text").attr("x", 90).attr("y", 80).text("Cryptocurrency")
-    .style("font-size", "35px").attr("alignment-baseline","middle").style("stroke","black").style("stroke-width","1px")
+    svg.append("text").attr("x", 90).attr("y", 80).text("Cryptocurrency node")
+    .style("font-size", "35px").attr("alignment-baseline","middle")
+    .attr("fill", fill_node_text)
+
+    svg.append("text").attr("x", 55).attr("y", 200).text("↻ \t Clockwise sorted")
+    .style("font-size", "35px").attr("alignment-baseline","middle")
     .attr("fill", fill_node_text)
     
     svg.append("line")
@@ -657,6 +661,7 @@ function create_graph(ididix) {
         full_matrix_or_reduced(last_clicked, data_json, actual_t);
         //createGraphsOfMyCrypto(d.name);
         createSingleGraphsOfMyCrypto(d.name);
+        clicked_graph = true
         //createBoxPlotOfMyCrypto(d.name);
         //blink()
 
