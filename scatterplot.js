@@ -109,6 +109,7 @@ function create_scatterplot(name1=null,name2=null,dim_red=kind_dim) {
                               .attr("cy", y(data[i][1]))
                               .attr("r", 4)
                               .style("fill", "#FF6600")
+                              .style("stroke","black").style("stroke-width","2px")
                               .attr("id", crypto_name)
                               .on('mouseover', 
                         function (d,i) {
@@ -184,6 +185,7 @@ function create_scatterplot(name1=null,name2=null,dim_red=kind_dim) {
                               .style("fill", "#FF6600")
                               .attr("id", crypto_name)
                               .attr("opacity", "1.0")
+                              .style("stroke","black").style("stroke-width","2px")
                               .on('mouseover', 
                         function (d,i) {
                               d3.select(this).transition().duration('100').attr("r", 11);
@@ -313,6 +315,7 @@ for (var i = 0; i < 100; i++) {
                   .style("fill", i==cryptonames.indexOf(name_array.slice().pop())? "yellow" : "#FF6600")
                   .attr("id", crypto_name)
                   .attr("opacity", "1.0")
+                  .style("stroke","black").style("stroke-width","2px")
                   .on('mouseover', 
             function (d,i) {
                   d3.select(this).transition().duration('100').attr("r", 11);
@@ -324,6 +327,7 @@ for (var i = 0; i < 100; i++) {
                   .attr("font-size", fontsize)  // Font size
                   .attr("fill", "white") 
                   .attr("opacity", "1.0")
+                  
 
 
 
@@ -337,7 +341,6 @@ for (var i = 0; i < 100; i++) {
                   g.selectAll("text").remove()
 
             })
-            //dot.on("click", createSingleGraphsOfMyCrypto(crypto_name));
 
             }
 

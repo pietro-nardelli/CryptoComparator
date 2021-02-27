@@ -395,8 +395,8 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
     .attr("fill", "rgb(2, 200, 255)")
     .attr("opacity", 0.1);
 
-    svg.append("circle").attr("cx",10).attr("cy",20).attr("r", 4).style("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value)
-    svg.append("circle").attr("cx",10).attr("cy",30).attr("r", 4).style("fill", "white").style("opacity", opacity_value)
+    svg.append("circle").attr("cx",10).attr("cy",20).attr("r", 4).style("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value).style("stroke","black").style("stroke-width","1px")
+    svg.append("circle").attr("cx",10).attr("cy",30).attr("r", 4).style("fill", "white").style("opacity", opacity_value).style("stroke","black").style("stroke-width","1px")
     svg.append("text").attr("x", 25).attr("y", 20).text(data_final1['name'] + ' ' + attr+"(in $)").style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value)
     svg.append("text").attr("x", 25).attr("y", 30).text(data_final2['name'] + ' ' + attr+"(in $)").style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", "white").style("opacity", opacity_value)
 
@@ -492,8 +492,7 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
 
             for(i=0;i<number_of_graphs;i++){
 
-                // print([ x_array[i].invert(extent[0]), x_array[i].invert(extent[1]) ])
-                // print([ Date.parse(x_array[i].invert(extent[0]))/1000, Date.parse(x_array[i].invert(extent[1]))/1000 ])
+
 
                 x_array[i].domain([ x_array[i].invert(extent[0]), x_array[i].invert(extent[1]) ])
                 dataFiltered_array[i] = data_array[i].filter(function(d, i) {                           //dataFiltered_array = [dataFiltered,dataFiltered_new,...]
@@ -674,7 +673,7 @@ function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_gr
     .attr("fill", "rgb(2, 200, 255)")
     .attr("opacity", 0.1);
 
-    svg.append("circle").attr("cx",10).attr("cy",20).attr("r", 4).style("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value)
+    svg.append("circle").attr("cx",10).attr("cy",20).attr("r", 4).style("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value).style("stroke","black").style("stroke-width","1px")
     svg.append("text").attr("x", 25).attr("y", 20).text(data_final['name'] + ' ' + attr+"(in $)").style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value)
 
 
@@ -980,7 +979,6 @@ function draw_single_time_chart1(svg,margin1,data_final,attr)
 
         // select a region with boundaries
         var extent = d3.event.selection
-        print(attr)
         // If no selection, back to initial coordinate. Otherwise, update X axis domain
         if(!extent)
         {
