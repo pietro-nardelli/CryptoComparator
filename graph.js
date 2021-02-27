@@ -329,6 +329,7 @@ d3v3.csv("dataset/100List.csv", function (data) {
     if (i % 2 == 0) y += 2 * (Math.sin(theta * i)) * (Math.abs(Math.sin(theta * i))) ** 400
     if (namecoin == "Dogecoin") { y += 30, x -= 30 }
     if (namecoin == "Radium") { y -= 20, x -= 20 }
+    if (namecoin == "DigitalNote") { y += 20, x -= 20 }
     data_reg[namecoin] = [[x, y], namecoin]
   }
   //update_reg_links(0); //set in datareg all the links
@@ -538,10 +539,10 @@ function create_graph(ididix) {
     svg.selectAll("*").remove()
 
     svg.append("circle").attr("cx",70).attr("cy",80).attr("r", 12)
-    .style("fill", fill_node_circle)
+    .style("fill", fill_node_circle).style("stroke","black").style("stroke-width","2px")
 
     svg.append("text").attr("x", 90).attr("y", 80).text("Cryptocurrency")
-    .style("font-size", "35px").attr("alignment-baseline","middle")
+    .style("font-size", "35px").attr("alignment-baseline","middle").style("stroke","black").style("stroke-width","1px")
     .attr("fill", fill_node_text)
     
     svg.append("line")
@@ -635,7 +636,6 @@ function create_graph(ididix) {
       })
       .on('click', function (d) {
 
-
         if (last_clicked == d || last_clicked.name == d.name) {
           last_clicked = ""
           fullMatrix(data_json)
@@ -665,6 +665,7 @@ function create_graph(ididix) {
 
 
     node.append("circle")
+    .attr("stroke","black").style("stroke","black").style("stroke-width","3px")
       .attr("r", radius_node_circle);
 
     node.append("text")
@@ -802,7 +803,7 @@ function on_click_function(d) {
 
   svg.selectAll(".node circle") // rende la stroke rossa dei nodi a zero per tutti
     .data(nodes)
-    .style("stroke-width", "0px");
+    //.style("stroke-width", "0px");
 
   svg.selectAll(".node text")   // rende il testo grande uguale per tutti
     .data(nodes)
