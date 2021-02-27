@@ -426,13 +426,15 @@ function matrixReduction(node_name, file_json, slider_value) {
         .attr("x2", width);
 
     // Name of the crypto on the left
+    var dim_row_text = (n <= 10) ? 13  : 10;
+
     row.append("text")
         .attr("x", -6)
         .attr("y", x_m.bandwidth() / 2)
         .attr("dy", ".32em")
         .attr("text-anchor", "end")
-        .attr('fill', 'white')
-        .attr('font-size', '10px')
+        .attr('fill', function(d,i) {var selected_text_color = (node_name == ordered_nodes[i].Name) ? 'rgb(2, 200, 255)'  : 'white';return selected_text_color})
+        .attr('font-size', dim_row_text+'px')
         .text(function(d, i) {return ordered_nodes[i].Name; });
 
     // Columns
@@ -449,14 +451,15 @@ function matrixReduction(node_name, file_json, slider_value) {
     // Text on top of the matrix
     var rotation_col_text = (n <= 10) ? 90  : 30;
     var y_col_text = (n <= 10) ? -10  : 0;
+    var dim_col_text = (n <= 10) ? 13  : 10;
     column.append("text")
         .attr("x", -25)
         .attr("y", y_col_text)
         .attr("dy", ".32em")
         .attr("text-anchor", "start")
-        .attr('fill', 'white')
+        .attr('fill', function(d,i) {var selected_text_color = (node_name == ordered_nodes[i].Name) ? 'rgb(2, 200, 255)'  : 'white';return selected_text_color})
         .attr("transform", "rotate("+rotation_col_text+")translate(30)")
-        .attr('font-size', '10px')
+        .attr('font-size', +dim_col_text+'px')
         .text(function(d, i) { return ordered_nodes[i].Name; });
 
     function row(row) {
