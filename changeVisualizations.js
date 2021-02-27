@@ -8,9 +8,6 @@ function changeVisualization(){
     var attribute = document.getElementById("attribute_selection").value;
     var year = document.getElementById("year_selection").value;
 
-    console.log(radio);
-    console.log(attribute);
-    console.log(year);
 
     if (radio == 't0'){
         document.getElementById("year_selection").hidden = true;
