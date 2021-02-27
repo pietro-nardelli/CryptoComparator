@@ -111,6 +111,9 @@ function create_scatterplot(name1=null,name2=null,dim_red=kind_dim) {
                               .style("fill", "#FF6600")
                               .style("stroke","black").style("stroke-width","2px")
                               .attr("id", crypto_name)
+                              .on("click", function(d,i){
+                                    createSingleGraphsOfMyCrypto(crypto_name)
+                              })
                               .on('mouseover', 
                         function (d,i) {
                               d3.select(this).transition().duration('100').attr("r", 11);
@@ -186,6 +189,9 @@ function create_scatterplot(name1=null,name2=null,dim_red=kind_dim) {
                               .attr("id", crypto_name)
                               .attr("opacity", "1.0")
                               .style("stroke","black").style("stroke-width","2px")
+                              .on("click", function(d,i){
+                                    createSingleGraphsOfMyCrypto(crypto_name)
+                              })
                               .on('mouseover', 
                         function (d,i) {
                               d3.select(this).transition().duration('100').attr("r", 11);
@@ -316,6 +322,9 @@ for (var i = 0; i < 100; i++) {
                   .attr("id", crypto_name)
                   .attr("opacity", "1.0")
                   .style("stroke","black").style("stroke-width","2px")
+                  .on("click", function(d,i){
+                        createSingleGraphsOfMyCrypto(crypto_name)
+                  })
                   .on('mouseover', 
             function (d,i) {
                   d3.select(this).transition().duration('100').attr("r", 11);
