@@ -222,13 +222,6 @@ function create_scatterplot(name1=null,name2=null,dim_red=kind_dim) {
 
 }
 
-// names_array_test = ["Siacoin", "DigiByte", "BitcoinDark", "GameCredits", "GXShares", "Lykke",
-// "Dogecoin", "Blocknet", "Syscoin", "Verge", "FirstCoin", "Nxt", "I-O Coin", "Ubiq", "Particl",
-// "NAV Coin", "Rise", "Vertcoin", "Bitdeal", "FairCoin", "Metaverse ETP", "Gulden",]
-
-//create_scatterplot_from_graph(names_array_test)
-
-
 
 function create_scatterplot_from_graph(name_array,dim_red=kind_dim) {
 
