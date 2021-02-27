@@ -19,7 +19,6 @@ var width1 = (360 - margin1.left - margin1.right)*zoom;
 var height1 = (330 - margin1.top - margin1.bottom)*zoom;
 //-------------------------------------------------------
 
-
 var need_candlestick = false;
 //how many graphs do I want to create?
 number_of_graphs=3
@@ -94,8 +93,8 @@ document.getElementById("MyBtn2").addEventListener("click", function() {
     }
 });
 
-
-
+var clicked_graph = false
+var last_clicked_scatterplot
 
 function functionOnClick(rel_or_abs=null,change_graphs=change_graphs){
 
@@ -145,15 +144,26 @@ function functionOnClick(rel_or_abs=null,change_graphs=change_graphs){
     })
 }
 
-
+print(clicked_graph)
 function functionOnClickSingle(rel_or_abs=null,change_graphs=change_graphs){
 
     //already_draw=true
+
     single_chart=true
-    if(last_clicked.name == undefined){
-        name1 = "Bitcoin"
+    if(clicked_graph){
+        if(last_clicked.name == undefined){
+            name1 = "Bitcoin"
+        }
+        else name1 = last_clicked.name 
+
     }
-    else name1 = last_clicked.name 
+    else{
+        if(last_clicked_scatterplot == undefined){
+            name1 = "Bitcoin"
+        }
+        else name1 = last_clicked_scatterplot 
+
+    }
 
     var path_1 = 'dataset/' + String(name1)+ '.csv';
 

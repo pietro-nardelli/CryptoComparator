@@ -112,7 +112,9 @@ function create_scatterplot(name1=null,name2=null,dim_red=kind_dim) {
                               .style("stroke","black").style("stroke-width","2px")
                               .attr("id", crypto_name)
                               .on("click", function(d,i){
+                                    clicked_graph = false
                                     createSingleGraphsOfMyCrypto(crypto_name)
+                                    last_clicked_scatterplot = crypto_name
                               })
                               .on('mouseover', 
                         function (d,i) {
@@ -190,7 +192,10 @@ function create_scatterplot(name1=null,name2=null,dim_red=kind_dim) {
                               .attr("opacity", "1.0")
                               .style("stroke","black").style("stroke-width","2px")
                               .on("click", function(d,i){
+                                    clicked_graph = false
                                     createSingleGraphsOfMyCrypto(crypto_name)
+                                    last_clicked_scatterplot = crypto_name
+
                               })
                               .on('mouseover', 
                         function (d,i) {
@@ -316,7 +321,10 @@ for (var i = 0; i < 100; i++) {
                   .attr("opacity", "1.0")
                   .style("stroke","black").style("stroke-width","2px")
                   .on("click", function(d,i){
+                        clicked_graph = false
                         createSingleGraphsOfMyCrypto(crypto_name)
+                        last_clicked_scatterplot = crypto_name
+
                   })
                   .on('mouseover', 
             function (d,i) {
