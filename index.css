@@ -258,7 +258,7 @@ h3 {
         height: 541px;
         border: 1px solid rgb(255, 153, 0);
         margin-left: 1070px;
-        margin-top: 5px;
+        margin-top: 4px;
       }
 
       #svg_matrix {
@@ -451,11 +451,11 @@ h3 {
       #twitter-div {
         position:absolute;
         margin-left: 1700px; 
-        margin-top: 5px; 
+        margin-top: 4px; 
         stroke: rgb(255, 255, 255); 
         border: 1px solid rgb(255, 153, 0);
         width: 300px; 
-        height: 540px;
+        height: 541px;
       }
 
       #dim_reduction_selection {
@@ -463,8 +463,8 @@ h3 {
         font-family: inherit;
         color: white;
         margin-top: 575px;
-        width: 180px;
-        margin-left: 1820px;
+        width: 100px;
+        margin-left: 1890px;
         z-index: 9;
       }
 
@@ -554,7 +554,7 @@ h3 {
         padding: 0 0 0 5px;
         width: 620px;
         height: 540px;
-        margin-top: 25px;
+        margin-top: 24px;
         margin-left: 871px;
         
         transition: 1s ease;
