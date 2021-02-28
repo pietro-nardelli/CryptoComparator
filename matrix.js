@@ -4,8 +4,6 @@ var margin = {top: 30, right: 380, bottom: 150, left: 120},
     height = 430;
 
 
-var crypto_name_matrix1, crypto_name_matrix2;
-
 var x_m = d3.scaleBand().range([0, width]),
     z = d3.scaleLinear().domain([0, 1]).clamp(true),
 /*
@@ -234,7 +232,7 @@ function fullMatrix(file_json) {
       d3.selectAll(".row text").classed("non-active-x", function(d, i) { return i != p.y; });
       d3.selectAll(".column text").classed("non-active-y", function(d, i) { return i != p.x; });
 
-      var window_color = "rgb(2, 200, 255)"
+      var window_color = color1;
       var value_to_show = p.z.toFixed(3);
       if (p.z == -1) window_color = "grey";
       if (p.z == -1) value_to_show = "&#8709;";
@@ -433,7 +431,7 @@ function matrixReduction(node_name, file_json, slider_value) {
         .attr("y", x_m.bandwidth() / 2)
         .attr("dy", ".32em")
         .attr("text-anchor", "end")
-        .attr('fill', function(d,i) {var selected_text_color = (node_name == ordered_nodes[i].Name) ? 'rgb(2, 200, 255)'  : 'white';return selected_text_color})
+        .attr('fill', function(d,i) {var selected_text_color = (node_name == ordered_nodes[i].Name) ? color1  : 'white';return selected_text_color})
         .attr('font-size', dim_row_text+'px')
         .text(function(d, i) {return ordered_nodes[i].Name; });
 
@@ -457,7 +455,7 @@ function matrixReduction(node_name, file_json, slider_value) {
         .attr("y", y_col_text)
         .attr("dy", ".32em")
         .attr("text-anchor", "start")
-        .attr('fill', function(d,i) {var selected_text_color = (node_name == ordered_nodes[i].Name) ? 'rgb(2, 200, 255)'  : 'white';return selected_text_color})
+        .attr('fill', function(d,i) {var selected_text_color = (node_name == ordered_nodes[i].Name) ? color1 : 'white';return selected_text_color})
         .attr("transform", "rotate("+rotation_col_text+")translate(30)")
         .attr('font-size', +dim_col_text+'px')
         .text(function(d, i) { return ordered_nodes[i].Name; });
@@ -488,7 +486,7 @@ function matrixReduction(node_name, file_json, slider_value) {
       d3.selectAll(".row text").classed("non-active-x", function(d, i) { return d[i].x != p.y; });
       d3.selectAll(".column text").classed("non-active-y", function(d, i) { return d[i].x != p.x; });
 
-      var window_color = "rgb(2, 200, 255)"
+      var window_color = color1
       var value_to_show = p.z.toFixed(3);
       if (p.z == -1) window_color = "grey";
       if (p.z == -1) value_to_show = "&#8709;";
