@@ -30,8 +30,10 @@ single_chart=true
 already_draw=false
 change_graphs=false
 first_time_draw = true
-//opacity_param=1.0
-//let's create the svgs for each graph!
+var clicked_graph = false
+var last_clicked_scatterplot
+var color_sec_line = color1
+var color_first_line = color2
 var svg_arr=[]
 var svg_arr_boxplot=[]
 
@@ -93,8 +95,6 @@ document.getElementById("MyBtn2").addEventListener("click", function() {
     }
 });
 
-var clicked_graph = false
-var last_clicked_scatterplot
 
 function functionOnClick(rel_or_abs=null,change_graphs=change_graphs){
 
@@ -144,7 +144,6 @@ function functionOnClick(rel_or_abs=null,change_graphs=change_graphs){
     })
 }
 
-print(clicked_graph)
 function functionOnClickSingle(rel_or_abs=null,change_graphs=change_graphs){
 
     //already_draw=true
@@ -402,13 +401,13 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
     .attr("y", 0)
     .attr("width", width1)
     .attr("height", height1)
-    .attr("fill", "rgb(2, 200, 255)")
+    .attr("fill", window_color)
     .attr("opacity", 0.1);
 
-    svg.append("circle").attr("cx",10).attr("cy",20).attr("r", 4).style("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value).style("stroke","black").style("stroke-width","1px")
-    svg.append("circle").attr("cx",10).attr("cy",30).attr("r", 4).style("fill", "white").style("opacity", opacity_value).style("stroke","black").style("stroke-width","1px")
-    svg.append("text").attr("x", 25).attr("y", 20).text(data_final1['name'] + ' ' + attr+"(in $)").style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value)
-    svg.append("text").attr("x", 25).attr("y", 30).text(data_final2['name'] + ' ' + attr+"(in $)").style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", "white").style("opacity", opacity_value)
+    svg.append("circle").attr("cx",10).attr("cy",20).attr("r", 4).style("fill", color_first_line).style("opacity", opacity_value).style("stroke","black").style("stroke-width","1px")
+    svg.append("circle").attr("cx",10).attr("cy",30).attr("r", 4).style("fill", color_sec_line).style("opacity", opacity_value).style("stroke","black").style("stroke-width","1px")
+    svg.append("text").attr("x", 25).attr("y", 20).text(data_final1['name'] + ' ' + attr+"(in $)").style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", color_first_line).style("opacity", opacity_value)
+    svg.append("text").attr("x", 25).attr("y", 30).text(data_final2['name'] + ' ' + attr+"(in $)").style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", color_sec_line).style("opacity", opacity_value)
 
     var data = []
     var data2 = []
@@ -653,10 +652,10 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
     //line2.append("g").attr("class", "brush").call(brush);
 
     // Add the line
-    line.append("path").datum(data).attr("class", "line").attr("fill", "none").attr("stroke", 'rgb(255, 102, 0)').style("opacity",opacity_value)
+    line.append("path").datum(data).attr("class", "line").attr("fill", "none").attr("stroke", color_first_line).style("opacity",opacity_value)
     .attr("stroke-width", 1.5).attr("d", d3.line().x(function(d) { return x(d.date) }).y(function(d) { return y(d.value) }))
 
-    line2.append("path").datum(data2).attr("class", "line").attr("fill", "none").attr("stroke", "white").style("opacity",opacity_value)
+    line2.append("path").datum(data2).attr("class", "line").attr("fill", "none").attr("stroke", color_sec_line).style("opacity",opacity_value)
     .attr("stroke-width", 1.5).attr("d", d3.line().x(function(d) { return x(d.date) }).y(function(d) { return y(d.value) }))
 
 
@@ -666,6 +665,7 @@ function draw_multilines_time_chart(svg,margin1,data_final1,data_final2,attr,par
 }
 
 //FUNZIONE PER DISEGNARE GRAFICI INTERAGIBILI E INTERCONNESSI, MA CON SOLO UNA LINEA SOPRA
+
 
 function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_graphs,rel_or_abs,opacity_value=1.0){
     //FUNZIONE PER DISEGNARE GRAFICI INTERCONNESSI FRA LORO
@@ -680,11 +680,11 @@ function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_gr
     .attr("y", 0)
     .attr("width", width1)
     .attr("height", height1)
-    .attr("fill", "rgb(2, 200, 255)")
+    .attr("fill", window_color)
     .attr("opacity", 0.1);
 
-    svg.append("circle").attr("cx",10).attr("cy",20).attr("r", 4).style("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value).style("stroke","black").style("stroke-width","1px")
-    svg.append("text").attr("x", 25).attr("y", 20).text(data_final['name'] + ' ' + attr+"(in $)").style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", 'rgb(255, 102, 0)').style("opacity", opacity_value)
+    svg.append("circle").attr("cx",10).attr("cy",20).attr("r", 4).style("fill", color_first_line).style("opacity", opacity_value).style("stroke","black").style("stroke-width","1px")
+    svg.append("text").attr("x", 25).attr("y", 20).text(data_final['name'] + ' ' + attr+"(in $)").style("font-size", "10px").attr("alignment-baseline","middle").attr("fill", color_first_line).style("opacity", opacity_value)
 
 
     //print(data_final['date'].length)
@@ -841,16 +841,9 @@ function draw_time_chart(svg,margin1,data_final,attr,param,id_graph,number_of_gr
     line.append("g").attr("class", "brush").call(brush);
 
     // Add the line
-    line.append("path").datum(data).attr("class", "line").attr("fill", "none").attr("stroke", 'rgb(255, 102, 0)').style("opacity",opacity_value)
+    line.append("path").datum(data).attr("class", "line").attr("fill", "none").attr("stroke", color_first_line).style("opacity",opacity_value)
     .attr("stroke-width", 1.5).attr("d", d3.line().x(function(d) { return x(d.date) }).y(function(d) { return y(d.value) }))
 
-    // svg.append("text")
-    // .attr("x", (width1 / 2))
-    // .attr("y", 10 - (margin1.top / 2))
-    // .attr("text-anchor", "middle")
-    // .style("font-size", "16px")
-    // .style("text-decoration", "underline")
-    // .text(attr + ' vs Date Graph');
 
     data_charts.push([x,xAxis,line,y,yAxis,data])
 
