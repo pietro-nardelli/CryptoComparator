@@ -142,7 +142,6 @@ function create_scatterplot(name1=null,name2=null,dim_red=kind_dim) {
                               g.selectAll("text").remove()
 
                               })
-                        //dot.on("click", createSingleGraphsOfMyCrypto(crypto_name));
 
                   };
 
@@ -226,46 +225,7 @@ function create_scatterplot(name1=null,name2=null,dim_red=kind_dim) {
 
                   }
 
-                        
-                        // let g = svgg.append('g')
-                        // let crypto_name = cryptonames[i]
-                        // let name_x = x(data[i][0])+10
-                        // let name_y = y(data[i][1])
-
-                        // g.append("text")
-                        //       .text(crypto_name)
-                        //       .attr("x", name_x)
-                        //       .attr("y", name_y)
-                        //       .attr("font_family", "sans-serif")  // Font type
-                        //       .attr("font-size", fontsize)  // Font size
-                        //       .attr("fill", "white") 
-                        //       .attr("opacity", "1.0")
-                        //       .attr("hidden", true)
-
-                        // var dot = g.append("circle")
-                        //       .attr("cx", x(data[i][0]))
-                        //       .attr("cy", y(data[i][1]))
-                        //       .attr("r", 4)
-                        //       .style("fill", window_color)
-                        //       .attr("id", crypto_name)
-                        //       .attr("opacity", "1.0")
-                        //       .style("stroke","black").style("stroke-width","2px")
-                        //       .on("click", function(d,i){
-                        //             clicked_graph = false
-                        //             createSingleGraphsOfMyCrypto(crypto_name)
-                        //             last_clicked_scatterplot = crypto_name
-
-                        //       })
-                        //       .on('mouseover', 
-                        // function (d,i) {
-                        //       d3.select(this).transition().duration('100').attr("r", 11);
-
-                        // })
-
-
-                        // .on('mouseout', function (d) {
-                        //       d3.select(this).transition().duration('200').attr("r", 4);
-                        // })
+            name1=name2=null
           }
 
 
@@ -340,11 +300,11 @@ d3v3.json(path, function (data) {
                   }
             }
       }
-
 for (var i = 0; i < 100; i++) {
 
 
       bool = index_array.includes(i)
+      print(i + " is "+ bool)
 
       if(!bool){//grigi
 
@@ -361,22 +321,28 @@ for (var i = 0; i < 100; i++) {
             
 
             }
-      else{
-            if(i==cryptonames.indexOf(name_array.slice().pop())){
-                  continue
-            }
+      };
+      
+            
+      for(i=0;i<index_array.length;i++){
+            if(index_array[i]==cryptonames.indexOf(name_array.slice().pop())) continue
 
-            let g = svgg.append('g').attr("id", i)
-            let crypto_name = cryptonames[i]
-            let name_x = x(data[i][0])+10
-            let name_y = y(data[i][1])
+            var i_ = index_array[i]
+            // if(i==cryptonames.indexOf(name_array.slice().pop())){
+            //       continue
+            // }
+
+            let g = svgg.append('g').attr("id", i_)
+            let crypto_name = cryptonames[i_]
+            let name_x = x(data[i_][0])+10
+            let name_y = y(data[i_][1])
 
 
             var dot = g.append("circle")
-                  .attr("cx", x(data[i][0]))
-                  .attr("cy", y(data[i][1]))
+                  .attr("cx", x(data[i_][0]))
+                  .attr("cy", y(data[i_][1]))
                   .attr("r", 4)
-                  .style("fill", dot_color)//i==cryptonames.indexOf(name_array.slice().pop())? "yellow" : "#FF6600")
+                  .style("fill", dot_color)
                   .attr("id", crypto_name)
                   .attr("opacity", "1.0")
                   .style("stroke","black").style("stroke-width","2px")
@@ -396,26 +362,18 @@ for (var i = 0; i < 100; i++) {
                   .attr("font_family", "sans-serif")  // Font type
                   .attr("font-size", fontsize)  // Font size
                   .attr("fill", "white") 
-                  .attr("opacity", "1.0")
-                  
-
-
-
-                  
+                  .attr("opacity", "1.0")   
 
             })
-
 
             .on('mouseout', function (d) {
                   d3.select(this).transition().duration('200').attr("r", 4);
                   g.selectAll("text").remove()
-
             })
 
             }
 
 
-      };
 
       i_yellow = cryptonames.indexOf(name_array.slice().pop())
       
@@ -466,7 +424,7 @@ for (var i = 0; i < 100; i++) {
       })
 
       
-
+      global_arr_names = []
 
 
 
