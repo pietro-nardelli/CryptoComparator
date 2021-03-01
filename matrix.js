@@ -365,7 +365,7 @@ function matrixReduction(node_name, file_json, slider_value) {
     //console.log(order_distance);
 
     for (var i = 0; i < n; i++) {
-      if (order_distance[i].z.toFixed(3) < slider_value){
+      if (Number(String(order_distance[i].z).slice(0, 5)) < slider_value){
         n = i;
         break;
       }
