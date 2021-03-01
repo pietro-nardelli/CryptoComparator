@@ -431,7 +431,7 @@ function matrixReduction(node_name, file_json, slider_value) {
         .attr("y", x_m.bandwidth() / 2)
         .attr("dy", ".32em")
         .attr("text-anchor", "end")
-        .attr('fill', function(d,i) {var selected_text_color = (node_name == ordered_nodes[i].Name) ? color1  : 'white';return selected_text_color})
+        .attr('fill', function(d,i) {var selected_text_color = (node_name == ordered_nodes[i].Name) ? color2  : 'white';return selected_text_color})
         .attr('font-size', dim_row_text+'px')
         .text(function(d, i) {return ordered_nodes[i].Name; });
 

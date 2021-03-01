@@ -31,8 +31,7 @@ body {
   */
 }
 h3 {
-  display: inline;
-  color: #434343;
+  color: #ffffff;
 }
 
 .button {
@@ -134,9 +133,7 @@ h3 {
         font-family: "Nunito","PT Serif", serif;
       }
 
-      h1, h2, h3, h4 {
-        color: #000;
-      }
+
 
       header,
       footer {
@@ -320,7 +317,7 @@ h3 {
         font-size: 13.5px;
       }
       text.active-y {
-        fill: white;
+        fill: rgb(2, 200, 255);
         font-weight: bold;
         font-size: 13.5px;
       }
@@ -338,7 +335,7 @@ h3 {
         font-size: 13.5px;
       }
       text.activeReduced-y {
-        fill: white;
+        fill: rgb(2, 200, 255);
         font-weight: bold;
         font-size: 13.5px;
       }
