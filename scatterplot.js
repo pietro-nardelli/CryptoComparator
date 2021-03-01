@@ -300,37 +300,34 @@ d3v3.json(path, function (data) {
                   }
             }
       }
-for (var i = 0; i < 100; i++) {
+      for (var i = 0; i < 100; i++) {
 
 
-      bool = index_array.includes(i)
-      print(i + " is "+ bool)
+            bool = index_array.includes(i)
+            print(i + " is "+ bool)
 
-      if(!bool){//grigi
+            if(!bool){//grigi
 
-            var g = svgg.append('g').attr("id", i)
-            let crypto_name = cryptonames[i]
+                  var g = svgg.append('g').attr("id", i)
+                  let crypto_name = cryptonames[i]
 
-            var dot = g.append("circle")
-                  .attr("cx", x(data[i][0]))
-                  .attr("cy", y(data[i][1]))
-                  .attr("r", 4)
-                  .style("fill", "#808080")
-                  .attr("id", crypto_name)
-                  .attr("opacity", "0.2")
-            
+                  var dot = g.append("circle")
+                        .attr("cx", x(data[i][0]))
+                        .attr("cy", y(data[i][1]))
+                        .attr("r", 4)
+                        .style("fill", "#808080")
+                        .attr("id", crypto_name)
+                        .attr("opacity", "0.2")
+                  
 
-            }
-      };
+                  }
+            };
       
             
       for(i=0;i<index_array.length;i++){
             if(index_array[i]==cryptonames.indexOf(name_array.slice().pop())) continue
 
             var i_ = index_array[i]
-            // if(i==cryptonames.indexOf(name_array.slice().pop())){
-            //       continue
-            // }
 
             let g = svgg.append('g').attr("id", i_)
             let crypto_name = cryptonames[i_]
@@ -408,12 +405,6 @@ for (var i = 0; i < 100; i++) {
             .attr("font-size", fontsize)  // Font size
             .attr("fill", "white") 
             .attr("opacity", "1.0")
-            
-
-
-
-            
-
       })
 
 
@@ -422,16 +413,8 @@ for (var i = 0; i < 100; i++) {
             g.selectAll("text").remove()
 
       })
-
       
       global_arr_names = []
-
-
-
-
-            
-
-
       })
 
 }
