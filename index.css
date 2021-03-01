@@ -487,21 +487,27 @@ h3 {
       
 
       @-webkit-keyframes glowing {
-        0% {  -webkit-box-shadow: 0 0 3px #B20000; }
-        50% { -webkit-box-shadow: 0 0 40px #FF0000; }
-        100% {  -webkit-box-shadow: 0 0 3px #B20000; }
+        0% {   filter: drop-shadow( 2px 2px 1px rgba(84, 84, 84, 0.7)); }
+        25% {    filter: drop-shadow( 2px 2px 1px rgb(204, 206, 206)); }
+        50% {   filter: drop-shadow( 2px 2px 1px rgba(84, 84, 84, 0.7)); }
+        75% {    filter: drop-shadow( 2px 2px 1px rgb(203, 203, 202)); }
+        100% {   filter: drop-shadow( 2px 2px 1px rgba(84, 84, 84, 0.7)); }
       }
 
       @-moz-keyframes glowing {
-        0% { -moz-box-shadow: 0 0 3px #B20000; }
-        50% { -moz-box-shadow: 0 0 40px #FF0000; }
-        100% {  -moz-box-shadow: 0 0 3px #B20000; }
+        0% {   filter: drop-shadow( 2px 2px 1px rgba(84, 84, 84, 0.7)); }
+        25% {    filter: drop-shadow( 2px 2px 1px rgb(204, 206, 206)); }
+        50% {   filter: drop-shadow( 2px 2px 1px rgba(84, 84, 84, 0.7)); }
+        75% {    filter: drop-shadow( 2px 2px 1px rgb(203, 203, 202)); }
+        100% {   filter: drop-shadow( 2px 2px 1px rgba(84, 84, 84, 0.7)); }
       }
 
       @-o-keyframes glowing {
-        0% {  box-shadow: 0 0 3px #B20000; }
-        50% { box-shadow: 0 0 40px #FF0000; }
-        100% {  box-shadow: 0 0 3px #B20000; }
+        0% {   filter: drop-shadow( 2px 2px 1px rgba(84, 84, 84, 0.7)); }
+        25% {    filter: drop-shadow( 2px 2px 1px rgb(204, 206, 206)); }
+        50% {   filter: drop-shadow( 2px 2px 1px rgba(84, 84, 84, 0.7)); }
+        75% {    filter: drop-shadow( 2px 2px 1px rgb(203, 203, 202)); }
+        100% {   filter: drop-shadow( 2px 2px 1px rgba(84, 84, 84, 0.7)); }
       }
 
       
