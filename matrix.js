@@ -14,7 +14,7 @@ var x_m = d3.scaleBand().range([0, width]),
     .domain([1,0]);
 */
 // d3.interpolateRdYlBu
-  c = d3.scaleSequential(d3.interpolateInferno)
+  c = d3.scaleSequential(d3.interpolatePlasma)
       .domain([0,1]);
 
 var svg_matrix = d3.select("#matrix_div").append("svg")
