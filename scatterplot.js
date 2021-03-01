@@ -412,7 +412,7 @@ d3v3.json(path, function (data) {
 
       })
       
-      global_arr_names = []
+      //global_arr_names = []
       })
 
 }
