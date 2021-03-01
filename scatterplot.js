@@ -44,7 +44,6 @@ d3.select("#dim_reduction_selection_dropdown").on("change", function() {
             else create_scatterplot(crypto_name_matrix1,crypto_name_matrix2,kind_dim)
       }
       else{
-            print("aaaaa")
             create_scatterplot(null,null,kind_dim)
       }
     });
@@ -304,7 +303,6 @@ d3v3.json(path, function (data) {
 
 
             bool = index_array.includes(i)
-            print(i + " is "+ bool)
 
             if(!bool){//grigi
 
