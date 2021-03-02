@@ -257,6 +257,7 @@ d3v3.json(path, function (data) {
       
       
       if(dim_red=="mds"){
+            
             var x = d3.scaleLinear()
             .domain([-0.5, 0.5])
             .range([0, width_s]);
@@ -316,8 +317,7 @@ d3v3.json(path, function (data) {
                         .style("fill", "#808080")
                         .attr("id", crypto_name)
                         .attr("opacity", "0.2")
-                  
-
+            
                   }
             };
       
