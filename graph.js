@@ -121,7 +121,7 @@ formatter = new Intl.NumberFormat('en-US', {
 });
 
  function rr(v) { 
-  return Number(String(v).slice(0, 5))
+   return Number(String(v).slice(0, 5))
 } //3rd decimal n
 
 function getZeros(v) {
@@ -150,7 +150,7 @@ function slider_update(t) {
 
   svg.selectAll(".link ")
     .data(links)
-    .filter(function (x) { return x.k >= t })
+    .filter(function (x) {  return x.k >= t })
     .style("stroke", color_links)
 
   full_matrix_or_reduced(last_clicked, data_json, t);
@@ -234,7 +234,7 @@ function create_100100_matrix(json_file, matrix) {
 function reshape(q) {
   var w = []
   for (var i = 0; i < 100; i++) {
-    aux = new Array(100).fill(0)
+    aux = new Array(100).fill(0.000)
     for (var j = 0; j < 100; j++) {
       aux[j] = q[name_arr_not_sorted.indexOf(name_arr[i])][name_arr_not_sorted.indexOf(name_arr[j])]
     }
