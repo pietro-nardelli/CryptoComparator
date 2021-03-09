@@ -646,32 +646,8 @@ function create_graph(ididix) {
 
       })
       .on('click', function (d) {
-
-        if (last_clicked == d || last_clicked.name == d.name) {
-          last_clicked = ""
-          fullMatrix(data_json)
-          on_mouseout_function()
-          create_scatterplot()
-          //createSingleGraphsOfMyCrypto("Bitcoin")
-          change_graphs=false
-          return
-        }
-
-        on_mouseout_function(d)
-        arr_tar_names = on_mouseover_function(d)
-        print(arr_tar_names)
-
-        last_clicked = d;
-
-        //console.log(data_json)
-        //matrixReduction(d.name, data_json, actual_t);
-        full_matrix_or_reduced(last_clicked, data_json, actual_t);
-        //createGraphsOfMyCrypto(d.name);
-        createSingleGraphsOfMyCrypto(d.name);
-        clicked_graph = true
-        //createBoxPlotOfMyCrypto(d.name);
-        //blink()
-
+      
+        CLICK(d)
 
       });
 
@@ -702,7 +678,7 @@ function create_graph(ididix) {
 
     //slider_update(actual_t)
     if (last_clicked != "") {
-      on_mouseout_function(last_clicked)
+      on_mouseout_function(d)
       on_mouseover_function(last_clicked)
     }
   });
@@ -726,6 +702,27 @@ function blink() {
     .duration(500)
     .style('fill', fill_node_circle)
   //.on("end", blink);
+}
+
+function CLICK(d) {
+  if (last_clicked == d || last_clicked.name == d.name) {
+    last_clicked = ""
+    fullMatrix(data_json)
+    on_mouseout_function(d)
+    create_scatterplot()
+    change_graphs=false
+    return
+  }
+  on_mouseout_function(d)
+  arr_tar_names = on_mouseover_function(d)
+  last_clicked = d;
+  full_matrix_or_reduced(last_clicked, data_json, actual_t);
+  createSingleGraphsOfMyCrypto(d.name);
+  clicked_graph = true  
+}
+
+function highlight_subgraph_from_scatterplot(d) {
+  CLICK({name:d})
 }
 
 

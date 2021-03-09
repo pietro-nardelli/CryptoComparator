@@ -120,6 +120,7 @@ function create_scatterplot(name1=null,name2=null,dim_red=kind_dim) {
                               .on("click", function(d,i){
                                     clicked_graph = false
                                     createSingleGraphsOfMyCrypto(crypto_name)
+                                    highlight_subgraph_from_scatterplot(crypto_name)
                                     last_clicked_scatterplot = crypto_name
                               })
                               .on('mouseover', 
@@ -208,6 +209,7 @@ function create_scatterplot(name1=null,name2=null,dim_red=kind_dim) {
                               .on("click", function(d,i){
                                     clicked_graph = false
                                     createSingleGraphsOfMyCrypto(crypto_name)
+                                    highlight_subgraph_from_scatterplot(crypto_name)
                                     last_clicked_scatterplot = crypto_name
 
                               })
@@ -344,6 +346,7 @@ d3v3.json(path, function (data) {
                   .on("click", function(d,i){
                         clicked_graph = false
                         createSingleGraphsOfMyCrypto(crypto_name)
+                        highlight_subgraph_from_scatterplot(crypto_name)
                         last_clicked_scatterplot = crypto_name
 
                   })
@@ -389,6 +392,7 @@ d3v3.json(path, function (data) {
             .on("click", function(d,i){
                   clicked_graph = false
                   createSingleGraphsOfMyCrypto(crypto_name)
+                  highlight_subgraph_from_scatterplot(crypto_name)
                   last_clicked_scatterplot = crypto_name
 
             })
