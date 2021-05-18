@@ -28,6 +28,10 @@ Text dello scatter
 - TODO animationhell
 */
 
+threshold0=0.9599203439955711
+threshold1=0.9814371590335464
+threshold2=0.978382766168612
+
 var T_ARR1 = [0.666672100974757, 0.9368, 0.95, 0.95, 0.95, 0.6666,
   0.3, 0.3, 0.3, 0.3, 0.3, 0.3,
   0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
@@ -41,13 +45,12 @@ var T_ARR2 = [0.9258215989245593, 0.9160405042808755, 0.9287826381387896, 0.9368
 
 
   var T_ARR = 
-  [0.9756817761737007, 0.9160405042808755, 0.9287826381387896, 0.936899679455302, 0.925929462364907, 0.666672100974757,
+  [threshold0, 0.9160405042808755, 0.9287826381387896, 0.936899679455302, 0.925929462364907, 0.666672100974757,
     0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
     0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
     0.93470956073676836, 0.879847184716891, 0.9294995693621586, 0.9167563070011337, 0.91263249763380497, 0.623165853649523]
-  
-threshold1=0.9814371590335464
-threshold2=0.978382766168612
+
+
 
 /*
 span = 1 - T_ARR[0]
@@ -295,6 +298,13 @@ function get_top_n(arr, n) {
     .slice(0, n);
 }
 
+function discombobulate(name_arr){ //the first of the list is even so goes on the outer ring
+  //so we use [first outer,first inner,second outer,second inner..]
+  //we have in the list [first inner, second inner..last inner, first outer, second outer... last outer]
+  //from [0,1,2,3...49(last inner), 50(first outer), 51..99] to [50, 0, 51, 1, 52, 2..99, 49]
+  return SIMIL_CARD_ordered_list
+}
+
 
 //get n node from the hat and give them to node namecoin in datareg
 //if nodes are over a threshold from the(TODO each) similarity matrix we assign a link
@@ -340,20 +350,25 @@ d3v3.csv("dataset/100List.csv", function (data) {
     name_arr = name_arr.concat(data[i].Name)  //fill name_arr with names
   }
   name_arr_not_sorted = name_arr.concat()
-  name_arr.sort() //alphabetical order
+  name_arr.sort().reverse() //alphabetical order
+
+  name_arr = discombobulate(name_arr)
 
   for (var i = 0; i < name_arr.length; i++) {  //create in data reg[name] an entry with (x,y),name
     namecoin = name_arr[i]
     aux_radius = radius
-    if (i % 2 == 0) aux_radius = radius * 0.75
-    x = x_c + Math.cos(theta * i) * aux_radius + 520 * Math.cos(theta * i)
-    if (i % 2 != 0) x = x + 100 * Math.cos(theta * i)
+    if (i % 2 == 0) aux_radius = radius * 0.75 //if it's even reduce the radius
+    x = x_c + Math.cos(theta * i) * aux_radius + 520 * Math.cos(theta * i) 
+    if (i % 2 != 0) x = x + 100 * Math.cos(theta * i) //if is odd space a bit more on the x
     y = y_c + Math.sin(theta * i) * aux_radius
     if (!ellisse) y += 100 * (Math.sin(theta * i)) * (Math.abs(Math.sin(theta * i))) ** 10
-    if (i % 2 == 0) y += 2 * (Math.sin(theta * i)) * (Math.abs(Math.sin(theta * i))) ** 400
+    if (i % 2 == 0) y += 50 * (Math.sin(theta * i)) * (Math.abs(Math.sin(theta * i))) ** 400  
+/*
     if (namecoin == "Dogecoin") { y += 30, x -= 30 }
     if (namecoin == "Radium") { y -= 20, x -= 20 }
     if (namecoin == "DigitalNote") { y += 20, x -= 20 }
+    if (namecoin == "Rise") { y += 0, x += 10 }
+*/
     data_reg[namecoin] = [[x, y], namecoin]
   }
   //update_reg_links(0); //set in datareg all the links
@@ -392,145 +407,28 @@ function getThreshold(source, target, similarity_idx) {
   return ret
 }
 
-
-
 /*
-document.getElementById("SIMIL1").addEventListener("click", function () {
-  data_json = "data_high"
-  create_graph(1)
-})
-
-document.getElementById("SIMIL2").addEventListener("click", function () {
-  data_json = "data_low";
-  create_graph(2)
-})
-
-document.getElementById("SIMIL3").addEventListener("click", function () {
-  data_json = "data_market_cap";
-  create_graph(3)
-})
-
-document.getElementById("SIMIL4").addEventListener("click", function () {
-  data_json = "data_open";
-  create_graph(4)
-})
-
-document.getElementById("SIMIL5").addEventListener("click", function () {
-  data_json = "data_volume";
-  create_graph(5)
-})
-
-document.getElementById("SIMIL0").addEventListener("click", function () {
-  data_json = "data_close";
-  create_graph(0)
-})
-
-///////
-
-
-document.getElementById("SIMIL1_15").addEventListener("click", function () {
-  data_json = "data_high_2015"
-  create_graph(7)
-})
-
-document.getElementById("SIMIL2_15").addEventListener("click", function () {
-  data_json = "data_low_2015";
-  create_graph(8)
-})
-
-document.getElementById("SIMIL3_15").addEventListener("click", function () {
-  data_json = "data_market_cap_2015";
-  create_graph(9)
-})
-
-document.getElementById("SIMIL4_15").addEventListener("click", function () {
-  data_json = "data_open_2015";
-  create_graph(10)
-})
-
-document.getElementById("SIMIL5_15").addEventListener("click", function () {
-  data_json = "data_volume_2015";
-  create_graph(11)
-})
-
-document.getElementById("SIMIL0_15").addEventListener("click", function () {
-  data_json = "data_close_2015";
-  create_graph(6)
-})
-
-////
-document.getElementById("SIMIL1_16").addEventListener("click", function () {
-  data_json = "data_high_2016"
-  create_graph(13)
-})
-
-document.getElementById("SIMIL2_16").addEventListener("click", function () {
-  data_json = "data_low_2016";
-  create_graph(14)
-})
-
-document.getElementById("SIMIL3_16").addEventListener("click", function () {
-  data_json = "data_market_cap_2016";
-  create_graph(15)
-})
-
-document.getElementById("SIMIL4_16").addEventListener("click", function () {
-  data_json = "data_open_2016";
-  create_graph(16)
-})
-
-document.getElementById("SIMIL5_16").addEventListener("click", function () {
-  data_json = "data_volume_2016";
-  create_graph(17)
-})
-
-document.getElementById("SIMIL0_16").addEventListener("click", function () {
-  data_json = "data_close_2016";
-  create_graph(12)
-})
-//////
-
-document.getElementById("SIMIL1_17").addEventListener("click", function () {
-  data_json = "data_high_2017"
-  create_graph(19)
-})
-
-document.getElementById("SIMIL2_17").addEventListener("click", function () {
-  data_json = "data_low_2017";
-  create_graph(20)
-})
-
-document.getElementById("SIMIL3_17").addEventListener("click", function () {
-  data_json = "data_market_cap_2017";
-  create_graph(21)
-})
-
-document.getElementById("SIMIL4_17").addEventListener("click", function () {
-  data_json = "data_open_2017";
-  create_graph(22)
-})
-
-document.getElementById("SIMIL5_17").addEventListener("click", function () {
-  data_json = "data_volume_2017";
-
-  create_graph(23)
-})
-
-document.getElementById("SIMIL0_17").addEventListener("click", function () {
-  data_json = "data_close_2017";
-
-  create_graph(18)
-})
-*/
 "rgb(2, 200, 255)"
 "rgba(255, 255, 0, 1)" 
 "rgb(200, 0, 255,0.95)"
 "rgba(0, 200, 255,0.95)"
+*/
+
+colore0 = "rgba(0, 200, 255,1)" 
+colore1 = "rgba(0, 200, 255,0.75)"
+colore2 = "rgba(0, 200, 255, 0.5)"
+
+// Decommentate e mettete i colori qui
+/*
+colore0 = "rgba(0, 200, 255,1)" //colore importante (0% -> 0.1%)
+colore1 = "rgba(242,226,210)"  //medio 0.1% -> 0.5%
+colore2 = "rgba(79,180,119)"  //basso 0.5 -> 1%
+*/
 
 function ret_link_col(d){ 
-  if(d.k>=threshold1) return "rgba(0, 200, 255,1)" 
-  if(d.k>=threshold2) return "rgba(0, 200, 255,0.75)"
-  return "rgba(0, 200, 255, 0.5)"
+  if(d.k>=threshold1) return colore0
+  if(d.k>=threshold2) return colore1
+  return colore2
 }
 
 function ret_node_col(d){  return color2
@@ -539,10 +437,10 @@ function ret_node_col(d){  return color2
   return "rgb(255, 255, 0)"
 }
 
-function ret_stroke(d){ return "1px"
-  if(d.k>=threshold1) return "1px" 
+function ret_stroke(d){ 
+  if(d.k>=threshold1) return "1.25px" 
   if(d.k>=threshold2) return "1px"
-  return "1px"
+  return "0.75px"
 }
 
 function set_slider_params(idx) {
@@ -563,6 +461,7 @@ var data_json = "data_close" //first attribute
 var actual_graph_used = -1
 
 create_graph(0)
+on_mouseout_function()
 
 function create_graph(ididix) {
 
