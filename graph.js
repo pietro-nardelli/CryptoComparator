@@ -41,12 +41,29 @@ var T_ARR2 = [0.9258215989245593, 0.9160405042808755, 0.9287826381387896, 0.9368
 
 
   var T_ARR = 
-  [0.9258215989245593, 0.9160405042808755, 0.9287826381387896, 0.936899679455302, 0.925929462364907, 0.666672100974757,
+  [0.9756817761737007, 0.9160405042808755, 0.9287826381387896, 0.936899679455302, 0.925929462364907, 0.666672100974757,
     0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
     0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
     0.93470956073676836, 0.879847184716891, 0.9294995693621586, 0.9167563070011337, 0.91263249763380497, 0.623165853649523]
   
-  
+threshold1=0.9814371590335464
+threshold2=0.978382766168612
+
+/*
+span = 1 - T_ARR[0]
+aux_span = span/3
+threshold2 = T_ARR[0]+aux_span
+threshold1 = threshold2 + aux_span
+*/
+
+0.9599203439955711
+0.9708419175354708
+0.9814371590335464
+
+//01 02 03
+0.9814371590335464
+0.978382766168612
+0.9756817761737007
 
 ///DATABASE
 var data_reg = {}  //REG NAME ID ECC
@@ -505,6 +522,28 @@ document.getElementById("SIMIL0_17").addEventListener("click", function () {
   create_graph(18)
 })
 */
+"rgb(2, 200, 255)"
+"rgba(255, 255, 0, 1)" 
+"rgb(200, 0, 255,0.95)"
+"rgba(0, 200, 255,0.95)"
+
+function ret_link_col(d){ 
+  if(d.k>=threshold1) return "rgba(0, 200, 255,1)" 
+  if(d.k>=threshold2) return "rgba(0, 200, 255,0.75)"
+  return "rgba(0, 200, 255, 0.5)"
+}
+
+function ret_node_col(d){  return color2
+  if(Math.random()  >=  0.7) return "rgb(255, 0, 0)" 
+  if(Math.random()  >= 0.3) return "rgb(255, 125, 0)"
+  return "rgb(255, 255, 0)"
+}
+
+function ret_stroke(d){ return "1px"
+  if(d.k>=threshold1) return "1px" 
+  if(d.k>=threshold2) return "1px"
+  return "1px"
+}
 
 function set_slider_params(idx) {
   initial_threshold = rr(T_ARR[idx]); //THRESHOLD MIN x creare il nodo!
@@ -626,7 +665,7 @@ function create_graph(ididix) {
       .attr("class", "link")
       .attr("target", function (d) { return d.target.name; }) //per ora inutile
       .attr("k", function (d) { return d.k; })
-      .style("stroke-width", function (d) { return stroke_width_links_mouseout; });
+      .style("stroke-width", function (d) { return stroke_width_links_mouseout; }); //NOT important?
 
     var node = svg.selectAll(".node")
       .data(nodes)
@@ -770,7 +809,7 @@ function on_mouseover_function(d) {
     svg.selectAll(".node circle")
       .data(nodes)
       .filter(function (x) { return x.name == target_name })
-      .style('fill', fill_node_circle);
+      .style('fill', function (x) { return ret_node_col(x)});
 
     svg.selectAll(".node text")
       .data(nodes)
@@ -788,7 +827,7 @@ function on_mouseout_function(d) {
 
   svg.selectAll(".node circle")  //ricolora i cerchi
     .data(nodes)
-    .style('fill', fill_node_circle);
+    .style('fill', function (x) { return ret_node_col(x)});
 
   svg.selectAll(".node text")   //ricolora i testi
     .data(nodes)
@@ -802,8 +841,8 @@ function on_mouseout_function(d) {
   svg.selectAll(".link ")     //ricolora i links sopra la soglia
     .data(links)
     .filter(function (x) { return x.k >= actual_t })
-    .style('stroke', color_links)
-    .style("stroke-width", stroke_width_links_mouseout);
+    .style('stroke', function (x) { return ret_link_col(x)})
+    .style("stroke-width", function (x) { return ret_stroke(x)});
 
 }
 
