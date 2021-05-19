@@ -68,6 +68,16 @@ threshold1 = threshold2 + aux_span
 0.978382766168612
 0.9756817761737007
 
+//TEST order flag
+NO_ordering_flag = true
+/*
+function changeGraphOrder(){
+  NO_ordering_flag = false
+  //set_node_pos()
+  create_graph(0)
+}
+*/
+
 ///DATABASE
 var data_reg = {}  //REG NAME ID ECC
 var name_arr = []  //ARR with names only
@@ -298,11 +308,20 @@ function get_top_n(arr, n) {
     .slice(0, n);
 }
 
-function discombobulate(name_arr){ //the first of the list is even so goes on the outer ring
+function discombobulate(list_to_order) { //the first of the list is even so goes on the outer ring //wrong is in the inner?
   //so we use [first outer,first inner,second outer,second inner..]
   //we have in the list [first inner, second inner..last inner, first outer, second outer... last outer]
   //from [0,1,2,3...49(last inner), 50(first outer), 51..99] to [50, 0, 51, 1, 52, 2..99, 49]
-  return SIMIL_CARD_ordered_list
+  aux_list_ordered = []
+  for (i = 0; i < 50; i++) {
+    for (j = 0; j < 2; j++) {
+      if (j % 2 == 0)
+        aux_list_ordered.push(list_to_order[i])
+      else
+        aux_list_ordered.push(list_to_order[i + 50])
+    }
+  }
+  return aux_list_ordered
 }
 
 
@@ -344,35 +363,42 @@ function update_reg_links(index_of_similarity_in_use) {
 }
 
 //fill name_arr and sort it, set data_reg(name)=([x,y],name,[links])
-d3v3.csv("dataset/100List.csv", function (data) {
+function set_node_pos() {
+  d3v3.csv("dataset/100List.csv", function (data) {
 
-  for (var i = 0; i < data.length; i++) {
-    name_arr = name_arr.concat(data[i].Name)  //fill name_arr with names
-  }
-  name_arr_not_sorted = name_arr.concat()
-  name_arr.sort().reverse() //alphabetical order
+    for (var i = 0; i < data.length; i++) {
+      name_arr = name_arr.concat(data[i].Name)  //fill name_arr with names
+    }
+    name_arr_not_sorted = name_arr.concat()
+    name_arr.sort().reverse() //alphabetical order
 
-  name_arr = discombobulate(name_arr)
+    if (NO_ordering_flag)
+      name_arr = discombobulate(SIMIL_CARD_ordered_list)
 
-  for (var i = 0; i < name_arr.length; i++) {  //create in data reg[name] an entry with (x,y),name
-    namecoin = name_arr[i]
-    aux_radius = radius
-    if (i % 2 == 0) aux_radius = radius * 0.75 //if it's even reduce the radius
-    x = x_c + Math.cos(theta * i) * aux_radius + 520 * Math.cos(theta * i) 
-    if (i % 2 != 0) x = x + 100 * Math.cos(theta * i) //if is odd space a bit more on the x
-    y = y_c + Math.sin(theta * i) * aux_radius
-    if (!ellisse) y += 100 * (Math.sin(theta * i)) * (Math.abs(Math.sin(theta * i))) ** 10
-    if (i % 2 == 0) y += 50 * (Math.sin(theta * i)) * (Math.abs(Math.sin(theta * i))) ** 400  
-/*
-    if (namecoin == "Dogecoin") { y += 30, x -= 30 }
-    if (namecoin == "Radium") { y -= 20, x -= 20 }
-    if (namecoin == "DigitalNote") { y += 20, x -= 20 }
-    if (namecoin == "Rise") { y += 0, x += 10 }
-*/
-    data_reg[namecoin] = [[x, y], namecoin]
-  }
-  //update_reg_links(0); //set in datareg all the links
-});
+    for (var i = 0; i < name_arr.length; i++) {  //create in data reg[name] an entry with (x,y),name
+      namecoin = name_arr[i]
+      aux_radius = radius
+      if (i % 2 == 0) aux_radius = radius * 0.75 //if it's even reduce the radius
+      x = x_c + Math.cos(theta * i) * aux_radius + 520 * Math.cos(theta * i)
+      if (i % 2 != 0) x = x + 100 * Math.cos(theta * i) //if is odd space a bit more on the x
+      y = y_c + Math.sin(theta * i) * aux_radius
+      if (!ellisse) y += 100 * (Math.sin(theta * i)) * (Math.abs(Math.sin(theta * i))) ** 10
+      if (i % 2 == 0) y += 50 * (Math.sin(theta * i)) * (Math.abs(Math.sin(theta * i))) ** 400
+      /*
+          if (namecoin == "Dogecoin") { y += 30, x -= 30 }
+          if (namecoin == "Radium") { y -= 20, x -= 20 }
+          if (namecoin == "DigitalNote") { y += 20, x -= 20 }
+          if (namecoin == "Rise") { y += 0, x += 10 }
+      */
+          if (namecoin == "PIVX") { y += 0, x += 100 }
+      x += Math.sign(Math.cos(theta*i))*10
+      data_reg[namecoin] = [[x, y], namecoin]
+    }
+    //update_reg_links(0); //set in datareg all the links
+  });
+}
+
+set_node_pos()
 
 //console.log(data_reg)
 
@@ -425,29 +451,31 @@ colore1 = "rgba(242,226,210)"  //medio 0.1% -> 0.5%
 colore2 = "rgba(79,180,119)"  //basso 0.5 -> 1%
 */
 
-function ret_link_col(d){ 
-  if(d.k>=threshold1) return colore0
-  if(d.k>=threshold2) return colore1
+function ret_link_col(d) {
+  if (d.k >= threshold1) return colore0
+  if (d.k >= threshold2) return colore1
   return colore2
 }
 
-function ret_node_col(d){  return color2
-  if(Math.random()  >=  0.7) return "rgb(255, 0, 0)" 
-  if(Math.random()  >= 0.3) return "rgb(255, 125, 0)"
-  return "rgb(255, 255, 0)"
+function ret_node_col(d) {
+  grade = similarities_grades_MCAP_ordered[M_CAP_ordered_list.indexOf(d.name)]
+  if (grade >= 26-1) return "rgb(255, 0, 0)" //-1 for the connection with itself
+  if (grade >= 11-1) return "rgb(255, 125, 0)" //-1 for the connection with itself
+  if (grade >= 3-1) return "rgb(180, 150, 0)"
+  return "rgb(100, 100, 0)"
 }
 
-function ret_stroke(d){ 
-  if(d.k>=threshold1) return "1.25px" 
-  if(d.k>=threshold2) return "1px"
-  return "0.75px"
+function ret_stroke(d) {
+  if (d.k >= threshold1) return "1.25px"
+  if (d.k >= threshold2) return "1px"
+  return " .75px"
 }
 
 function set_slider_params(idx) {
   initial_threshold = rr(T_ARR[idx]); //THRESHOLD MIN x creare il nodo!
   initial_threshold_slider = initial_threshold; //THRESHOLD BASE OF THE SLIDER
   fix_val_slider = (1 - initial_threshold) * 100
-  output.innerHTML =   getZeros(initial_threshold );
+  output.innerHTML = getZeros(initial_threshold);
   slider.value = 0
   actual_t = initial_threshold
   full_matrix_or_reduced(last_clicked, data_json, actual_t);
@@ -461,7 +489,11 @@ var data_json = "data_close" //first attribute
 var actual_graph_used = -1
 
 create_graph(0)
-on_mouseout_function()
+
+setTimeout(() => {  ///TODO: -> TO REMOVE
+  on_mouseout_function()
+}, 500);
+
 
 function create_graph(ididix) {
 
@@ -620,7 +652,6 @@ function create_graph(ididix) {
       on_mouseover_function(last_clicked)
     }
   });
-
 }
 
 function blink() {
