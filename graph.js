@@ -44,14 +44,26 @@ var T_ARR2 = [0.9258215989245593, 0.9160405042808755, 0.9287826381387896, 0.9368
   0.93470956073676836, 0.879847184716891, 0.9294995693621586, 0.9167563070011337, 0.91263249763380497, 0.623165853649523]
 
 
-  var T_ARR = 
+  var T_ARR = //min value to create the link, baseline
   [threshold0, 0.9160405042808755, 0.9287826381387896, 0.936899679455302, 0.925929462364907, 0.666672100974757,
     0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
     0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
     0.93470956073676836, 0.879847184716891, 0.9294995693621586, 0.9167563070011337, 0.91263249763380497, 0.623165853649523]
 
+  var T_ARR_medium = 
+  [threshold1, 0.9560405042808755, 0.9487826381387896, 0.936899679455302, 0.925929462364907, 0.666672100974757,
+    0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+    0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+    0.93470956073676836, 0.879847184716891, 0.9294995693621586, 0.9167563070011337, 0.91263249763380497, 0.623165853649523]
+
+  var T_ARR_high = 
+  [threshold2, 0.9660405042808755, 0.9787826381387896, 0.936899679455302, 0.925929462364907, 0.666672100974757,
+    0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+    0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
+    0.93470956073676836, 0.879847184716891, 0.9294995693621586, 0.9167563070011337, 0.91263249763380497, 0.623165853649523]
 
 
+var index_of_similarity_in_use = 0 //initial graph index used
 /*
 span = 1 - T_ARR[0]
 aux_span = span/3
@@ -70,13 +82,13 @@ threshold1 = threshold2 + aux_span
 
 //TEST order flag
 NO_ordering_flag = true
-/*
+
 function changeGraphOrder(){
-  NO_ordering_flag = false
-  //set_node_pos()
+  NO_ordering_flag = !NO_ordering_flag
+  set_node_pos()
   create_graph(0)
 }
-*/
+
 
 ///DATABASE
 var data_reg = {}  //REG NAME ID ECC
@@ -373,7 +385,7 @@ function set_node_pos() {
     name_arr.sort().reverse() //alphabetical order
 
     if (NO_ordering_flag)
-      name_arr = discombobulate(SIMIL_CARD_ordered_list)
+      name_arr = discombobulate(SIMIL_CARD_ordered_list) //da rendere relativa al index_of_similarity
 
     for (var i = 0; i < name_arr.length; i++) {  //create in data reg[name] an entry with (x,y),name
       namecoin = name_arr[i]
@@ -390,7 +402,6 @@ function set_node_pos() {
           if (namecoin == "DigitalNote") { y += 20, x -= 20 }
           if (namecoin == "Rise") { y += 0, x += 10 }
       */
-          if (namecoin == "PIVX") { y += 0, x += 100 }
       x += Math.sign(Math.cos(theta*i))*10
       data_reg[namecoin] = [[x, y], namecoin]
     }
@@ -444,6 +455,11 @@ colore0 = "rgba(0, 200, 255,1)"
 colore1 = "rgba(0, 200, 255,0.75)"
 colore2 = "rgba(0, 200, 255, 0.5)"
 
+/*
+colore1 = "rgba(255, 0, 0 ,0.75)" red high value
+colore2 = "rgba(0, 255,0, 0.5)"  green medium value
+*/
+
 // Decommentate e mettete i colori qui
 /*
 colore0 = "rgba(0, 200, 255,1)" //colore importante (0% -> 0.1%)
@@ -452,6 +468,9 @@ colore2 = "rgba(79,180,119)"  //basso 0.5 -> 1%
 */
 
 function ret_link_col(d) {
+  threshold1 = T_ARR_high[index_of_similarity_in_use]   
+  threshold2 = T_ARR_medium[index_of_similarity_in_use]
+
   if (d.k >= threshold1) return colore0
   if (d.k >= threshold2) return colore1
   return colore2
@@ -466,6 +485,9 @@ function ret_node_col(d) {
 }
 
 function ret_stroke(d) {
+  threshold1 = T_ARR_medium[index_of_similarity_in_use]
+  threshold2 = T_ARR_high[index_of_similarity_in_use]
+
   if (d.k >= threshold1) return "1.25px"
   if (d.k >= threshold2) return "1px"
   return " .75px"
@@ -490,10 +512,11 @@ var actual_graph_used = -1
 
 create_graph(0)
 
+/*
 setTimeout(() => {  ///TODO: -> TO REMOVE
   on_mouseout_function()
 }, 500);
-
+*/
 
 function create_graph(ididix) {
 
@@ -651,6 +674,8 @@ function create_graph(ididix) {
       on_mouseout_function(d)
       on_mouseover_function(last_clicked)
     }
+
+    on_mouseout_function()
   });
 }
 
