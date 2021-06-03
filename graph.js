@@ -311,8 +311,12 @@ function update_reg_links(index_of_similarity_in_use) {
   }
 }
 
+
+
 function get_array_of_ordered_nodes_in_use(CHANGE) {
   aux=name_arr_alp_sorted
+
+  CHANGE_VAL = CHANGE
 
   if (CHANGE==0)
     aux =// Order_innerFirst_outerNext( SIMIL_CARD_ordered_list)//
@@ -344,7 +348,7 @@ function set_node_pos(CHANGE) {
       namecoin = name_arr[i]
       aux_radius = radius
       theta_i = theta * i
-      theta_i -= Math.PI/2 //se partiamo da sopra
+      //theta_i -= Math.PI/2 //se partiamo da sopra
       if (i % 2 == 0) aux_radius = radius * 0.75 //if it's even reduce the radius
       x = x_c + Math.cos(theta_i) * aux_radius + 520 * Math.cos(theta_i)
       if (i % 2 != 0) x = x + 100 * Math.cos(theta_i) //if is odd space a bit more on the x
@@ -365,7 +369,8 @@ function set_node_pos(CHANGE) {
   });
 }
 
-set_node_pos(2)
+var CHANGE_VAL = 2 //var per i link che uso sotto
+set_node_pos(CHANGE_VAL)
 
 var last_clicked = "";
 
@@ -514,7 +519,9 @@ function create_graph(new_graph_index) {
         }
       }
     }
-    name_arr = name_arr//get_array_of_ordered_nodes_in_use(new_graph_index)
+    name_arr =  name_arr//get_array_of_ordered_nodes_in_use(CHANGE_VAL) 
+    //Order_innerFirst_outerNext(Matrix_of_names_CARD[index_of_similarity_in_use]) //con questo va la prima schermata
+     // get_array_of_ordered_nodes_in_use(new_graph_index)
 
     update_reg_links(index_of_similarity_in_use)
 
@@ -756,6 +763,7 @@ function on_click_function(d) {
 
 
 
+//set_node_pos(a), 374375namearr
 
 
 

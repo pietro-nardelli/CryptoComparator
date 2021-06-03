@@ -1,13 +1,10 @@
-var theALPHA_VAR = 0
+var theALPHA_VAR = 0 //swap var
 
 function alph_order() {
     
-    theALPHA_VAR = ((theALPHA_VAR +1) % 3)
-
     changeVisualization()
+    theALPHA_VAR = ((theALPHA_VAR +1) % 3)
 }
-
-
 
 function changeVisualization(){
     if (document.getElementById('t0_radio').checked) {
@@ -19,7 +16,7 @@ function changeVisualization(){
     var attribute = document.getElementById("attribute_selection").value;
     var year = document.getElementById("year_selection").value;
 
-    set_node_pos(theALPHA_VAR)
+    //set_node_pos(theALPHA_VAR)
 
     if (radio == 't0'){
         document.getElementById("year_selection").hidden = true;
