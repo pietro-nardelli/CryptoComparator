@@ -1,3 +1,14 @@
+var theALPHA_VAR = 0
+
+function alph_order() {
+    
+    theALPHA_VAR = ((theALPHA_VAR +1) % 3)
+
+    changeVisualization()
+}
+
+
+
 function changeVisualization(){
     if (document.getElementById('t0_radio').checked) {
       var radio = document.getElementById("t0_radio").value;
@@ -8,6 +19,7 @@ function changeVisualization(){
     var attribute = document.getElementById("attribute_selection").value;
     var year = document.getElementById("year_selection").value;
 
+    set_node_pos(theALPHA_VAR)
 
     if (radio == 't0'){
         document.getElementById("year_selection").hidden = true;
@@ -129,4 +141,5 @@ function changeVisualization(){
             break;
         }
     }
+
   }
