@@ -1,8 +1,9 @@
 var theALPHA_VAR = 2 //swap var
-
+var name_swap_but_arr = ["1° order  ","2° order","3° order"]
 function alph_order() {
     
     theALPHA_VAR = ((theALPHA_VAR +1) % 3)
+    document.getElementById("swap_B").innerHTML = name_swap_but_arr[theALPHA_VAR]
     
     changeVisualization()
     
