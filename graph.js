@@ -330,22 +330,22 @@ function update_reg_links(index_of_similarity_in_use) {
 
 
 
-function get_array_of_ordered_nodes_in_use(CHANGE) {
+function get_array_of_ordered_nodes_in_use(CHANGE,index_used) {
   aux=name_arr_alp_sorted
   CHANGE_VAL = CHANGE
 
 
   if (CHANGE==0){   // Order_innerFirst_outerNext( SIMIL_CARD_ordered_list)//
-    return Order_innerFirst_outerNext(Matrix_of_names_CARD[index_of_similarity_in_use])  }
+    return Order_innerFirst_outerNext(Matrix_of_names_CARD[index_used])  }
    
   else if (CHANGE==1){   // SIMIL_CARD_ordered_list //
-    return Matrix_of_names_CARD[index_of_similarity_in_use] }
+    return Matrix_of_names_CARD[index_used] }
    
   return aux
 }
 
 //fill name_arr and sort it, set data_reg(name)=([x,y],name,[links])
-function set_node_pos(CHANGE) {
+function set_node_pos(CHANGE, index_used) {
   d3v3.csv("dataset/100List.csv", function (data) {
     
     for (var i = 0; i < data.length; i++) {
@@ -356,7 +356,7 @@ function set_node_pos(CHANGE) {
 
     alp_name_arr_sorted = name_arr
     
-    name_arr = get_array_of_ordered_nodes_in_use(CHANGE)
+    name_arr = get_array_of_ordered_nodes_in_use(CHANGE,index_used)
 
 
     for (var i = 0; i < name_arr.length; i++) {  //create in data reg[name] an entry with (x,y),name
@@ -385,7 +385,7 @@ function set_node_pos(CHANGE) {
 }
 
 var CHANGE_VAL = 2 //var per i link che uso sotto
-set_node_pos(CHANGE_VAL)
+set_node_pos(CHANGE_VAL,index_of_similarity_in_use)
 
 var last_clicked = "";
 
