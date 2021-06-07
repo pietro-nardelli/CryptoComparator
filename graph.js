@@ -22,6 +22,7 @@ var T_ARR_high =
   0.9792464720602758,0.9761449321224998,0.981012989448163,0.98049324004802,0.979151084613305,0.8251534557954563]
 
 var index_of_similarity_in_use = 0 //initial graph index used
+//var old_index_of_similarity = 0
 
 ///DATABASE
 var data_reg = {}  //REG NAME ID ECC
@@ -32,7 +33,7 @@ var name_arr_not_sorted = []
 var width = 2700;  //d3 object width
 var height = 1500; //d3 obj height
 
-//GRAPH VALUES
+//GRAPH VALUESs
 var x_c = (width - 100) / 2;
 var y_c = height / 2;
 var radius = 600;
@@ -292,11 +293,27 @@ function get_links(namecoin, similarity_idx) {
   return links
 }
 
+//same as before but for the new purpose of having a new node array to display in a different order
+function get_links_new(namecoin, similarity_idx) {
+  
+  namecoin_idx = name_arr.indexOf(namecoin)
+  links = []
+  var namecoin_similarity_arr = []
+
+  namecoin_similarity_arr = arr_similarity_matrix[similarity_idx][namecoin_idx] 
+    
+  for (var i = 0; i < 100; i++) {  
+    if (namecoin_similarity_arr[i] >= initial_threshold && i != namecoin_idx) //!!! THRESHOLD MINIMA PER CREARE IL NODO
+      links = links.concat(name_arr[i])
+  }
+  return links
+}
+
 //UP DATAREG setting the links
 function update_reg_links(index_of_similarity_in_use) {
   for (var i = 0; i < 100; i++) {
     namecoin = name_arr[i]
-    data_reg[namecoin][2] = get_links(namecoin, index_of_similarity_in_use)
+    data_reg[namecoin][2] = get_links_new(namecoin, index_of_similarity_in_use)
 
     if (false) { //ALL LINKS HAVE THRESHOLD OVER 0.9! TO VERIFY USE TRUE
       console.log("----TEST!--- link, namecoin, value of their sim.")
@@ -315,18 +332,16 @@ function update_reg_links(index_of_similarity_in_use) {
 
 function get_array_of_ordered_nodes_in_use(CHANGE) {
   aux=name_arr_alp_sorted
-
   CHANGE_VAL = CHANGE
 
-  if (CHANGE==0)
-    aux =// Order_innerFirst_outerNext( SIMIL_CARD_ordered_list)//
-    Order_innerFirst_outerNext(Matrix_of_names_CARD[index_of_similarity_in_use])
-  if (CHANGE==1)
-    aux =// SIMIL_CARD_ordered_list //
-    Matrix_of_names_CARD[index_of_similarity_in_use] 
 
-  
-  return(aux)
+  if (CHANGE==0){   // Order_innerFirst_outerNext( SIMIL_CARD_ordered_list)//
+    return Order_innerFirst_outerNext(Matrix_of_names_CARD[index_of_similarity_in_use])  }
+   
+  else if (CHANGE==1){   // SIMIL_CARD_ordered_list //
+    return Matrix_of_names_CARD[index_of_similarity_in_use] }
+   
+  return aux
 }
 
 //fill name_arr and sort it, set data_reg(name)=([x,y],name,[links])
@@ -347,7 +362,7 @@ function set_node_pos(CHANGE) {
     for (var i = 0; i < name_arr.length; i++) {  //create in data reg[name] an entry with (x,y),name
       namecoin = name_arr[i]
       aux_radius = radius
-      theta_i = theta * i
+      theta_i = -theta * i
       //theta_i -= Math.PI/2 //se partiamo da sopra
       if (i % 2 == 0) aux_radius = radius * 0.75 //if it's even reduce the radius
       x = x_c + Math.cos(theta_i) * aux_radius + 520 * Math.cos(theta_i)
@@ -480,33 +495,33 @@ function create_graph(new_graph_index) {
 
     svg.selectAll("*").remove()
 
-    svg.append("circle").attr("cx",70).attr("cy",80).attr("r", 12)  
-    .style("fill", fill_node_circle).style("stroke","black").style("stroke-width","2px")
+    svg.append("circle").attr("cx", 70).attr("cy", 80).attr("r", 12)
+      .style("fill", fill_node_circle).style("stroke", "black").style("stroke-width", "2px")
 
     svg.append("text").attr("x", 90).attr("y", 80).text("Cryptocurrency node")
-    .style("font-size", "35px").attr("alignment-baseline","middle")
-    .attr("fill", fill_node_text)
+      .style("font-size", "35px").attr("alignment-baseline", "middle")
+      .attr("fill", fill_node_text)
 
     svg.append("text").attr("x", 55).attr("y", 200).text("↻ \t Clockwise sorted")
-    .style("font-size", "35px").attr("alignment-baseline","middle")
-    .attr("fill", fill_node_text)
-    
+      .style("font-size", "35px").attr("alignment-baseline", "middle")
+      .attr("fill", fill_node_text)
+
     svg.append("line")
-    .style("stroke", color_links)
-    .style("stroke-width", 7)
-    .attr("x1", 55)
-    .attr("y1", 125 )
-    .attr("x2", 77)
-    .attr("y2", 146);
-    
+      .style("stroke", color_links)
+      .style("stroke-width", 7)
+      .attr("x1", 55)
+      .attr("y1", 125)
+      .attr("x2", 77)
+      .attr("y2", 146);
+
     // .attr("cx",70).attr("cy",140).attr("r", 12)
     // .style("fill", color_links)
 
     svg.append("text").attr("x", 90).attr("y", 140).text("Similarity link")
-    .style("font-size", "35px").attr("alignment-baseline","middle")
-    .attr("fill", fill_node_text)
+      .style("font-size", "35px").attr("alignment-baseline", "middle")
+      .attr("fill", fill_node_text)
 
-
+    old_index_of_similarity = index_of_similarity_in_use
     index_of_similarity_in_use = new_graph_index
 
     if (reshape_flag == 1) {
@@ -519,9 +534,21 @@ function create_graph(new_graph_index) {
         }
       }
     }
-    name_arr =  name_arr//get_array_of_ordered_nodes_in_use(CHANGE_VAL) 
-    //Order_innerFirst_outerNext(Matrix_of_names_CARD[index_of_similarity_in_use]) //con questo va la prima schermata
-     // get_array_of_ordered_nodes_in_use(new_graph_index)
+
+
+    InnerAndOuter_nodes = Matrix_of_names_CARD[index_of_similarity_in_use]
+    InnerF_outerL_nodes = Order_innerFirst_outerNext(Matrix_of_names_CARD[index_of_similarity_in_use])
+
+    name_arr = name_arr_alp_sorted  //Order_innerFirst_outerNext(Matrix_of_names_CARD[index_of_similarity_in_use])
+
+    //print("chiamo get con var " + CHANGE_VAL)
+    //print(get_array_of_ordered_nodes_in_use(CHANGE_VAL))
+    //print( name_arr)
+
+    // Order_innerFirst_outerNext(Matrix_of_names_CARD[index_of_similarity_in_use]) //con questo va la prima schermata
+    // get_array_of_ordered_nodes_in_use(new_graph_index)
+
+    //if(index_of_similarity_in_use != old_index_of_similarity || index_of_similarity_in_use==0)
 
     update_reg_links(index_of_similarity_in_use)
 
@@ -580,7 +607,7 @@ function create_graph(new_graph_index) {
 
       })
       .on('click', function (d) {
-      
+
         CLICK(d)
 
       });

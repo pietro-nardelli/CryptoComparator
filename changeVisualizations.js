@@ -1,9 +1,11 @@
-var theALPHA_VAR = 0 //swap var
+var theALPHA_VAR = 2 //swap var
 
 function alph_order() {
     
-    changeVisualization()
     theALPHA_VAR = ((theALPHA_VAR +1) % 3)
+    
+    changeVisualization()
+    
 }
 
 function changeVisualization(){
@@ -16,7 +18,7 @@ function changeVisualization(){
     var attribute = document.getElementById("attribute_selection").value;
     var year = document.getElementById("year_selection").value;
 
-    //set_node_pos(theALPHA_VAR)
+    set_node_pos(theALPHA_VAR)
 
     if (radio == 't0'){
         document.getElementById("year_selection").hidden = true;
@@ -138,5 +140,8 @@ function changeVisualization(){
             break;
         }
     }
-
+    if(last_clicked!="")
+    setTimeout(() => {CLICK(last_clicked)
+        
+    }, 50); 
   }

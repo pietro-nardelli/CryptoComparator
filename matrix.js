@@ -178,11 +178,11 @@ function fullMatrix(file_json) {
     }
     similarity_array = similarity_array.sort(function (a, b) { return a - b; }).reverse()
     // top 1%
-    console.log(file_json +": "+similarity_array[Math.round(495*1)])
+    //console.log(file_json +": "+similarity_array[Math.round(495*1)])
     // top 2%
-    console.log(file_json +": "+similarity_array[Math.round(495*0.5)])
+    //console.log(file_json +": "+similarity_array[Math.round(495*0.5)])
     // top 3%
-    console.log(file_json +": "+similarity_array[Math.round(495*0.1)])
+    //console.log(file_json +": "+similarity_array[Math.round(495*0.1)])
 
 
     // Generation of the matrix on the webpage
