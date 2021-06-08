@@ -181,7 +181,6 @@ function fullMatrix(file_json) {
         k+=1;
       }
     }
-<<<<<<< HEAD
     // similarity_array has length 4950
     similarity_array_sorted = similarity_array_unsorted.sort(function (a, b) { return a - b; }).reverse() //Ordered by number of similarity
    
@@ -219,15 +218,6 @@ function fullMatrix(file_json) {
                 "n_of_links: \t \t \t" + n_of_links + "\n" + 
                 "threshold_array: \t \t[" + threshold_array +"]" + "\n" + 
                 "cardinality_array:\t[" + cardinality_array +"] \n \n")
-=======
-    similarity_array = similarity_array.sort(function (a, b) { return a - b; }).reverse()
-    // top 1%
-    //console.log(file_json +": "+similarity_array[Math.round(495*1)])
-    // top 2%
-    //console.log(file_json +": "+similarity_array[Math.round(495*0.5)])
-    // top 3%
-    //console.log(file_json +": "+similarity_array[Math.round(495*0.1)])
->>>>>>> 73856c2786444a25e58d570a6b7a164ce2d88c57
 
 
     // Generation of the matrix on the webpage
