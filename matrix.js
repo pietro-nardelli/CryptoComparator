@@ -167,6 +167,7 @@ function fullMatrix(file_json) {
     var ord_val = document.getElementById("order").value;
     x_m.domain(orders[ord_val]);
 
+    ///////////////////////////////////
     // Return top % on 
     similarity_array_unsorted = []
     k = 0;
@@ -218,6 +219,7 @@ function fullMatrix(file_json) {
                 "n_of_links: \t \t \t" + n_of_links + "\n" + 
                 "threshold_array: \t \t[" + threshold_array +"]" + "\n" + 
                 "cardinality_array:\t[" + cardinality_array +"] \n \n")
+    /////////////
 
 
     // Generation of the matrix on the webpage
