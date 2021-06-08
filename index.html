@@ -4,6 +4,7 @@
 <!-- <script src="slider.js"></script> -->
 <style>
   @import "index.css";
+  /*@import "searchBar.css";*/
 </style>
 
 
@@ -16,6 +17,15 @@
   </head>
 
   <body onload="twitterCss()">
+    <!--
+    <form hidden autocomplete="off" >
+      <div class="autocomplete" style="width:100px; ">
+        <input id="myInput" type="text" name="myCountry" placeholder="Cryptocurrency name">
+      </div>
+      <input type="submit" onclick="exe_click();">
+    </form>
+    <script src="searchBar.js" defer></script> 
+    -->
     <!--<h3 style="text-align: center;">PROGETTO VA!</h3>-->
 
     <!-- <div class="dropdown2">
@@ -29,12 +39,14 @@
     <!-- slider -->
     <div id="scale-zoom">
       <div id="menu">
+        
         <!--<h3>Cryptocurrency comparator</h3>-->
         <a href="."><img src="logo.png" style="width: 200px; margin-top: -5px;"></a>
         <div style="position: absolute; margin-left: 200px; margin-top: -47px; margin-bottom: 23px;">
           <div style="margin-left: 100px; display: inline-block; color: white; width: 550px;">Similarity: <span id="demo"></span>
             <input style=" width: 350px;" type="range" min="0" max="100" value="0" class="slider" id="myRange">
           </div>
+          <button id="swap_B" style="width: 200px; border-radius: 8px; position: absoulte; height: 30px; font-family : inherit; "  onclick="alph_order()">Change graph order (1/3)</button>
           <div style="position: absoulte; margin-left: 60px; color: white; display: inline-block; width: 250px;" >
             Compare by:
             <input type="radio" id="t0_radio" name="radio_selection" value="t0" checked="checked"

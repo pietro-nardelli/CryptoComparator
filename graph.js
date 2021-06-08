@@ -1,52 +1,28 @@
-//TO THINK
-/*
-X scatter interattivo
-cursore on mouseover
-X grafi iniziali vuoti/bianco se 1 solo?
-X similitudini menù a tendina 
-Cambiare value slider , 90% ?
-Text dello scatter
-*/
-
-/*
-- potremmo graficare similarità particolari evidenziandole
-  nel grafo e nella matrice nella sottorete creata
-+ DOne rami in base alla similarità random YHEEAA done
-+ done ricrea il grafo premendo il tasto con altri rami yes
-- TODO se passo su un nodo deve ingrandire la scritta(e colorarla?), e ridurla quando esce(e farla tornare bianca in caso)
-       se premo su un nodo già premuto deve tornare tutto alla normalità* eccetto i 2 nodi colorati
-       se premo su un nodo deve colorarlo ed evidenziare la sottorete(nodo,testo,archi*,nodoTarget*,testoTarget*)
-            e nascondere il resto(nodi non connessi, archi non connessi*)
-       se premo su un altro nodo deve tenere l'ultimo colorato e colorare anche quello nuovo(e con colori specifici)
-       se premo di nuovo sull'ultimo premuto?
-       se premo su un terzo nodo?
-       se premo il primo nodo?
-      * = relativamente alla soglia attuale, e se viene modificata bisogna tenerne conto
-          (mantenendo solo alcune modifiche, tipo la sottorete deve restare evidenziata con i link più grandi)
+threshold0=0.9599203439955711
+threshold1=0.9814371590335464
+threshold2=0.978382766168612
 
 
-- TODO animationhell
-*/
+var T_ARR = //min value to create the link, baseline
+[0.9598377676355152,0.954764086916276,0.9622385796804991,0.9645476488315503,0.9596504472418033,0.7364907572231746,
+  0.8056734344857461,0.7936566007331114,0.8328306417437831,0.81590715368864,0.8076139591599294,0.6039178481792998,
+  0.8464393369708181,0.8248564605749555,0.8684098260423625,0.8641256103078544,0.8460754586966066,0.5810492687935018,
+  0.9612183299008994,0.955265558604166,0.9651361562564238,0.9621548425249444,0.9615374515893493,0.7109360307806543]
 
-var T_ARR1 = [0.666672100974757, 0.9368, 0.95, 0.95, 0.95, 0.6666,
-  0.3, 0.3, 0.3, 0.3, 0.3, 0.3,
-  0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
-  0.9, 0.9, 0.9, 0.9, 0.9, 0.9]
+var T_ARR_medium = 
+[0.9707866582742337,0.9663051532728639,0.9724622317908826,0.9737050596019544,0.970739808238023,0.7751710048056932,
+  0.8755368460119818,0.8525403070280532,0.8849086304570315,0.8693784719261519,0.8779509978401979,0.6499696404162836,
+  0.8846514988995254,0.8661238905177455,0.9046736926881773,0.8963319233570297,0.8846202991274328,0.6208326636832797,
+  0.968590606214579,0.9637139370053984,0.9720694445348708,0.969683864564796,0.9689080337364345,0.7520614302411703]
 
+var T_ARR_high = 
+[0.9813954101833389,0.9794888225067592,0.9833422513215253,0.9836507594831148,0.9815176142468249,0.8375238046535366,
+  0.9458688876311849,0.9434885371355382,0.9413695962605968,0.934077859242332,0.9466111312671828,0.7791958868136004,
+  0.9353941057665913,0.9273717925677756,0.9495205345608297,0.9387866240312474,0.9387779057158157,0.716473440337532,
+  0.9792464720602758,0.9761449321224998,0.981012989448163,0.98049324004802,0.979151084613305,0.8251534557954563]
 
-var T_ARR2 = [0.9258215989245593, 0.9160405042808755, 0.9287826381387896, 0.936899679455302, 0.925929462364907, 0.666672100974757,
-  0.0, 0.0, 0.0, 0.0, 0.0, 0.1654305802084671,
-  0.06644471580952299, 0.0662827433551127, 0.06451481322929004, 0.07106426047662956, 0.06706740242648263, 0.25875661189361066,
-  0.93470956073676836, 0.879847184716891, 0.9294995693621586, 0.9167563070011337, 0.91263249763380497, 0.623165853649523]
-
-
-  var T_ARR = 
-  [0.9258215989245593, 0.9160405042808755, 0.9287826381387896, 0.936899679455302, 0.925929462364907, 0.666672100974757,
-    0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
-    0.5, 0.5, 0.5, 0.5, 0.5, 0.5,
-    0.93470956073676836, 0.879847184716891, 0.9294995693621586, 0.9167563070011337, 0.91263249763380497, 0.623165853649523]
-  
-  
+var index_of_similarity_in_use = 0 //initial graph index used
+//var old_index_of_similarity = 0
 
 ///DATABASE
 var data_reg = {}  //REG NAME ID ECC
@@ -57,7 +33,7 @@ var name_arr_not_sorted = []
 var width = 2700;  //d3 object width
 var height = 1500; //d3 obj height
 
-//GRAPH VALUES
+//GRAPH VALUESs
 var x_c = (width - 100) / 2;
 var y_c = height / 2;
 var radius = 600;
@@ -229,8 +205,6 @@ function create_100100_matrix(json_file, matrix) {
   //return matrix;
 }
 
-
-
 function reshape(q) {
   var w = []
   for (var i = 0; i < 100; i++) {
@@ -278,15 +252,36 @@ function get_top_n(arr, n) {
     .slice(0, n);
 }
 
+function Order_innerFirst_outerNext(list_to_order) { //the first of the list is even so goes on the outer ring //wrong is in the inner?
+  //so we use [first outer,first inner,second outer,second inner..]
+  //we have in the list [first inner, second inner..last inner, first outer, second outer... last outer]
+  //from [0,1,2,3...49(last inner), 50(first outer), 51..99] to [50, 0, 51, 1, 52, 2..99, 49]
+  aux_list_ordered = []
+  for (i = 0; i < 50; i++) {
+    for (j = 0; j < 2; j++) {
+      if (j % 2 == 0)
+        aux_list_ordered.push(list_to_order[i])
+      else
+        aux_list_ordered.push(list_to_order[i + 50])
+    }
+  }
+  return aux_list_ordered
+}
+
 
 //get n node from the hat and give them to node namecoin in datareg
 //if nodes are over a threshold from the(TODO each) similarity matrix we assign a link
 function get_links(namecoin, similarity_idx) {
+  
   namecoin_idx = name_arr.indexOf(namecoin)
   links = []
   var namecoin_similarity_arr = []
-  if (similarity_idx == -1) { namecoin_similarity_arr = arr_sim_old[0][namecoin_idx] }
-  else { namecoin_similarity_arr = arr_similarity_matrix[similarity_idx][namecoin_idx] }
+
+  if (similarity_idx == -1) //non capita mai, ignora
+    namecoin_similarity_arr = arr_sim_old[0][namecoin_idx] 
+  else 
+    namecoin_similarity_arr = arr_similarity_matrix[similarity_idx][namecoin_idx] 
+    
   //console.log(namecoin_similarity_arr)
   // console.log("l arr a cui collegarmi è!")
   // console.log(namecoin_similarity_arr)
@@ -298,11 +293,28 @@ function get_links(namecoin, similarity_idx) {
   return links
 }
 
+//same as before but for the new purpose of having a new node array to display in a different order
+function get_links_new(namecoin, similarity_idx) {
+  
+  namecoin_idx = name_arr.indexOf(namecoin)
+  links = []
+  var namecoin_similarity_arr = []
+
+  namecoin_similarity_arr = arr_similarity_matrix[similarity_idx][namecoin_idx] 
+    
+  for (var i = 0; i < 100; i++) {  
+    if (namecoin_similarity_arr[i] >= initial_threshold && i != namecoin_idx) //!!! THRESHOLD MINIMA PER CREARE IL NODO
+      links = links.concat(name_arr[i])
+  }
+  return links
+}
+
 //UP DATAREG setting the links
 function update_reg_links(index_of_similarity_in_use) {
-  for (var i = 0; i < name_arr.length; i++) {
+  for (var i = 0; i < 100; i++) {
     namecoin = name_arr[i]
-    data_reg[namecoin][2] = get_links(namecoin, index_of_similarity_in_use)
+    data_reg[namecoin][2] = get_links_new(namecoin, index_of_similarity_in_use)
+
     if (false) { //ALL LINKS HAVE THRESHOLD OVER 0.9! TO VERIFY USE TRUE
       console.log("----TEST!--- link, namecoin, value of their sim.")
       console.log(get_links(namecoin))
@@ -316,37 +328,66 @@ function update_reg_links(index_of_similarity_in_use) {
   }
 }
 
+
+
+function get_array_of_ordered_nodes_in_use(CHANGE,index_used) {
+  aux=name_arr_alp_sorted
+  CHANGE_VAL = CHANGE
+
+
+  if (CHANGE==0){   // Order_innerFirst_outerNext( SIMIL_CARD_ordered_list)//
+    return Order_innerFirst_outerNext(Matrix_of_names_CARD[index_used])  }
+   
+  else if (CHANGE==1){   // SIMIL_CARD_ordered_list //
+    return Matrix_of_names_CARD[index_used] }
+   
+  return aux
+}
+
 //fill name_arr and sort it, set data_reg(name)=([x,y],name,[links])
-d3v3.csv("dataset/100List.csv", function (data) {
+function set_node_pos(CHANGE, index_used) {
+  d3v3.csv("dataset/100List.csv", function (data) {
+    
+    for (var i = 0; i < data.length; i++) {
+      name_arr = name_arr.concat(data[i].Name)  //fill name_arr with names
+    }
+    name_arr_not_sorted = name_arr.concat()
+    name_arr.sort().reverse() //alphabetical order
 
-  for (var i = 0; i < data.length; i++) {
-    name_arr = name_arr.concat(data[i].Name)  //fill name_arr with names
-  }
-  name_arr_not_sorted = name_arr.concat()
-  name_arr.sort() //alphabetical order
+    alp_name_arr_sorted = name_arr
+    
+    name_arr = get_array_of_ordered_nodes_in_use(CHANGE,index_used)
 
-  for (var i = 0; i < name_arr.length; i++) {  //create in data reg[name] an entry with (x,y),name
-    namecoin = name_arr[i]
-    aux_radius = radius
-    if (i % 2 == 0) aux_radius = radius * 0.75
-    x = x_c + Math.cos(theta * i) * aux_radius + 520 * Math.cos(theta * i)
-    if (i % 2 != 0) x = x + 100 * Math.cos(theta * i)
-    y = y_c + Math.sin(theta * i) * aux_radius
-    if (!ellisse) y += 100 * (Math.sin(theta * i)) * (Math.abs(Math.sin(theta * i))) ** 10
-    if (i % 2 == 0) y += 2 * (Math.sin(theta * i)) * (Math.abs(Math.sin(theta * i))) ** 400
-    if (namecoin == "Dogecoin") { y += 30, x -= 30 }
-    if (namecoin == "Radium") { y -= 20, x -= 20 }
-    if (namecoin == "DigitalNote") { y += 20, x -= 20 }
-    data_reg[namecoin] = [[x, y], namecoin]
-  }
-  //update_reg_links(0); //set in datareg all the links
-});
 
-//console.log(data_reg)
+    for (var i = 0; i < name_arr.length; i++) {  //create in data reg[name] an entry with (x,y),name
+      namecoin = name_arr[i]
+      aux_radius = radius
+      theta_i = -theta * i
+      //theta_i -= Math.PI/2 //se partiamo da sopra
+      if (i % 2 == 0) aux_radius = radius * 0.75 //if it's even reduce the radius
+      x = x_c + Math.cos(theta_i) * aux_radius + 520 * Math.cos(theta_i)
+      if (i % 2 != 0) x = x + 100 * Math.cos(theta_i) //if is odd space a bit more on the x
+      y = y_c + Math.sin(theta_i) * aux_radius
+      //if (!ellisse)
+      y += 100 * (Math.sin(theta_i)) * (Math.abs(Math.sin(theta_i))) ** 10
+      if (i % 2 == 0) y += 10 * (Math.sin(theta_i)) * (Math.abs(Math.sin(theta_i))) ** 100
+      /*
+          if (namecoin == "Dogecoin") { y += 30, x -= 30 }
+          if (namecoin == "Radium") { y -= 20, x -= 20 }
+          if (namecoin == "DigitalNote") { y += 20, x -= 20 }
+          if (namecoin == "Rise") { y += 0, x += 10 }
+      */
+      x += Math.sign(Math.cos(theta*i))*10
+      data_reg[namecoin] = [[x, y], namecoin]
+    }
+    //update_reg_links(0); //set in datareg all the links
+  });
+}
+
+var CHANGE_VAL = 2 //var per i link che uso sotto
+set_node_pos(CHANGE_VAL,index_of_similarity_in_use)
 
 var last_clicked = "";
-
-
 
 //SVG OBJs from d3v3
 var svg = d3v3.select("#graph_div").append("svg")
@@ -376,168 +417,77 @@ function getThreshold(source, target, similarity_idx) {
 }
 
 
+colore0 = "rgba(0, 200, 255,1)" 
+colore1 = "rgba(0, 200, 255,0.75)"
+colore2 = "rgba(0, 200, 255, 0.5)"
 
 /*
-document.getElementById("SIMIL1").addEventListener("click", function () {
-  data_json = "data_high"
-  create_graph(1)
-})
-
-document.getElementById("SIMIL2").addEventListener("click", function () {
-  data_json = "data_low";
-  create_graph(2)
-})
-
-document.getElementById("SIMIL3").addEventListener("click", function () {
-  data_json = "data_market_cap";
-  create_graph(3)
-})
-
-document.getElementById("SIMIL4").addEventListener("click", function () {
-  data_json = "data_open";
-  create_graph(4)
-})
-
-document.getElementById("SIMIL5").addEventListener("click", function () {
-  data_json = "data_volume";
-  create_graph(5)
-})
-
-document.getElementById("SIMIL0").addEventListener("click", function () {
-  data_json = "data_close";
-  create_graph(0)
-})
-
-///////
-
-
-document.getElementById("SIMIL1_15").addEventListener("click", function () {
-  data_json = "data_high_2015"
-  create_graph(7)
-})
-
-document.getElementById("SIMIL2_15").addEventListener("click", function () {
-  data_json = "data_low_2015";
-  create_graph(8)
-})
-
-document.getElementById("SIMIL3_15").addEventListener("click", function () {
-  data_json = "data_market_cap_2015";
-  create_graph(9)
-})
-
-document.getElementById("SIMIL4_15").addEventListener("click", function () {
-  data_json = "data_open_2015";
-  create_graph(10)
-})
-
-document.getElementById("SIMIL5_15").addEventListener("click", function () {
-  data_json = "data_volume_2015";
-  create_graph(11)
-})
-
-document.getElementById("SIMIL0_15").addEventListener("click", function () {
-  data_json = "data_close_2015";
-  create_graph(6)
-})
-
-////
-document.getElementById("SIMIL1_16").addEventListener("click", function () {
-  data_json = "data_high_2016"
-  create_graph(13)
-})
-
-document.getElementById("SIMIL2_16").addEventListener("click", function () {
-  data_json = "data_low_2016";
-  create_graph(14)
-})
-
-document.getElementById("SIMIL3_16").addEventListener("click", function () {
-  data_json = "data_market_cap_2016";
-  create_graph(15)
-})
-
-document.getElementById("SIMIL4_16").addEventListener("click", function () {
-  data_json = "data_open_2016";
-  create_graph(16)
-})
-
-document.getElementById("SIMIL5_16").addEventListener("click", function () {
-  data_json = "data_volume_2016";
-  create_graph(17)
-})
-
-document.getElementById("SIMIL0_16").addEventListener("click", function () {
-  data_json = "data_close_2016";
-  create_graph(12)
-})
-//////
-
-document.getElementById("SIMIL1_17").addEventListener("click", function () {
-  data_json = "data_high_2017"
-  create_graph(19)
-})
-
-document.getElementById("SIMIL2_17").addEventListener("click", function () {
-  data_json = "data_low_2017";
-  create_graph(20)
-})
-
-document.getElementById("SIMIL3_17").addEventListener("click", function () {
-  data_json = "data_market_cap_2017";
-  create_graph(21)
-})
-
-document.getElementById("SIMIL4_17").addEventListener("click", function () {
-  data_json = "data_open_2017";
-  create_graph(22)
-})
-
-document.getElementById("SIMIL5_17").addEventListener("click", function () {
-  data_json = "data_volume_2017";
-
-  create_graph(23)
-})
-
-document.getElementById("SIMIL0_17").addEventListener("click", function () {
-  data_json = "data_close_2017";
-
-  create_graph(18)
-})
+colore1 = "rgba(255, 0, 0 ,0.75)" red high value
+colore2 = "rgba(0, 255,0, 0.5)"  green medium value
 */
+
+// Decommentate e mettete i colori qui
+/*
+colore0 = "rgba(0, 200, 255,1)" //colore importante (0% -> 0.1%)
+colore1 = "rgba(242,226,210)"  //medio 0.1% -> 0.5%
+colore2 = "rgba(79,180,119)"  //basso 0.5 -> 1%
+*/
+
+function ret_link_col(d) {
+  threshold1 = T_ARR_high[index_of_similarity_in_use]   
+  threshold2 = T_ARR_medium[index_of_similarity_in_use]
+
+  if (d.k >= threshold1) return colore0
+  if (d.k >= threshold2) return colore1
+  return colore2
+}
+
+function ret_node_col(d) {
+  grade = //data_reg[d.name][2].length//
+  matrix_of_simil_CARD[index_of_similarity_in_use][M_CAP_ordered_list.indexOf(d.name)] 
+  //prende dalle liste di cardinalità il relativo valore (es lista bitcoin, eth.. index di bitcoin = 0 
+  //=> grado di bitcoin = 18)
+  if (grade >= 26-1) return "rgb(255, 0, 0)" //-1 for the connection with itself
+  if (grade >= 11-1) return "rgb(255, 125, 0)" //-1 for the connection with itself
+  if (grade >= 3-1) return "rgb(180, 150, 0)"
+  return "rgb(100, 100, 0)"
+}
+
+function ret_stroke(d) {
+  threshold1 = T_ARR_medium[index_of_similarity_in_use]
+  threshold2 = T_ARR_high[index_of_similarity_in_use]
+
+  if (d.k >= threshold1) return "1.25px"
+  if (d.k >= threshold2) return "1px"
+  return " .75px"
+}
 
 function set_slider_params(idx) {
   initial_threshold = rr(T_ARR[idx]); //THRESHOLD MIN x creare il nodo!
   initial_threshold_slider = initial_threshold; //THRESHOLD BASE OF THE SLIDER
   fix_val_slider = (1 - initial_threshold) * 100
-  output.innerHTML =   getZeros(initial_threshold );
+  output.innerHTML = getZeros(initial_threshold);
   slider.value = 0
   actual_t = initial_threshold
   full_matrix_or_reduced(last_clicked, data_json, actual_t);
   //slider_update(actual_t)
 }
 
-
 var reshape_flag = 1; //1 iterazione quando apre la pagina DA METTERE PRIMA DEL CREATE_GRAPH
 //update_reg_links(0); !! CI SERVE PURE QUESTO PRIMA?
 var data_json = "data_close" //first attribute
 var actual_graph_used = -1
 
-create_graph(0)
+create_graph(0)  //DA RIMETTERE A ZERO
 
-function create_graph(ididix) {
-
-
-  //console.log("last clicked è:")
-  //console.log(last_clicked == "" ? "nessuno" : last_clicked.name)
-
+function create_graph(new_graph_index) {
 
   if (actual_graph_used == 1212) return
-  actual_graph_used = ididix
+  actual_graph_used = new_graph_index
   if (reshape_flag != 1) //quindi se non è la prima volta
   {
     //console.log("cambio valori slider iniziali,e reshape flag è:" + String(reshape_flag))
-    set_slider_params(ididix)
+    set_slider_params(new_graph_index)
   }
 
 
@@ -545,34 +495,34 @@ function create_graph(ididix) {
 
     svg.selectAll("*").remove()
 
-    svg.append("circle").attr("cx",70).attr("cy",80).attr("r", 12)  
-    .style("fill", fill_node_circle).style("stroke","black").style("stroke-width","2px")
+    svg.append("circle").attr("cx", 70).attr("cy", 80).attr("r", 12)
+      .style("fill", fill_node_circle).style("stroke", "black").style("stroke-width", "2px")
 
     svg.append("text").attr("x", 90).attr("y", 80).text("Cryptocurrency node")
-    .style("font-size", "35px").attr("alignment-baseline","middle")
-    .attr("fill", fill_node_text)
+      .style("font-size", "35px").attr("alignment-baseline", "middle")
+      .attr("fill", fill_node_text)
 
     svg.append("text").attr("x", 55).attr("y", 200).text("↻ \t Clockwise sorted")
-    .style("font-size", "35px").attr("alignment-baseline","middle")
-    .attr("fill", fill_node_text)
-    
+      .style("font-size", "35px").attr("alignment-baseline", "middle")
+      .attr("fill", fill_node_text)
+
     svg.append("line")
-    .style("stroke", color_links)
-    .style("stroke-width", 7)
-    .attr("x1", 55)
-    .attr("y1", 125 )
-    .attr("x2", 77)
-    .attr("y2", 146);
-    
+      .style("stroke", color_links)
+      .style("stroke-width", 7)
+      .attr("x1", 55)
+      .attr("y1", 125)
+      .attr("x2", 77)
+      .attr("y2", 146);
+
     // .attr("cx",70).attr("cy",140).attr("r", 12)
     // .style("fill", color_links)
 
     svg.append("text").attr("x", 90).attr("y", 140).text("Similarity link")
-    .style("font-size", "35px").attr("alignment-baseline","middle")
-    .attr("fill", fill_node_text)
+      .style("font-size", "35px").attr("alignment-baseline", "middle")
+      .attr("fill", fill_node_text)
 
-
-    index_of_similarity_in_use = ididix
+    old_index_of_similarity = index_of_similarity_in_use
+    index_of_similarity_in_use = new_graph_index
 
     if (reshape_flag == 1) {
       reshape_flag = 0
@@ -584,16 +534,27 @@ function create_graph(ididix) {
         }
       }
     }
+
+
+    InnerAndOuter_nodes = Matrix_of_names_CARD[index_of_similarity_in_use]
+    InnerF_outerL_nodes = Order_innerFirst_outerNext(Matrix_of_names_CARD[index_of_similarity_in_use])
+
+    name_arr = name_arr_alp_sorted  //Order_innerFirst_outerNext(Matrix_of_names_CARD[index_of_similarity_in_use])
+
+    //print("chiamo get con var " + CHANGE_VAL)
+    //print(get_array_of_ordered_nodes_in_use(CHANGE_VAL))
+    //print( name_arr)
+
+    // Order_innerFirst_outerNext(Matrix_of_names_CARD[index_of_similarity_in_use]) //con questo va la prima schermata
+    // get_array_of_ordered_nodes_in_use(new_graph_index)
+
+    //if(index_of_similarity_in_use != old_index_of_similarity || index_of_similarity_in_use==0)
+
     update_reg_links(index_of_similarity_in_use)
-
-
-    //console.log("SIMIL1!")
-
-    //console.log(arr_similarity_matrix)
 
     nodes = name_arr;
     links = [];
-    for (var i = 0; i < name_arr.length; i++) {
+    for (var i = 0; i < 100; i++) {
       namecoin = nodes[i]
       link_to_add = data_reg[namecoin][2]
 
@@ -626,7 +587,7 @@ function create_graph(ididix) {
       .attr("class", "link")
       .attr("target", function (d) { return d.target.name; }) //per ora inutile
       .attr("k", function (d) { return d.k; })
-      .style("stroke-width", function (d) { return stroke_width_links_mouseout; });
+      .style("stroke-width", function (d) { return stroke_width_links_mouseout; }); //NOT important?
 
     var node = svg.selectAll(".node")
       .data(nodes)
@@ -646,7 +607,7 @@ function create_graph(ididix) {
 
       })
       .on('click', function (d) {
-      
+
         CLICK(d)
 
       });
@@ -681,28 +642,12 @@ function create_graph(ididix) {
       on_mouseout_function(d)
       on_mouseover_function(last_clicked)
     }
+
+    on_mouseout_function()
   });
-
 }
 
-function blink() {
-  svg.selectAll(".node circle")
-    .data(nodes)
-    .filter(function (x) { return x.name == last_clicked.name })
-    .transition()
-    .duration(500)
-    .style('fill', "red")
-    .transition()
-    .duration(500)
-    .style('fill', fill_node_circle)
-    .transition()
-    .duration(500)
-    .style('fill', "red")
-    .transition()
-    .duration(500)
-    .style('fill', fill_node_circle)
-  //.on("end", blink);
-}
+
 
 function CLICK(d) {
   if (last_clicked == d || last_clicked.name == d.name) {
@@ -770,7 +715,7 @@ function on_mouseover_function(d) {
     svg.selectAll(".node circle")
       .data(nodes)
       .filter(function (x) { return x.name == target_name })
-      .style('fill', fill_node_circle);
+      .style('fill', function (x) { return ret_node_col(x)});
 
     svg.selectAll(".node text")
       .data(nodes)
@@ -788,7 +733,7 @@ function on_mouseout_function(d) {
 
   svg.selectAll(".node circle")  //ricolora i cerchi
     .data(nodes)
-    .style('fill', fill_node_circle);
+    .style('fill', function (x) { return ret_node_col(x)});
 
   svg.selectAll(".node text")   //ricolora i testi
     .data(nodes)
@@ -802,8 +747,8 @@ function on_mouseout_function(d) {
   svg.selectAll(".link ")     //ricolora i links sopra la soglia
     .data(links)
     .filter(function (x) { return x.k >= actual_t })
-    .style('stroke', color_links)
-    .style("stroke-width", stroke_width_links_mouseout);
+    .style('stroke', function (x) { return ret_link_col(x)})
+    .style("stroke-width", function (x) { return ret_stroke(x)});
 
 }
 
@@ -841,6 +786,50 @@ function on_click_function(d) {
 
 
 
+
+
+
+
+//set_node_pos(a), 374375namearr
+
+
+
+/*
+function blink() {
+  svg.selectAll(".node circle")
+    .data(nodes)
+    .filter(function (x) { return x.name == last_clicked.name })
+    .transition()
+    .duration(500)
+    .style('fill', "red")
+    .transition()
+    .duration(500)
+    .style('fill', fill_node_circle)
+    .transition()
+    .duration(500)
+    .style('fill', "red")
+    .transition()
+    .duration(500)
+    .style('fill', fill_node_circle)
+  //.on("end", blink);
+}
+
+function ontick(n) {
+  // link.attr("x1", function(d) { return d.source.x; })
+  // .attr("y1", function(d) { return d.source.y; })
+  // .attr("x2", function(d) { return d.target.x; })
+  // .attr("y2", function(d) { return d.target.y; })
+  // .attr("k", function(d) { return d.k;  });  //useless 4 now
+
+  n.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+  svg.selectAll(".node").data(nodes)[0][50].transition()
+    .duration(100).setAttribute("transform", "translate(100,100).transition()")
+
+  svg.selectAll(".node circle").transition().duration(1000).attr("transform", "translate(1200,100)")
+}
+*/
+
 // function clicked(node_name) {  //:(
 // console.log(node_name)
 // console.log("dataset/"+node_name+".csv")
@@ -863,17 +852,59 @@ function on_click_function(d) {
 // .style('fill', 'rgb(255, 0, 0)') ;
 // }
 
-function ontick(n) {
-  // link.attr("x1", function(d) { return d.source.x; })
-  // .attr("y1", function(d) { return d.source.y; })
-  // .attr("x2", function(d) { return d.target.x; })
-  // .attr("y2", function(d) { return d.target.y; })
-  // .attr("k", function(d) { return d.k;  });  //useless 4 now
 
-  n.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; });
+//TO THINK
+/*
+X scatter interattivo
+cursore on mouseover
+X grafi iniziali vuoti/bianco se 1 solo?
+X similitudini menù a tendina 
+Cambiare value slider , 90% ?
+Text dello scatter
+*/
 
-  svg.selectAll(".node").data(nodes)[0][50].transition()
-    .duration(100).setAttribute("transform", "translate(100,100).transition()")
+/*
+- potremmo graficare similarità particolari evidenziandole
+  nel grafo e nella matrice nella sottorete creata
++ DOne rami in base alla similarità random YHEEAA done
++ done ricrea il grafo premendo il tasto con altri rami yes
+- TODO se passo su un nodo deve ingrandire la scritta(e colorarla?), e ridurla quando esce(e farla tornare bianca in caso)
+       se premo su un nodo già premuto deve tornare tutto alla normalità* eccetto i 2 nodi colorati
+       se premo su un nodo deve colorarlo ed evidenziare la sottorete(nodo,testo,archi*,nodoTarget*,testoTarget*)
+            e nascondere il resto(nodi non connessi, archi non connessi*)
+       se premo su un altro nodo deve tenere l'ultimo colorato e colorare anche quello nuovo(e con colori specifici)
+       se premo di nuovo sull'ultimo premuto?
+       se premo su un terzo nodo?
+       se premo il primo nodo?
+      * = relativamente alla soglia attuale, e se viene modificata bisogna tenerne conto
+          (mantenendo solo alcune modifiche, tipo la sottorete deve restare evidenziata con i link più grandi)
 
-  svg.selectAll(".node circle").transition().duration(1000).attr("transform", "translate(1200,100)")
+
+- TODO animationhell
+
+span = 1 - T_ARR[0]
+aux_span = span/3
+threshold2 = T_ARR[0]+aux_span
+threshold1 = threshold2 + aux_span
+
+
+0.9599203439955711
+0.9708419175354708
+0.9814371590335464
+
+//01 02 03
+0.9814371590335464
+0.978382766168612
+0.9756817761737007
+
+//TEST order flag
+NO_ordering_flag = true
+
+
+function changeGraphOrder(){
+  NO_ordering_flag = !NO_ordering_flag
+  //set_node_pos()
+  //create_graph(0)
 }
+
+*/
