@@ -168,21 +168,56 @@ function fullMatrix(file_json) {
     x_m.domain(orders[ord_val]);
 
     // Return top % on 
-    similarity_array = []
+    similarity_array_unsorted = []
     k = 0;
     for (i = 0; i < 100; i++) {
       for (j = i+1; j < 100; j++) {
+        if (matrix[i][j].z == -1) {
+          similarity_array_unsorted[k] = 0;
+        }
+        else {
+          similarity_array_unsorted[k] = matrix[i][j].z;
+        }
         k+=1;
-        similarity_array[k] = matrix[i][j].z;
       }
     }
-    similarity_array = similarity_array.sort(function (a, b) { return a - b; }).reverse()
-    // top 1%
-    console.log(file_json +": "+similarity_array[Math.round(495*1)])
-    // top 2%
-    console.log(file_json +": "+similarity_array[Math.round(495*0.5)])
-    // top 3%
-    console.log(file_json +": "+similarity_array[Math.round(495*0.1)])
+    // similarity_array has length 4950
+    similarity_array_sorted = similarity_array_unsorted.sort(function (a, b) { return a - b; }).reverse() //Ordered by number of similarity
+   
+    // This should be the number of links that has similarity value different from zero (if year, different from 4950)
+    var n_of_links = 0 
+    for (i = 0; i < similarity_array_sorted.length; i++) {
+      if (similarity_array_sorted[i] != 0) {
+        n_of_links+=1;
+      }
+    }
+
+    var top_10 = n_of_links*0.1;
+    var top_5 = n_of_links*0.05;
+    var top_1 = n_of_links*0.01;
+    // top 10%, top 5%, top 0.1%
+    var threshold_array =  [similarity_array_sorted[Math.round(top_10)], 
+                            similarity_array_sorted[Math.round(top_5)],
+                            similarity_array_sorted[Math.round(top_1)]]
+
+    
+    cardinality_array = []
+    for (i = 0; i < 100; i++) {
+      k = 0;
+      cardinality_array[i] = k
+      for (j = 0; j < 100; j++) {
+        // If that link has value greater than treshold for top 10%, add to cardinality array
+        if (matrix[i][j].z >= threshold_array[0]) {
+          k+=1;
+          cardinality_array[i] = k;
+        }
+      }
+    }
+
+    console.log("similarity from: \t \t" + file_json + "\n" + 
+                "n_of_links: \t \t \t" + n_of_links + "\n" + 
+                "threshold_array: \t \t[" + threshold_array +"]" + "\n" + 
+                "cardinality_array:\t[" + cardinality_array +"] \n \n")
 
 
     // Generation of the matrix on the webpage
