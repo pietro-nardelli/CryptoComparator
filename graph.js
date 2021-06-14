@@ -126,8 +126,8 @@ function slider_update(t) {
 
   svg.selectAll(".link ")
     .data(links)
-    .filter(function (x) {  return x.k >= t })
-    .style("stroke", color_links)
+    .filter(function (x) { return x.k >= t })
+    .style('stroke', function (x) { return ret_link_col(x) })
 
   full_matrix_or_reduced(last_clicked, data_json, t);
   if (last_clicked != "") {
