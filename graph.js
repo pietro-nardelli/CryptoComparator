@@ -34,7 +34,7 @@ var width = 2700;  //d3 object width
 var height = 1500; //d3 obj height
 
 //GRAPH VALUESs
-var x_c = (width - 100) / 2;
+var x_c = (width ) / 2;
 var y_c = height / 2;
 var radius = 600;
 var theta = 2 * Math.PI / 100 //split 2pi into 2pi/n_nodes
@@ -126,8 +126,8 @@ function slider_update(t) {
 
   svg.selectAll(".link ")
     .data(links)
-    .filter(function (x) {  return x.k >= t })
-    .style("stroke", color_links)
+    .filter(function (x) { return x.k >= t })
+    .style('stroke', function (x) { return ret_link_col(x) })
 
   full_matrix_or_reduced(last_clicked, data_json, t);
   if (last_clicked != "") {
@@ -495,29 +495,64 @@ function create_graph(new_graph_index) {
 
     svg.selectAll("*").remove()
 
+    /* USED
+     if (grade >= 26-1) return "rgb(255, 0, 0)" //-1 for the connection with itself
+    if (grade >= 11-1) return "rgb(255, 125, 0)" //-1 for the connection with itself
+    if (grade >= 3-1) return "rgb(180, 150, 0)"
+    return "rgb(100, 100, 0)"
+    */
     svg.append("circle").attr("cx", 70).attr("cy", 80).attr("r", 12)
-      .style("fill", fill_node_circle).style("stroke", "black").style("stroke-width", "2px")
+      .style("fill", "rgb(255, 0, 0)").style("stroke", "black").style("stroke-width", "2px")
+    
+    svg.append("circle").attr("cx", 110).attr("cy", 80).attr("r", 12)
+      .style("fill", "rgb(255, 125, 0)").style("stroke", "black").style("stroke-width", "2px")
 
-    svg.append("text").attr("x", 90).attr("y", 80).text("Cryptocurrency node")
+    svg.append("circle").attr("cx", 150).attr("cy", 80).attr("r", 12)
+       .style("fill", "rgb(180, 150, 0)").style("stroke", "black").style("stroke-width", "2px")
+
+    svg.append("circle").attr("cx", 190).attr("cy", 80).attr("r", 12)
+       .style("fill", "rgb(100, 100, 0)").style("stroke", "black").style("stroke-width", "2px")
+
+    svg.append("text").attr("x", 210).attr("y", 80).text("Cryptocurrency nodes") //(grade >= 25, 10, 2, 0)")
       .style("font-size", "35px").attr("alignment-baseline", "middle")
       .attr("fill", fill_node_text)
 
-    svg.append("text").attr("x", 55).attr("y", 200).text("↻ \t Clockwise sorted")
+    svg.append("text").attr("x", 55).attr("y", 200).text("⭯ \t Ordered counterclockwise")
       .style("font-size", "35px").attr("alignment-baseline", "middle")
       .attr("fill", fill_node_text)
-
+/*
+  if (d.k >= threshold1) return "1.25px"
+  if (d.k >= threshold2) return "1px"
+  return " .75px"
+*/
     svg.append("line")
-      .style("stroke", color_links)
+      .style("stroke", "rgb(2, 200, 255)")
       .style("stroke-width", 7)
       .attr("x1", 55)
       .attr("y1", 125)
       .attr("x2", 77)
       .attr("y2", 146);
+    
+      svg.append("line")
+      .style("stroke", "rgba(2, 200, 255,0.75)")
+      .style("stroke-width", 7)
+      .attr("x1", 85)
+      .attr("y1", 125)
+      .attr("x2", 107)
+      .attr("y2", 146);
+    
+      svg.append("line")
+      .style("stroke", "rgba(2, 200, 255,0.5)")
+      .style("stroke-width", 7)
+      .attr("x1", 115)
+      .attr("y1", 125)
+      .attr("x2", 137)
+      .attr("y2", 146);
 
     // .attr("cx",70).attr("cy",140).attr("r", 12)
     // .style("fill", color_links)
 
-    svg.append("text").attr("x", 90).attr("y", 140).text("Similarity link")
+    svg.append("text").attr("x", 150).attr("y", 140).text("Similarity links")
       .style("font-size", "35px").attr("alignment-baseline", "middle")
       .attr("fill", fill_node_text)
 
