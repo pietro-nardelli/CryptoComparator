@@ -43,11 +43,11 @@
         <!--<h3>Cryptocurrency comparator</h3>-->
         <a href="."><img src="logo.png" style="width: 200px; margin-top: -5px;"></a>
         <div style="position: absolute; margin-left: 200px; margin-top: -47px; margin-bottom: 23px;">
-          <div style="margin-left: 100px; display: inline-block; color: white; width: 550px;">Similarity: <span id="demo"></span>
+          <div style="position:relative; top:1px;margin-left: 100px; display: inline-block; color: white; width: 550px;">Correlation: <span id="demo"></span>
             <input style=" width: 350px;" type="range" min="0" max="100" value="0" class="slider" id="myRange">
           </div>
-          <button id="swap_B" style="width: 200px; border-radius: 8px; position: absoulte; height: 30px; font-family : inherit; "  onclick="alph_order()">Change graph order (1/3)</button>
-          <div style="position: absoulte; margin-left: 60px; color: white; display: inline-block; width: 250px;" >
+          <button id="swap_B" style="width: 125px; border-radius: 5px; position: relative; top:-4px; font-family : inherit; "  onclick="alph_order()">Graph order (1/3)</button>
+          <div style="position: relative; margin-left: 60px; top:-3px; color: white; display: inline-block; width: 250px;" >
             Compare by:
             <input type="radio" id="t0_radio" name="radio_selection" value="t0" checked="checked"
               onchange="changeVisualization()">
@@ -55,7 +55,7 @@
             <input type="radio" id="year_radio" name="radio_selection" value="year" onchange="changeVisualization()">
             <label for="year">Year</label>
           </div>
-          <div style="position: absoulte; margin-left: 60px; color: white; display: inline-block; width: 300px; ">
+          <div style="position: relative; margin-left: 60px; top:-3px; color: white; display: inline-block; width: 300px; ">
             Attribute:
             <select id="attribute_selection" onchange="changeVisualization()">
               <option value="high" style="font-family : inherit;">High</option>
@@ -72,10 +72,10 @@
               <option value="2015" style="font-family : inherit;">2015</option>
             </select>
           </div>
-          <div style="position: absoulte; margin-left: 50px; color: white; display: inline;">
+          <div style="position: relative; margin-left: 50px; top: -3px; color: white; display: inline;">
             Matrix order:
             <select id="order">
-              <option value="count" style="font-family : inherit;">Similarity</option>
+              <option value="count" style="font-family : inherit;">Correlation</option>
               <option value="name" style="font-family : inherit;">Name</option>
             </select>
           </div>
@@ -85,11 +85,11 @@
           <div id="graph-info">
             <span class="info-text">
               <h3>Elliptic Network Graph</h3>
-              Each node in this similarity graph represent one of the top 100 cryptocurrencies,
+              Each node in this correlation graph represent one of the top 100 cryptocurrencies,
                sorted alphabetically(clock-wise). <br>
-              Each link represents a similarity between source and target, shown iff the corresponding similarity value is allowed by the slider.<br>
-              The similarity evaluation is done through the attribute and the time criteria, which can be chosen by the menu above.
-              Time zero means that the evaluation of the similarity is done respect to the beginning of both the cryptocurrencies(time relative),
+              Each link represents a correlation between source and target, shown iff the corresponding correlation value is allowed by the slider (expressed as % of correlation).<br>
+              The correlation evaluation is done through the attribute and the time criteria, which can be chosen by the menu above.
+              Time zero means that the evaluation of the correlation is done respect to the beginning of both the cryptocurrencies(time relative),
               while selecting the year option occurs into the evalution year-wise, and only if all the values of both cryptocurrencies are non-zero for that year.
               Sub-graph and node-specific information are displayed clicking on a node of interest.
 
@@ -97,12 +97,12 @@
           </div>
           <div id="matrix-info">
             <span class="info-text">
-              <h3>Similarity Heatmap</h3>
+              <h3>Correlation Heatmap</h3>
               The heatmap is a data matrix that visualizes values in the cells by the use of a color gradient.
-              The data contained within a cell is based on the chosen similarity between the two cryptocurrencies in the connecting row and column.
+              The data contained within a cell is based on the chosen correlation between the two cryptocurrencies in the connecting row and column.
               <br />
-              When a node is selected in the graph, the matrix shows the similarity values for all the cryptocurrencies in the sub-graph.
-              Hovering the mouse on an heatmap cell produce a pop-up window where the compared cryptocurrencies names appear among with their similarity value.
+              When a node is selected in the graph, the matrix shows the correlation values for all the cryptocurrencies in the sub-graph.
+              Hovering the mouse on an heatmap cell produce a pop-up window where the compared cryptocurrencies names appear among with their correlation value.
               Finally, clicking on a cell shows charts for both cryptocurrencies time series, while the nodes are revealed on the scatterplot.
             </span>
           </div>
