@@ -500,8 +500,8 @@ function create_graph(new_graph_index) {
     if (grade >= 3-1) return "rgb(180, 150, 0)"
     return "rgb(100, 100, 0)"  
     */
-   y_first_row = 75
-   y_second_row = 140
+   y_first_row = 150
+   y_second_row = 75
    y_third_row = 220
    x_rows = 30
     svg.append("circle").attr("cx", x_rows+340).attr("cy", y_second_row).attr("r", 14)
@@ -530,7 +530,7 @@ function create_graph(new_graph_index) {
   return " .75px"
 */ x1=275
    x2=420
-   x3=690
+   x3=570
     svg.append("line")
       .style("stroke", "rgb(2, 200, 255)")
       .style("stroke-width", 7)
@@ -558,7 +558,7 @@ function create_graph(new_graph_index) {
     // .attr("cx",70).attr("cy",140).attr("r", 12)
     // .style("fill", color_links)
 
-    svg.append("text").attr("x", x_rows).attr("y", y_first_row).text("Similarity links:\xa0\xa0\xa0\xa0 top1%,\xa0\xa0\xa0\xa0top1%-top5%,\xa0\xa0\xa0\xa0top5%-top10%")
+    svg.append("text").attr("x", x_rows).attr("y", y_first_row).text("Similarity links:\xa0\xa0\xa0\xa0 top1%,\xa0\xa0\xa0\xa0top5%,\xa0\xa0\xa0\xa0top10%")
       .style("font-size", "35px").attr("alignment-baseline", "middle")
       .attr("fill", fill_node_text)
 
