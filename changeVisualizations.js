@@ -1,5 +1,5 @@
 var theALPHA_VAR = 2 //swap var
-var name_swap_but_arr = ["Change graph order (2/3)  ","Change graph order (3/3)","Change graph order (1/3)"]
+var name_swap_but_arr = ["Graph order (2/3)  ","Graph order (3/3)","Graph order (1/3)"]
 function alph_order() {
     
     theALPHA_VAR = ((theALPHA_VAR +1) % 3)

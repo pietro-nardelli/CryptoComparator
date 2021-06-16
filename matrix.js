@@ -11,6 +11,8 @@ var x_m = d3.scaleBand().range([0, width]),
     .domain([0,1]);
 */
 
+// Transform the "similarity" to correlation:
+var scaleCorr = d3.scaleLinear().domain([0, 1]).range([-1, 1]);
 
 var powScale = d3.scalePow()
   .exponent(2)
@@ -23,6 +25,9 @@ var x_m = d3.scaleBand().range([0, width]),
   c = d3.scaleSequential(
     //(d) => d3.interpolatePlasma(logScale.invert(d)))
     (d) => d3.interpolatePlasma(powScale(d)))
+    //(d) => d3.interpolateRdYlBu(powScale(d)))
+    //(d) => d3.interpolateSpectral(powScale(d)))
+
 
 var svg_matrix = d3.select("#matrix_div").append("svg")
   .attr("id", "svg_matrix")
@@ -113,6 +118,9 @@ key.append("g")
   .attr("dy", ".71em")
   .style("text-anchor", "end")
   .text("axis title");
+
+
+
 /****************/
 
 var first_file_json = "data_close";
@@ -271,6 +279,36 @@ function fullMatrix(file_json) {
       .attr('fill', 'white')
       .text(function (d, i) { return nodes[i].Name; });
 
+    
+    // Change the legend matrix from 0/1 to -1/+1
+    var legend_texts = d3.select("#svg_legend_matrix").selectAll("text")
+    legend_texts.text(function(d) { 
+        var textElem = d3.select(this);
+
+        if (d == 0){
+          textElem.attr('x',"2.5")
+          return scaleCorr(d).toFixed(0);
+        }
+        else if (d == 1) {
+          textElem.attr('x',"-2")
+          return scaleCorr(d).toFixed(0);          
+        }
+        else{
+          return scaleCorr(d).toFixed(1); }
+        });
+
+
+    /*
+    legend_texts (function(d) { 
+      console.log(d)
+      if (d.text == 0){
+        d.attr('x',"2");
+      }
+      else if (d.text == 1) {
+        d.attr('x',"-2");
+      }
+    });*/
+
     function row(row) {
       var cell = d3.select(this).selectAll(".cell")
         .data(row.filter(function (d) { return d.z >= -1; }))
@@ -295,7 +333,8 @@ function fullMatrix(file_json) {
       d3.selectAll(".column text").classed("non-active-y", function (d, i) { return i != p.x; });
 
       var window_color = color1;
-      var value_to_show = p.z.toFixed(3);
+      //var value_to_show = p.z.toFixed(3);
+      var value_to_show = scaleCorr(p.z).toFixed(3);
       if (p.z == -1) window_color = "grey";
       if (p.z == -1) value_to_show = "&#8709;";
 
@@ -522,6 +561,23 @@ function matrixReduction(node_name, file_json, slider_value) {
       .attr('font-size', +dim_col_text + 'px')
       .text(function (d, i) { return ordered_nodes[i].Name; });
 
+    // Change the legend matrix from 0/1 to -1/+1
+    var legend_texts = d3.select("#svg_legend_matrix").selectAll("text")
+    legend_texts.text(function(d) { 
+        var textElem = d3.select(this);
+
+        if (d == 0){
+          textElem.attr('x',"2.5")
+          return scaleCorr(d).toFixed(0);
+        }
+        else if (d == 1) {
+          textElem.attr('x',"-2")
+          return scaleCorr(d).toFixed(0);          
+        }
+        else{
+          return scaleCorr(d).toFixed(1); }
+        });
+
     function row(row) {
       var cell = d3.select(this).selectAll(".cell")
         .data(row.filter(function (d) { return d.z >= -1; }))
@@ -549,7 +605,8 @@ function matrixReduction(node_name, file_json, slider_value) {
       d3.selectAll(".column text").classed("non-active-y", function (d, i) { return d[i].x != p.x; });
 
       var window_color = color1
-      var value_to_show = p.z.toFixed(3);
+      //var value_to_show = p.z.toFixed(3);
+      var value_to_show = scaleCorr(p.z).toFixed(3);
       if (p.z == -1) window_color = "grey";
       if (p.z == -1) value_to_show = "&#8709;";
 
