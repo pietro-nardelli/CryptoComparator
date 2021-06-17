@@ -564,7 +564,7 @@ function create_graph(new_graph_index) {
     // .attr("cx",70).attr("cy",140).attr("r", 12)
     // .style("fill", color_links)
 
-    svg.append("text").attr("x", x_rows).attr("y", y_first_row).text("Similarity links:\xa0\xa0\xa0\xa0 top1%,\xa0\xa0\xa0\xa0top5%,\xa0\xa0\xa0\xa0top10%")
+    svg.append("text").attr("x", x_rows).attr("y", y_first_row).text("Correlation link:\xa0\xa0\xa0\xa0 top1%,\xa0\xa0\xa0\xa0top5%,\xa0\xa0\xa0\xa0top10%")
       .style("font-size", "35px").attr("alignment-baseline", "middle")
       .attr("fill", fill_node_text)
 
