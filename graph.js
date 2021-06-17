@@ -471,7 +471,7 @@ function set_slider_params(idx) {
   fix_val_slider = (1 - initial_threshold) * 100
   //output.innerHTML = getZeros(initial_threshold);
   // From [0,1] to correlation percentage
-  output.innerHTML =  (getZeros(actual_t)*100).toFixed(2)+"%"
+  output.innerHTML =  (getZeros(initial_threshold)*100).toFixed(1)+"%"
   slider.value = 0
   actual_t = initial_threshold
   full_matrix_or_reduced(last_clicked, data_json, actual_t);
