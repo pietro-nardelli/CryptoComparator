@@ -74,7 +74,9 @@ var output = document.getElementById("demo");   //0 - 0.1   0.9 + 0.1*x x = 1
 
 //
 output.innerHTML = //String(90 + slider.value / 10) + "%(" +
-  rr((slider.value * fix_val_slider / 1000) + initial_threshold_slider)
+  //rr((slider.value * fix_val_slider / 1000) + initial_threshold_slider)
+  // Show show the percentage correlation value (instead of [0,1])
+  ((rr((slider.value * fix_val_slider / 1000) + initial_threshold_slider))*100).toFixed(1)+"%"
   //+ ")";
 
 var actual_t = initial_threshold_slider; //slider initial value is ?  //NOT USED ANYMORE
@@ -113,7 +115,9 @@ function getZeros(v) {
 slider.oninput = function () {
   //console.log(this.value* fix_val_slider / 10000)
   actual_t = rr(((this.value * fix_val_slider / 10000)) + initial_threshold_slider); // slider range 0-100 norm in 0 1
-  output.innerHTML =  getZeros(actual_t)  ;
+  //output.innerHTML =  getZeros(actual_t)  ;
+  // From [0,1] to correlation percentage
+  output.innerHTML =  (getZeros(actual_t)*100).toFixed(1)+"%"
   slider_update(actual_t)
 }
 
@@ -465,7 +469,9 @@ function set_slider_params(idx) {
   initial_threshold = rr(T_ARR[idx]); //THRESHOLD MIN x creare il nodo!
   initial_threshold_slider = initial_threshold; //THRESHOLD BASE OF THE SLIDER
   fix_val_slider = (1 - initial_threshold) * 100
-  output.innerHTML = getZeros(initial_threshold);
+  //output.innerHTML = getZeros(initial_threshold);
+  // From [0,1] to correlation percentage
+  output.innerHTML =  (getZeros(actual_t)*100).toFixed(2)+"%"
   slider.value = 0
   actual_t = initial_threshold
   full_matrix_or_reduced(last_clicked, data_json, actual_t);

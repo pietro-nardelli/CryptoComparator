@@ -470,7 +470,8 @@ h3 {
 
       /* INFO BUTTON CONTAINER */
       #info-button-container {
-        position: absolute;
+        position: relative;
+        top: -3px;
         width: 30px;
         margin-left: 1800px;
         margin-top: -27px;
