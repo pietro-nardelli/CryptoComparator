@@ -12,6 +12,7 @@
 
   <head>
     <title>CryptoComparator</title>
+    <link rel="icon" type="image/png" sizes="96x96" href="favicon-96x96.png">
     <META HTTP-EQUIV="Pragma" CONTENT="no-cache">
     <META HTTP-EQUIV="Expires" CONTENT="-1">
   </head>
@@ -43,11 +44,11 @@
         <!--<h3>Cryptocurrency comparator</h3>-->
         <a href="."><img src="logo.png" style="width: 200px; margin-top: -5px;"></a>
         <div style="position: absolute; margin-left: 200px; margin-top: -47px; margin-bottom: 23px;">
-          <div style="position:relative; top:1px;margin-left: 100px; display: inline-block; color: white; width: 550px;">Correlation: <span id="demo"></span>
+          <div style="position:relative; top:-1px;margin-left: 100px; display: inline-block; color: white; width: 550px;">Correlation: <span id="demo" style="display: inline-block; width: 60px;"></span>
             <input style=" width: 350px;" type="range" min="0" max="100" value="0" class="slider" id="myRange">
           </div>
-          <button id="swap_B" style="width: 125px; border-radius: 5px; position: relative; top:-4px; font-family : inherit; "  onclick="alph_order()">Graph order (1/3)</button>
-          <div style="position: relative; margin-left: 60px; top:-3px; color: white; display: inline-block; width: 250px;" >
+          <button id="swap_B" style="width: 125px; margin-left: 30px; border-radius: 5px; position: relative; top:-4px; font-family : inherit; "  onclick="alph_order()">Graph order (1/3)</button>
+          <div style="position: relative; margin-left: 80px; top:-3px; color: white; display: inline-block; width: 250px;" >
             Compare by:
             <input type="radio" id="t0_radio" name="radio_selection" value="t0" checked="checked"
               onchange="changeVisualization()">
@@ -55,7 +56,7 @@
             <input type="radio" id="year_radio" name="radio_selection" value="year" onchange="changeVisualization()">
             <label for="year">Year</label>
           </div>
-          <div style="position: relative; margin-left: 60px; top:-3px; color: white; display: inline-block; width: 300px; ">
+          <div style="position: relative; margin-left: 80px; top:-3px; color: white; display: inline-block; width: 300px; ">
             Attribute:
             <select id="attribute_selection" onchange="changeVisualization()">
               <option value="high" style="font-family : inherit;">High</option>
@@ -72,7 +73,7 @@
               <option value="2015" style="font-family : inherit;">2015</option>
             </select>
           </div>
-          <div style="position: relative; margin-left: 50px; top: -3px; color: white; display: inline;">
+          <div style="position: relative; margin-left: 0px; top: -3px; color: white; display: inline;">
             Matrix order:
             <select id="order">
               <option value="count" style="font-family : inherit;">Correlation</option>
