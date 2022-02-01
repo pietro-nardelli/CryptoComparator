@@ -1,25 +1,29 @@
-threshold0=0.9599203439955711
-threshold1=0.9814371590335464
-threshold2=0.978382766168612
+threshold0 = 0.9599203439955711
+threshold1 = 0.9814371590335464
+threshold2 = 0.978382766168612
 
 
 var T_ARR = //min value to create the link, baseline
-[0.9598377676355152,0.954764086916276,0.9622385796804991,0.9645476488315503,0.9596504472418033,0.7364907572231746,
-  0.8056734344857461,0.7936566007331114,0.8328306417437831,0.81590715368864,0.8076139591599294,0.6039178481792998,
-  0.8464393369708181,0.8248564605749555,0.8684098260423625,0.8641256103078544,0.8460754586966066,0.5810492687935018,
-  0.9612183299008994,0.955265558604166,0.9651361562564238,0.9621548425249444,0.9615374515893493,0.7109360307806543]
+  [0.9598377676355152, 0.954764086916276, 0.9622385796804991, 0.9645476488315503, 0.9596504472418033, 0.7364907572231746,
+    0.8056734344857461, 0.7936566007331114, 0.8328306417437831, 0.81590715368864, 0.8076139591599294, 0.6039178481792998,
+    0.8464393369708181, 0.8248564605749555, 0.8684098260423625, 0.8641256103078544, 0.8460754586966066, 0.5810492687935018,
+    0.9612183299008994, 0.955265558604166, 0.9651361562564238, 0.9621548425249444, 0.9615374515893493, 0.7109360307806543]
 
-var T_ARR_medium = 
-[0.9707866582742337,0.9663051532728639,0.9724622317908826,0.9737050596019544,0.970739808238023,0.7751710048056932,
-  0.8755368460119818,0.8525403070280532,0.8849086304570315,0.8693784719261519,0.8779509978401979,0.6499696404162836,
-  0.8846514988995254,0.8661238905177455,0.9046736926881773,0.8963319233570297,0.8846202991274328,0.6208326636832797,
-  0.968590606214579,0.9637139370053984,0.9720694445348708,0.969683864564796,0.9689080337364345,0.7520614302411703]
+var T_ARR_medium =
+  [0.9707866582742337, 0.9663051532728639, 0.9724622317908826, 0.9737050596019544, 0.970739808238023, 0.7751710048056932,
+    0.8755368460119818, 0.8525403070280532, 0.8849086304570315, 0.8693784719261519, 0.8779509978401979, 0.6499696404162836,
+    0.8846514988995254, 0.8661238905177455, 0.9046736926881773, 0.8963319233570297, 0.8846202991274328, 0.6208326636832797,
+    0.968590606214579, 0.9637139370053984, 0.9720694445348708, 0.969683864564796, 0.9689080337364345, 0.7520614302411703]
 
-var T_ARR_high = 
-[0.9813954101833389,0.9794888225067592,0.9833422513215253,0.9836507594831148,0.9815176142468249,0.8375238046535366,
-  0.9458688876311849,0.9434885371355382,0.9413695962605968,0.934077859242332,0.9466111312671828,0.7791958868136004,
-  0.9353941057665913,0.9273717925677756,0.9495205345608297,0.9387866240312474,0.9387779057158157,0.716473440337532,
-  0.9792464720602758,0.9761449321224998,0.981012989448163,0.98049324004802,0.979151084613305,0.8251534557954563]
+var T_ARR_high =
+  [0.9813954101833389, 0.9794888225067592, 0.9833422513215253, 0.9836507594831148, 0.9815176142468249, 0.8375238046535366,
+    0.9458688876311849, 0.9434885371355382, 0.9413695962605968, 0.934077859242332, 0.9466111312671828, 0.7791958868136004,
+    0.9353941057665913, 0.9273717925677756, 0.9495205345608297, 0.9387866240312474, 0.9387779057158157, 0.716473440337532,
+    0.9792464720602758, 0.9761449321224998, 0.981012989448163, 0.98049324004802, 0.979151084613305, 0.8251534557954563]
+
+//var T_ARR_MAX = [1.0,1.0,1.0,1.0,1.0,1.0,
+//                  1.0,1.0,1.0,1.0,1.0,1.0,
+//                  1.0,1.0,1.0,1.0,1.0,1.0]
 
 var index_of_similarity_in_use = 0 //initial graph index used
 //var old_index_of_similarity = 0
@@ -34,7 +38,7 @@ var width = 2700;  //d3 object width
 var height = 1500; //d3 obj height
 
 //GRAPH VALUESs
-var x_c = (width+100 ) / 2;
+var x_c = (width + 100) / 2;
 var y_c = height / 2;
 var radius = 600;
 var theta = 2 * Math.PI / 100 //split 2pi into 2pi/n_nodes
@@ -75,7 +79,7 @@ var output = document.getElementById("demo");   //0 - 0.1   0.9 + 0.1*x x = 1
 //
 output.innerHTML = //String(90 + slider.value / 10) + "%(" +
   rr((slider.value * fix_val_slider / 1000) + initial_threshold_slider)
-  //+ ")";
+//+ ")";
 
 var actual_t = initial_threshold_slider; //slider initial value is ?  //NOT USED ANYMORE
 // Useful to avoid refresh of the matrix too many times
@@ -92,28 +96,28 @@ var mouse_down_on_slider = -1; // No click/unclick
 //
 
 formatter = new Intl.NumberFormat('en-US', {
-  minimumFractionDigits: 3,      
+  minimumFractionDigits: 3,
   maximumFractionDigits: 3,
 });
 
- function rr(v) { 
-   return Number(String(v).slice(0, 5))
+function rr(v) {
+  return Number(String(v).slice(0, 5))
 } //3rd decimal n
 
 function getZeros(v) {
-  if (v==undefined) return 0
+  if (v == undefined) return 0
   v = String(v).slice(0, 5)
   rest = v.split(".")
-  if(rest == undefined || v==0 || v==1) return v.concat(".000")
-  if(rest[1].length==1) return v.concat("00")
-  if(rest[1].length==2) return v.concat("0")
+  if (rest == undefined || v == 0 || v == 1) return v.concat(".000")
+  if (rest[1].length == 1) return v.concat("00")
+  if (rest[1].length == 2) return v.concat("0")
   return v
 }
 
 slider.oninput = function () {
   //console.log(this.value* fix_val_slider / 10000)
   actual_t = rr(((this.value * fix_val_slider / 10000)) + initial_threshold_slider); // slider range 0-100 norm in 0 1
-  output.innerHTML =  getZeros(actual_t)  ;
+  output.innerHTML = getZeros(actual_t);
   slider_update(actual_t)
 }
 
@@ -271,23 +275,24 @@ function Order_innerFirst_outerNext(list_to_order) { //the first of the list is 
 
 //get n node from the hat and give them to node namecoin in datareg
 //if nodes are over a threshold from the(TODO each) similarity matrix we assign a link
-function get_links(namecoin, similarity_idx) {
-  
+function get_links(namecoin, similarity_idx) { //NON IN USO
+
   namecoin_idx = name_arr.indexOf(namecoin)
   links = []
   var namecoin_similarity_arr = []
 
   if (similarity_idx == -1) //non capita mai, ignora
-    namecoin_similarity_arr = arr_sim_old[0][namecoin_idx] 
-  else 
-    namecoin_similarity_arr = arr_similarity_matrix[similarity_idx][namecoin_idx] 
-    
+    namecoin_similarity_arr = arr_sim_old[0][namecoin_idx]
+  else
+    namecoin_similarity_arr = arr_similarity_matrix[similarity_idx][namecoin_idx]
+
   //console.log(namecoin_similarity_arr)
   // console.log("l arr a cui collegarmi è!")
   // console.log(namecoin_similarity_arr)
   for (var i = 0; i < 100; i++) {   //was in n_links to keep n links max, now 100 coins
     //namecoin = name_arr[i*4] //Math.round(Math.random()*100)]
-    if (namecoin_similarity_arr[i] >= initial_threshold && i != namecoin_idx) //!!! THRESHOLD MINIMA PER CREARE IL NODO
+    if (namecoin_similarity_arr[i] >= initial_threshold && i != namecoin_idx)
+      //!!! THRESHOLD MINIMA PER CREARE IL NODO (DEPRECATED)
       links = links.concat(name_arr[i])
   }
   return links
@@ -295,15 +300,16 @@ function get_links(namecoin, similarity_idx) {
 
 //same as before but for the new purpose of having a new node array to display in a different order
 function get_links_new(namecoin, similarity_idx) {
-  
+
   namecoin_idx = name_arr.indexOf(namecoin)
   links = []
   var namecoin_similarity_arr = []
 
-  namecoin_similarity_arr = arr_similarity_matrix[similarity_idx][namecoin_idx] 
-    
-  for (var i = 0; i < 100; i++) {  
-    if (namecoin_similarity_arr[i] >= initial_threshold && i != namecoin_idx) //!!! THRESHOLD MINIMA PER CREARE IL NODO
+  namecoin_similarity_arr = arr_similarity_matrix[similarity_idx][namecoin_idx]
+
+  for (var i = 0; i < 100; i++) {
+    if (namecoin_similarity_arr[i] >= initial_threshold && i != namecoin_idx) //&& namecoin_similarity_arr[i] <= T_ARR_MAX[similarity_idx]) 
+      //!!! THRESHOLD MINIMA PER CREARE IL NODO(EFFETTIVA!)
       links = links.concat(name_arr[i])
   }
   return links
@@ -330,24 +336,26 @@ function update_reg_links(index_of_similarity_in_use) {
 
 
 
-function get_array_of_ordered_nodes_in_use(CHANGE,index_used) {
-  aux=name_arr_alp_sorted
+function get_array_of_ordered_nodes_in_use(CHANGE, index_used) {
+  aux = name_arr_alp_sorted
   CHANGE_VAL = CHANGE
 
 
-  if (CHANGE==0){   // Order_innerFirst_outerNext( SIMIL_CARD_ordered_list)//
-    return Order_innerFirst_outerNext(Matrix_of_names_CARD[index_used])  }
-   
-  else if (CHANGE==1){   // SIMIL_CARD_ordered_list //
-    return Matrix_of_names_CARD[index_used] }
-   
+  if (CHANGE == 0) {   // Order_innerFirst_outerNext( SIMIL_CARD_ordered_list)//
+    return Order_innerFirst_outerNext(Matrix_of_names_CARD[index_used])
+  }
+
+  else if (CHANGE == 1) {   // SIMIL_CARD_ordered_list //
+    return Matrix_of_names_CARD[index_used]
+  }
+
   return aux
 }
 
 //fill name_arr and sort it, set data_reg(name)=([x,y],name,[links])
 function set_node_pos(CHANGE, index_used) {
   d3v3.csv("dataset/100List.csv", function (data) {
-    
+
     for (var i = 0; i < data.length; i++) {
       name_arr = name_arr.concat(data[i].Name)  //fill name_arr with names
     }
@@ -355,8 +363,8 @@ function set_node_pos(CHANGE, index_used) {
     name_arr.sort().reverse() //alphabetical order
 
     alp_name_arr_sorted = name_arr
-    
-    name_arr = get_array_of_ordered_nodes_in_use(CHANGE,index_used)
+
+    name_arr = get_array_of_ordered_nodes_in_use(CHANGE, index_used)
 
 
     for (var i = 0; i < name_arr.length; i++) {  //create in data reg[name] an entry with (x,y),name
@@ -364,6 +372,7 @@ function set_node_pos(CHANGE, index_used) {
       aux_radius = radius
       theta_i = -theta * i
       //theta_i -= Math.PI/2 //se partiamo da sopra
+
       if (i % 2 == 0) aux_radius = radius * 0.75 //if it's even reduce the radius
       x = x_c + Math.cos(theta_i) * aux_radius + 520 * Math.cos(theta_i)
       if (i % 2 != 0) x = x + 100 * Math.cos(theta_i) //if is odd space a bit more on the x
@@ -376,7 +385,7 @@ function set_node_pos(CHANGE, index_used) {
           if (namecoin == "DigitalNote") { y += 20, x -= 20 }
           if (namecoin == "Rise") { y += 0, x += 10 }
       */
-      x += Math.sign(Math.cos(theta*i))*10
+      x += Math.sign(Math.cos(theta * i)) * 10
       data_reg[namecoin] = [[x, y], namecoin]
     }
     //update_reg_links(0); //set in datareg all the links
@@ -384,7 +393,7 @@ function set_node_pos(CHANGE, index_used) {
 }
 
 var CHANGE_VAL = 2 //var per i link che uso sotto
-set_node_pos(CHANGE_VAL,index_of_similarity_in_use)
+set_node_pos(CHANGE_VAL, index_of_similarity_in_use)
 
 var last_clicked = "";
 
@@ -416,7 +425,7 @@ function getThreshold(source, target, similarity_idx) {
 }
 
 
-colore0 = "rgba(0, 200, 255,1)" 
+colore0 = "rgba(0, 200, 255,1)"
 colore1 = "rgba(0, 200, 255,0.75)"
 colore2 = "rgba(0, 200, 255, 0.5)"
 
@@ -433,7 +442,7 @@ colore2 = "rgba(79,180,119)"  //basso 0.5 -> 1%
 */
 
 function ret_link_col(d) {
-  threshold1 = T_ARR_high[index_of_similarity_in_use]   
+  threshold1 = T_ARR_high[index_of_similarity_in_use]
   threshold2 = T_ARR_medium[index_of_similarity_in_use]
 
   if (d.k >= threshold1) return colore0
@@ -442,13 +451,14 @@ function ret_link_col(d) {
 }
 
 function ret_node_col(d) {
+  print(d)
   grade = //data_reg[d.name][2].length//
-  matrix_of_simil_CARD[index_of_similarity_in_use][M_CAP_ordered_list.indexOf(d.name)] 
+    matrix_of_simil_CARD[index_of_similarity_in_use][M_CAP_ordered_list.indexOf(d.name)]
   //prende dalle liste di cardinalità il relativo valore (es lista bitcoin, eth.. index di bitcoin = 0 
   //=> grado di bitcoin = 18)
-  if (grade >= 26-1) return "rgb(255, 0, 0)" //-1 for the connection with itself
-  if (grade >= 11-1) return "rgb(255, 125, 0)" //-1 for the connection with itself
-  if (grade >= 3-1) return "rgb(180, 150, 0)"
+  if (grade >= 26 - 1) return "rgb(255, 0, 0)" //-1 for the connection with itself
+  if (grade >= 11 - 1) return "rgb(255, 125, 0)" //-1 for the connection with itself
+  if (grade >= 3 - 1) return "rgb(180, 150, 0)"
   return "rgb(100, 100, 0)"
 }
 
@@ -481,8 +491,8 @@ create_graph(0)  //DA RIMETTERE A ZERO
 
 function create_graph(new_graph_index) {
 
-  if (actual_graph_used == 1212) return
-  actual_graph_used = new_graph_index
+  if (actual_graph_used == 1212) return //DA commentare
+  actual_graph_used = new_graph_index   //DA commentare
   if (reshape_flag != 1) //quindi se non è la prima volta
   {
     //console.log("cambio valori slider iniziali,e reshape flag è:" + String(reshape_flag))
@@ -500,24 +510,24 @@ function create_graph(new_graph_index) {
     if (grade >= 3-1) return "rgb(180, 150, 0)"
     return "rgb(100, 100, 0)"  
     */
-   y_first_row = 150
-   y_second_row = 75
-   y_third_row = 220
-   x_rows = 30
-    svg.append("circle").attr("cx", x_rows+340).attr("cy", y_second_row).attr("r", 14)
+    y_first_row = 150
+    y_second_row = 75
+    y_third_row = 220
+    x_rows = 30
+    svg.append("circle").attr("cx", x_rows + 340).attr("cy", y_second_row).attr("r", 14)
       .style("fill", "rgb(255, 0, 0)").style("stroke", "black").style("stroke-width", "2px")
-    
-    svg.append("circle").attr("cx", x_rows+505-50).attr("cy", y_second_row).attr("r", 14)
+
+    svg.append("circle").attr("cx", x_rows + 505 - 50).attr("cy", y_second_row).attr("r", 14)
       .style("fill", "rgb(255, 125, 0)").style("stroke", "black").style("stroke-width", "2px")
 
-    svg.append("circle").attr("cx", x_rows+600).attr("cy", y_second_row).attr("r", 14)
-       .style("fill", "rgb(180, 150, 0)").style("stroke", "black").style("stroke-width", "2px")
+    svg.append("circle").attr("cx", x_rows + 600).attr("cy", y_second_row).attr("r", 14)
+      .style("fill", "rgb(180, 150, 0)").style("stroke", "black").style("stroke-width", "2px")
 
-    svg.append("circle").attr("cx", x_rows+710).attr("cy", y_second_row).attr("r", 14)
-       .style("fill", "rgb(100, 100, 0)").style("stroke", "black").style("stroke-width", "2px")
+    svg.append("circle").attr("cx", x_rows + 710).attr("cy", y_second_row).attr("r", 14)
+      .style("fill", "rgb(100, 100, 0)").style("stroke", "black").style("stroke-width", "2px")
 
-    svg.append("text").attr("x", x_rows).attr("y", y_second_row+5).text("Crypto node degree:"+
-    "\n\n\xa0\xa0\xa0\xa025+,\xa0\xa0\xa0\xa0\xa024-10,\xa0\xa0\xa0\xa0\xa09-1,\xa0\xa0\xa0\xa0\xa00")
+    svg.append("text").attr("x", x_rows).attr("y", y_second_row + 5).text("Crypto node degree:" +
+      "\n\n\xa0\xa0\xa0\xa025+,\xa0\xa0\xa0\xa0\xa024-10,\xa0\xa0\xa0\xa0\xa09-1,\xa0\xa0\xa0\xa0\xa00")
       .style("font-size", "35px").attr("alignment-baseline", "middle")
       .attr("fill", fill_node_text)
 
@@ -528,31 +538,31 @@ function create_graph(new_graph_index) {
   if (d.k >= threshold1) return "1.25px"
   if (d.k >= threshold2) return "1px"
   return " .75px"
-*/ x1=275
-   x2=420
-   x3=570
+*/ x1 = 275
+    x2 = 420
+    x3 = 570
     svg.append("line")
       .style("stroke", "rgb(2, 200, 255)")
       .style("stroke-width", 7)
       .attr("x1", x1)
-      .attr("y1", y_first_row - 20 )
-      .attr("x2", x1+23)
+      .attr("y1", y_first_row - 20)
+      .attr("x2", x1 + 23)
       .attr("y2", y_first_row + 6);
-    
-      svg.append("line")
+
+    svg.append("line")
       .style("stroke", "rgba(2, 200, 255,0.75)")
       .style("stroke-width", 7)
       .attr("x1", x2)
-      .attr("y1", y_first_row - 20 )
-      .attr("x2", x2+23)
+      .attr("y1", y_first_row - 20)
+      .attr("x2", x2 + 23)
       .attr("y2", y_first_row + 6);
-    
-      svg.append("line")
+
+    svg.append("line")
       .style("stroke", "rgba(2, 200, 255,0.5)")
       .style("stroke-width", 7)
       .attr("x1", x3)
       .attr("y1", y_first_row - 20)
-      .attr("x2", x3+23)
+      .attr("x2", x3 + 23)
       .attr("y2", y_first_row + 6);
 
     // .attr("cx",70).attr("cy",140).attr("r", 12)
@@ -655,7 +665,7 @@ function create_graph(new_graph_index) {
 
 
     node.append("circle")
-    .attr("stroke","black").style("stroke","black").style("stroke-width","3px")
+      .attr("stroke", "black").style("stroke", "black").style("stroke-width", "3px")
       .attr("r", radius_node_circle);
 
     node.append("text")
@@ -696,7 +706,7 @@ function CLICK(d) {
     fullMatrix(data_json)
     on_mouseout_function(d)
     create_scatterplot()
-    change_graphs=false
+    change_graphs = false
     return
   }
   on_mouseout_function(d)
@@ -704,11 +714,11 @@ function CLICK(d) {
   last_clicked = d;
   full_matrix_or_reduced(last_clicked, data_json, actual_t);
   createSingleGraphsOfMyCrypto(d.name);
-  clicked_graph = true  
+  clicked_graph = true
 }
 
 function highlight_subgraph_from_scatterplot(d) {
-  CLICK({name:d})
+  CLICK({ name: d })
 }
 
 
@@ -756,7 +766,7 @@ function on_mouseover_function(d) {
     svg.selectAll(".node circle")
       .data(nodes)
       .filter(function (x) { return x.name == target_name })
-      .style('fill', function (x) { return ret_node_col(x)});
+      .style('fill', function (x) { return ret_node_col(x) });
 
     svg.selectAll(".node text")
       .data(nodes)
@@ -774,7 +784,7 @@ function on_mouseout_function(d) {
 
   svg.selectAll(".node circle")  //ricolora i cerchi
     .data(nodes)
-    .style('fill', function (x) { return ret_node_col(x)});
+    .style('fill', function (x) { return ret_node_col(x) });
 
   svg.selectAll(".node text")   //ricolora i testi
     .data(nodes)
@@ -788,8 +798,8 @@ function on_mouseout_function(d) {
   svg.selectAll(".link ")     //ricolora i links sopra la soglia
     .data(links)
     .filter(function (x) { return x.k >= actual_t })
-    .style('stroke', function (x) { return ret_link_col(x)})
-    .style("stroke-width", function (x) { return ret_stroke(x)});
+    .style('stroke', function (x) { return ret_link_col(x) })
+    .style("stroke-width", function (x) { return ret_stroke(x) });
 
 }
 
@@ -798,7 +808,7 @@ function on_click_function(d) {
 
   svg.selectAll(".node circle") // rende la stroke rossa dei nodi a zero per tutti
     .data(nodes)
-    //.style("stroke-width", "0px");
+  //.style("stroke-width", "0px");
 
   svg.selectAll(".node text")   // rende il testo grande uguale per tutti
     .data(nodes)
@@ -949,3 +959,43 @@ function changeGraphOrder(){
 }
 
 */
+
+/*
+
+//recap funzione del grafo
+      
+raggio = costante
+
+for i da 0 a 99:
+
+  theta = -i * (2 * Math.PI / 100) //prendo l'angolo in senso antiorario
+
+  if (i pari): // sono nella corona interna
+    raggio = raggio *0.75
+  
+  y = y_centro + sin(theta) * raggio
+  x = x_centro + cos(theta) * raggio + 520 * cos(theta) //incremento lineare sull'asse orizzontale
+
+  //spike verticale
+  y += sin(theta) * abs(sin(theta)) ^ 10 //incremento non lineare verticale
+
+  //fine tuning
+ 
+  if(i pari): //per aumentare lo spike nella corona esterna
+    y += 10 * sin(theta) * abs(sin(theta)) ^ 100
+
+  //per aumentare lo spazio centrale e dare spazio ai nomi
+  x += sign(cos(theta))*10
+
+  if(i dispari): //leggero incremento nella corona interna
+    x = x + 100 * cos(theta)
+
+  */
+
+
+function setvals() {
+  T_ARR[index_of_similarity_in_use] = 0.6
+  //T_ARR_MAX[index_of_similarity_in_use]=0.85
+  update_reg_links(index_of_similarity_in_use)
+  create_graph(index_of_similarity_in_use)
+}

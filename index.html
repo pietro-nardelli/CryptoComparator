@@ -39,7 +39,7 @@
     <!-- slider -->
     <div id="scale-zoom">
       <div id="menu">
-        
+        <button onclick="setvals()"></button>
         <!--<h3>Cryptocurrency comparator</h3>-->
         <a href="."><img src="logo.png" style="width: 200px; margin-top: -5px;"></a>
         <div style="position: absolute; margin-left: 200px; margin-top: -47px; margin-bottom: 23px;">
@@ -209,7 +209,12 @@
       cssLink.href = "twitter.css";
       cssLink.rel = "stylesheet";
       cssLink.type = "text/css";
-      document.getElementById('twitter-widget-0').contentDocument.body.appendChild(cssLink);
+      try {
+        document.getElementById('twitter-widget-0').contentDocument.body.appendChild(cssLink);
+      } catch (error) {
+        console.log("[ERR] Twitter window failed to load")
+      }
+     
     }
     /* Next chart button change text*/
     var next_chart = false;
