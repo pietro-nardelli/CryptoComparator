@@ -841,7 +841,12 @@ function on_click_function(d) {
 
 }
 
-
+function setvals(baseline) {
+  T_ARR[index_of_similarity_in_use] = baseline
+  //T_ARR_MAX[index_of_similarity_in_use]=0.85
+  update_reg_links(index_of_similarity_in_use)
+  create_graph(index_of_similarity_in_use)
+}
 
 
 
@@ -999,9 +1004,3 @@ for i da 0 a 99:
   */
 
 
-function setvals() {
-  T_ARR[index_of_similarity_in_use] = 0.6
-  //T_ARR_MAX[index_of_similarity_in_use]=0.85
-  update_reg_links(index_of_similarity_in_use)
-  create_graph(index_of_similarity_in_use)
-}
