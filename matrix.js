@@ -62,7 +62,10 @@ var key = d3.select("#legend_matrix")
   .attr("id", "svg_legend_matrix")
   .attr("width", w)
   .attr("height", h)
-  .attr("transform", "rotate(-90)");
+  .attr("transform", "rotate(-90)")
+  .on("mouseover", brushed);
+
+
 
 var legend = key.append("defs")
   .append("svg:linearGradient")
@@ -120,7 +123,34 @@ key.append("g")
   .text("axis title");
 
 
+// Add brushing
+var brush = d3.brushX()
+d3.select("#svg_legend_matrix")
+      .call( d3.brushX()                     // Add the brush feature using the d3.brush function
+        .extent( [ [0,10], [430,31] ] )       // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+      )
+// removes handle to resize the brush
+d3.selectAll('#svg_legend_matrix>.handle--e').remove();
+// removes crosshair cursor
+d3.selectAll('.brush>.overlay').remove();
 
+
+
+var old_brush = undefined;
+let brushScale = d3.scaleLinear()
+  .domain([0, 430])
+  .range([-1, 1]);
+
+function brushed() {
+  var legend_brush_x = d3.select("#svg_legend_matrix").selectAll(".selection").attr("x");
+  d3.selectAll('#svg_legend_matrix>.selection').attr("width", 430-legend_brush_x)
+
+  if (legend_brush_x && legend_brush_x != old_brush) {
+    //console.log(brushScale(legend_brush_x))
+    setvals(brushScale(legend_brush_x))
+    old_brush = legend_brush_x;
+  }
+}
 /****************/
 
 var first_file_json = "data_close";
