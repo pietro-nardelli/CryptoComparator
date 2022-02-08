@@ -141,8 +141,10 @@ let brushScale = d3.scaleLinear()
   .domain([0, 430])
   .range([-1, 1]);
 
+var legend_brush_x;
+var old_brush;
 function brushed() {
-  var legend_brush_x = d3.select("#svg_legend_matrix").selectAll(".selection").attr("x");
+  legend_brush_x = d3.select("#svg_legend_matrix").selectAll(".selection").attr("x");
   d3.selectAll('#svg_legend_matrix>.selection').attr("width", 430-legend_brush_x)
 
   if (legend_brush_x && legend_brush_x != old_brush) {
@@ -349,7 +351,7 @@ function fullMatrix(file_json) {
         .attr("height", x_m.bandwidth())
         //.style("fill-opacity", function(d) { return z(d.z); })
         //.style("fill", function(d) {return d3.interpolateMagma(d.z); })
-        .style("fill", function (d) { return d.z == -1 ? "grey" : c(d.z); })
+        .style("fill", function (d) { return d.z == -1 ? "rgb(53, 53, 53)" : c(d.z); })
         //.style("fill", function(d) { return nodes[d.x].group == nodes[d.y].group ? c(nodes[d.x].group) : null; })
         .on("mouseover", mouseover)
         .on("mouseout", mouseout)
@@ -730,11 +732,14 @@ function matrixReduction(node_name, file_json, slider_value) {
 
 function full_matrix_or_reduced(last_clicked, data_json, actual_t) {
   if (!firstTime) {
-    if (last_clicked == "" && mouse_down_on_slider == -1) {
-      fullMatrix(data_json);
-    }
-    else if (last_clicked != "" && (mouse_down_on_slider == 0 || mouse_down_on_slider == -1)) {
-      matrixReduction(last_clicked.name, data_json, actual_t)
+    // Added to avoid refreshing of the matrix when brush is applied
+    if (!(legend_brush_x && legend_brush_x != old_brush)){
+      if (last_clicked == "" && mouse_down_on_slider == -1) {
+        fullMatrix(data_json);
+      }
+      else if (last_clicked != "" && (mouse_down_on_slider == 0 || mouse_down_on_slider == -1)) {
+        matrixReduction(last_clicked.name, data_json, actual_t)
+      }
     }
   }
   if (mouse_down_on_slider == 0) {
