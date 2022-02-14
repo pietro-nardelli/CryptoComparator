@@ -25,8 +25,8 @@ var x_m = d3.scaleBand().range([0, width]),
   c = d3.scaleSequential(
     //(d) => d3.interpolatePlasma(logScale.invert(d)))
     (d) => d3.interpolatePlasma(powScale(d)))
-    //(d) => d3.interpolateRdYlBu(powScale(d)))
-    //(d) => d3.interpolateSpectral(powScale(d)))
+//(d) => d3.interpolateRdYlBu(powScale(d)))
+//(d) => d3.interpolateSpectral(powScale(d)))
 
 
 var svg_matrix = d3.select("#matrix_div").append("svg")
@@ -63,7 +63,7 @@ var key = d3.select("#legend_matrix")
   .attr("width", w)
   .attr("height", h)
   .attr("transform", "rotate(-90)")
-  .on("mouseover", brushed);
+  //.on("mouseover", brushed);
 
 
 
@@ -124,31 +124,31 @@ key.append("g")
 
 
 // Add brushing
-var brush = d3.brushX()
 d3.select("#svg_legend_matrix")
-      .call( d3.brushX()                     // Add the brush feature using the d3.brush function
-        .extent( [ [0,10], [430,31] ] )       // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
-      )
+  .append("g")
+  .attr("class", "brushX")
+  .call(d3.brushX()                     // Add the brush feature using the d3.brush function
+    .on("brush", brushed)
+    .extent([[0, 10], [430, 31]])       // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+  )
+
 // removes handle to resize the brush
-d3.selectAll('#svg_legend_matrix>.handle--e').remove();
-// removes crosshair cursor
-d3.selectAll('.brush>.overlay').remove();
-
-
+d3.selectAll('.brushX>.handle--e').remove();
 
 var old_brush = undefined;
 let brushScale = d3.scaleLinear()
   .domain([0, 430])
   .range([-1, 1]);
-
 var legend_brush_x;
 var old_brush;
-function brushed() {
-  legend_brush_x = d3.select("#svg_legend_matrix").selectAll(".selection").attr("x");
-  d3.selectAll('#svg_legend_matrix>.selection').attr("width", 430-legend_brush_x)
 
+
+
+function brushed() {
+  legend_brush_x = d3.select(".brushX").selectAll(".selection").attr("x");
+  d3.selectAll('.brushX>.selection').attr("width", 430 - legend_brush_x)
+  console.log("BRUSHED");
   if (legend_brush_x && legend_brush_x != old_brush) {
-    //console.log(brushScale(legend_brush_x))
     setvals(brushScale(legend_brush_x))
     old_brush = legend_brush_x;
   }
@@ -164,7 +164,25 @@ if (firstTime) {
 function fullMatrix(file_json) {
   if (!firstTime) {
     svg_matrix.selectAll("*").remove();
+    d3.selectAll('.brushX').remove();
+    // Insert again the brush
+    brush = d3.brushX()
+    d3.select("#svg_legend_matrix")
+      .append("g")
+      .attr("class", "brushX")
+      .call(d3.brushX()                     // Add the brush feature using the d3.brush function
+        .on("brush", brushed)
+        .extent([[0, 10], [430, 31]])       // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+      )
+    // Display none the rectangle of the previous brush
+    d3.selectAll('.brushX>.selection').style("display", "None")
+    // removes handle to resize the brush
+    d3.selectAll('.brushX>.handle--w').style("display", "None");
+    // Set again the possibility to use the brush
+    d3.selectAll('.brushX').attr("pointer-events", "All");
   }
+  
+
   //data_close_2015
   d3.json("similarities/" + file_json + ".json", function (crypto_top_100) {
     var matrix = [],
@@ -212,36 +230,36 @@ function fullMatrix(file_json) {
     similarity_array_unsorted = []
     k = 0;
     for (i = 0; i < 100; i++) {
-      for (j = i+1; j < 100; j++) {
+      for (j = i + 1; j < 100; j++) {
         if (matrix[i][j].z == -1) {
           similarity_array_unsorted[k] = 0;
         }
         else {
           similarity_array_unsorted[k] = matrix[i][j].z;
         }
-        k+=1;
+        k += 1;
       }
     }
     // similarity_array has length 4950
     similarity_array_sorted = similarity_array_unsorted.sort(function (a, b) { return a - b; }).reverse() //Ordered by number of similarity
-   
+
     // This should be the number of links that has similarity value different from zero (if year, different from 4950)
-    var n_of_links = 0 
+    var n_of_links = 0
     for (i = 0; i < similarity_array_sorted.length; i++) {
       if (similarity_array_sorted[i] != 0) {
-        n_of_links+=1;
+        n_of_links += 1;
       }
     }
 
-    var top_10 = n_of_links*0.1;
-    var top_5 = n_of_links*0.05;
-    var top_1 = n_of_links*0.01;
+    var top_10 = n_of_links * 0.1;
+    var top_5 = n_of_links * 0.05;
+    var top_1 = n_of_links * 0.01;
     // top 10%, top 5%, top 0.1%
-    var threshold_array =  [similarity_array_sorted[Math.round(top_10)], 
-                            similarity_array_sorted[Math.round(top_5)],
-                            similarity_array_sorted[Math.round(top_1)]]
+    var threshold_array = [similarity_array_sorted[Math.round(top_10)],
+    similarity_array_sorted[Math.round(top_5)],
+    similarity_array_sorted[Math.round(top_1)]]
 
-    
+
     cardinality_array = []
     for (i = 0; i < 100; i++) {
       k = 0;
@@ -249,16 +267,16 @@ function fullMatrix(file_json) {
       for (j = 0; j < 100; j++) {
         // If that link has value greater than treshold for top 10%, add to cardinality array
         if (matrix[i][j].z >= threshold_array[0]) {
-          k+=1;
+          k += 1;
           cardinality_array[i] = k;
         }
       }
     }
 
-    console.log("similarity from: \t \t" + file_json + "\n" + 
-                "n_of_links: \t \t \t" + n_of_links + "\n" + 
-                "threshold_array: \t \t[" + threshold_array +"]" + "\n" + 
-                "cardinality_array:\t[" + cardinality_array +"] \n \n")
+    console.log("similarity from: \t \t" + file_json + "\n" +
+      "n_of_links: \t \t \t" + n_of_links + "\n" +
+      "threshold_array: \t \t[" + threshold_array + "]" + "\n" +
+      "cardinality_array:\t[" + cardinality_array + "] \n \n")
     /////////////
 
 
@@ -311,23 +329,24 @@ function fullMatrix(file_json) {
       .attr('fill', 'white')
       .text(function (d, i) { return nodes[i].Name; });
 
-    
+
     // Change the legend matrix from 0/1 to -1/+1
     var legend_texts = d3.select("#svg_legend_matrix").selectAll("text")
-    legend_texts.text(function(d) { 
-        var textElem = d3.select(this);
+    legend_texts.text(function (d) {
+      var textElem = d3.select(this);
 
-        if (d == 0){
-          textElem.attr('x',"2.5")
-          return scaleCorr(d).toFixed(0);
-        }
-        else if (d == 1) {
-          textElem.attr('x',"-2")
-          return scaleCorr(d).toFixed(0);          
-        }
-        else{
-          return scaleCorr(d).toFixed(1); }
-        });
+      if (d == 0) {
+        textElem.attr('x', "2.5")
+        return scaleCorr(d).toFixed(0);
+      }
+      else if (d == 1) {
+        textElem.attr('x', "-2")
+        return scaleCorr(d).toFixed(0);
+      }
+      else {
+        return scaleCorr(d).toFixed(1);
+      }
+    });
 
 
     /*
@@ -340,8 +359,8 @@ function fullMatrix(file_json) {
         d.attr('x',"-2");
       }
     });*/
-
     function row(row) {
+      
       var cell = d3.select(this).selectAll(".cell")
         .data(row.filter(function (d) { return d.z >= -1; }))
         .enter().append("rect")
@@ -356,6 +375,7 @@ function fullMatrix(file_json) {
         .on("mouseover", mouseover)
         .on("mouseout", mouseout)
         .on("click", mouseclick)
+
     }
 
     function mouseover(p) {
@@ -450,6 +470,30 @@ function matrixReduction(node_name, file_json, slider_value) {
     svg_matrix.selectAll("*").remove();
   }
 
+
+  /*
+  // Remove elements to resize the brush
+  d3.select("#svg_legend_matrix")
+    .append("g")
+    .attr("class", "brushX")
+    .call(d3.brushX()                     // Add the brush feature using the d3.brush function
+      .on("brush", brushed)
+      .extent([[0, 10], [430, 31]])       // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
+    )
+  */
+  // removes handle to resize the brush
+  d3.selectAll('.brushX>.handle--e').remove();
+  d3.selectAll('.brushX>.handle--w').remove();
+  // removes crosshair cursor
+  d3.selectAll('.brushX>.overlay').remove();
+  d3.selectAll('.brushX>.selection').attr("cursor", null);
+  // Set fixed maximum brush
+  legend_brush_x = d3.select(".brushX").selectAll(".selection").attr("x");
+  d3.selectAll('.brushX>.selection').attr("width", 430 - legend_brush_x)
+  
+  d3.selectAll('.brushX').attr("pointer-events", "None")
+
+  
   d3.json("similarities/" + file_json + ".json", function (crypto_top_100) {
     var matrix = [],
       nodes = crypto_top_100.nodes,
@@ -595,20 +639,21 @@ function matrixReduction(node_name, file_json, slider_value) {
 
     // Change the legend matrix from 0/1 to -1/+1
     var legend_texts = d3.select("#svg_legend_matrix").selectAll("text")
-    legend_texts.text(function(d) { 
-        var textElem = d3.select(this);
+    legend_texts.text(function (d) {
+      var textElem = d3.select(this);
 
-        if (d == 0){
-          textElem.attr('x',"2.5")
-          return scaleCorr(d).toFixed(0);
-        }
-        else if (d == 1) {
-          textElem.attr('x',"-2")
-          return scaleCorr(d).toFixed(0);          
-        }
-        else{
-          return scaleCorr(d).toFixed(1); }
-        });
+      if (d == 0) {
+        textElem.attr('x', "2.5")
+        return scaleCorr(d).toFixed(0);
+      }
+      else if (d == 1) {
+        textElem.attr('x', "-2")
+        return scaleCorr(d).toFixed(0);
+      }
+      else {
+        return scaleCorr(d).toFixed(1);
+      }
+    });
 
     function row(row) {
       var cell = d3.select(this).selectAll(".cell")
@@ -733,7 +778,7 @@ function matrixReduction(node_name, file_json, slider_value) {
 function full_matrix_or_reduced(last_clicked, data_json, actual_t) {
   if (!firstTime) {
     // Added to avoid refreshing of the matrix when brush is applied
-    if (!(legend_brush_x && legend_brush_x != old_brush)){
+    if (!(legend_brush_x && legend_brush_x != old_brush)) {
       if (last_clicked == "" && mouse_down_on_slider == -1) {
         fullMatrix(data_json);
       }
