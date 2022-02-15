@@ -127,6 +127,7 @@ key.append("g")
 d3.select("#svg_legend_matrix")
   .append("g")
   .attr("class", "brushX")
+  .on("click", deactivate_brush)
   .call(d3.brushX()                     // Add the brush feature using the d3.brush function
     .on("brush", brushed)
     .extent([[0, 10], [430, 31]])       // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
@@ -143,16 +144,27 @@ var legend_brush_x;
 var old_brush;
 
 
-
+var brushed_flag = false;
 function brushed() {
   legend_brush_x = d3.select(".brushX").selectAll(".selection").attr("x");
   d3.selectAll('.brushX>.selection').attr("width", 430 - legend_brush_x)
   console.log("BRUSHED");
+  brushed_flag = true;
   if (legend_brush_x && legend_brush_x != old_brush) {
     setvals(brushScale(legend_brush_x))
     old_brush = legend_brush_x;
   }
 }
+
+let T_ARR_OLD = Object.assign({}, T_ARR);
+
+function deactivate_brush() {
+  if (brushed_flag) {
+    brushed_flag = false;
+    setvals(T_ARR_OLD[index_of_similarity_in_use]);
+  }
+}
+
 /****************/
 
 var first_file_json = "data_close";
@@ -162,6 +174,7 @@ if (firstTime) {
 
 
 function fullMatrix(file_json) {
+  actual_file_json = file_json;
   if (!firstTime) {
     svg_matrix.selectAll("*").remove();
     d3.selectAll('.brushX').remove();
@@ -170,6 +183,7 @@ function fullMatrix(file_json) {
     d3.select("#svg_legend_matrix")
       .append("g")
       .attr("class", "brushX")
+      .on("click", deactivate_brush)
       .call(d3.brushX()                     // Add the brush feature using the d3.brush function
         .on("brush", brushed)
         .extent([[0, 10], [430, 31]])       // initialise the brush area: start at 0,0 and finishes at width,height: it means I select the whole graph area
