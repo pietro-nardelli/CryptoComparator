@@ -40,9 +40,13 @@ var height = 1500; //d3 obj height
 //GRAPH VALUESs
 var x_c = (width + 100) / 2;
 var y_c = height / 2;
+
 var radius = 600;
 var theta = 2 * Math.PI / 100 //split 2pi into 2pi/n_nodes
+
+if(navigator.userAgent.indexOf("opr") > -1 && !!window.opr){ theta = 1.999 * Math.PI / 100}
 var ellisse = false
+
 
 //CSS VAR NAMES
 
@@ -455,7 +459,6 @@ function ret_link_col(d) {
 }
 
 function ret_node_col(d) {
-  print(d)
   grade = //data_reg[d.name][2].length//
     matrix_of_simil_CARD[index_of_similarity_in_use][M_CAP_ordered_list.indexOf(d.name)]
   //prende dalle liste di cardinalità il relativo valore (es lista bitcoin, eth.. index di bitcoin = 0 
@@ -657,16 +660,16 @@ function create_graph(new_graph_index) {
         on_click_function(d)
 
       })
-      .on("mouseout", function (d) {    //ricolora tutto come al normale
+      .on("mousedown", function (d) {    //ricolora tutto come al normale
+        last_x = parseInt(d.x)
 
+        
         //on_click_function()
         //on_mouseout_function(d)
 
       })
-      .on('click', function (d) {
-
+      .on("mouseup", function (d) {
         CLICK(d)
-
       });
 
 
@@ -693,8 +696,7 @@ function create_graph(new_graph_index) {
       node.attr("transform", function (d) { return "translate(" + d.x + "," + d.y + ")"; });
 
     });
-
-    //slider_update(actual_t)
+z
     if (last_clicked != "") {
       on_mouseout_function(d)
       on_mouseover_function(last_clicked)
@@ -704,9 +706,12 @@ function create_graph(new_graph_index) {
   });
 }
 
-
-
 function CLICK(d) {
+
+  x = parseInt(d.x)
+  if(last_x != x){ return}
+  last_x = x
+
   if (last_clicked == d || last_clicked.name == d.name) {
     last_clicked = ""
     fullMatrix(data_json)
@@ -726,7 +731,6 @@ function CLICK(d) {
 function highlight_subgraph_from_scatterplot(d) {
   CLICK({ name: d })
 }
-
 
 function on_mouseover_function(d) {
   svg.selectAll(".node text")     //se vado sopra con il mouse ingrandisce la scritta
