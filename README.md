@@ -8,4 +8,6 @@ The project is developed by [Pietro Manganelli Conforti](manganelliconforti.1754
 The data visualization tool is accessible from this [link](https://pietro-nardelli.github.io/CryptoComparator/).
 
 ### Tips and suggestions 
-We encourage you to avoid using CryptoComparator in Firefox browser for compatibility issues.
+Tested on Google Chrome (version 97.0.4692.99 or 98.0.4758.82, official build 64-bit) and Opera (83.0.4254.27 64-bit) browsers.
+
+We encourage you to avoid using CryptoComparator in Firefox and IE browsers due to possible compatibility issues.
