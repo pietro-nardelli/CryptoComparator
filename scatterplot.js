@@ -118,6 +118,7 @@ function create_scatterplot(name1=null,name2=null,dim_red=kind_dim) {
                               .style("stroke","black").style("stroke-width","2px")
                               .attr("id", crypto_name)
                               .on("click", function(d,i){
+                                    last_x = 999
                                     clicked_graph = false
                                     createSingleGraphsOfMyCrypto(crypto_name)
                                     highlight_subgraph_from_scatterplot(crypto_name)
@@ -142,6 +143,7 @@ function create_scatterplot(name1=null,name2=null,dim_red=kind_dim) {
                               g.selectAll("text").remove()
 
                               })
+                              
 
                   };
 
@@ -207,6 +209,7 @@ function create_scatterplot(name1=null,name2=null,dim_red=kind_dim) {
                               .attr("opacity", "1.0")
                               .style("stroke","black").style("stroke-width","2px")
                               .on("click", function(d,i){
+                                    last_x = 999
                                     clicked_graph = false
                                     createSingleGraphsOfMyCrypto(crypto_name)
                                     highlight_subgraph_from_scatterplot(crypto_name)
@@ -344,6 +347,7 @@ d3v3.json(path, function (data) {
                   .attr("opacity", "1.0")
                   .style("stroke","black").style("stroke-width","2px")
                   .on("click", function(d,i){
+                        last_x = 999
                         clicked_graph = false
                         createSingleGraphsOfMyCrypto(crypto_name)
                         highlight_subgraph_from_scatterplot(crypto_name)
@@ -390,6 +394,7 @@ d3v3.json(path, function (data) {
             .attr("opacity", "1.0")
             .style("stroke","black").style("stroke-width","2px")
             .on("click", function(d,i){
+                  last_x = 999
                   clicked_graph = false
                   createSingleGraphsOfMyCrypto(crypto_name)
                   highlight_subgraph_from_scatterplot(crypto_name)

@@ -47,6 +47,7 @@ var theta = 2 * Math.PI / 100 //split 2pi into 2pi/n_nodes
 if(navigator.userAgent.indexOf("opr") > -1 && !!window.opr){ theta = 1.999 * Math.PI / 100}
 var ellisse = false
 
+var last_x = 9999
 
 //CSS VAR NAMES
 
@@ -709,7 +710,7 @@ z
 function CLICK(d) {
 
   x = parseInt(d.x)
-  if(last_x != x){ return}
+  if(last_x != x && last_x != 999){ return}
   last_x = x
 
   if (last_clicked == d || last_clicked.name == d.name) {

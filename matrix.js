@@ -287,11 +287,12 @@ function fullMatrix(file_json) {
       }
     }
 
+    /*
     console.log("similarity from: \t \t" + file_json + "\n" +
       "n_of_links: \t \t \t" + n_of_links + "\n" +
       "threshold_array: \t \t[" + threshold_array + "]" + "\n" +
       "cardinality_array:\t[" + cardinality_array + "] \n \n")
-    /////////////
+    */////////////
 
 
     // Generation of the matrix on the webpage
