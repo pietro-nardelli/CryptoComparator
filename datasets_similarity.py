@@ -8,10 +8,10 @@ import matplotlib.pyplot as plt
 from sklearn import manifold
 from sklearn import preprocessing
 from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
 from sklearn.utils.validation import check_symmetric
 import math
-
-
+import umap.umap_ as umap
 import numpy as np
 from numpy import linalg
 
@@ -93,6 +93,19 @@ Output:
 
 '''
 
+# test_=[
+#  [ 9.07690721e+00, -1.94130324e-01, -1.86261710e-01],
+#  [ 3.67192750e+00, -1.92930767e-01, -1.40355268e-03],
+#  [ 8.66911613e-01, -1.94129981e-01, -3.89948013e-01],
+#  [ 8.40916956e-01,  3.93863802e-01, -1.50317068e-01],
+#  [ 2.20080754e-01, -1.94268520e-01,  1.95436152e-01],
+#  [ 2.13056736e-01, -1.93570815e-01,  1.20123569e-01],
+#  [ 1.08287268e-01, -5.63120377e-02, -2.45313621e-01],
+#  [ 3.43793632e-02, -1.51742799e-01,  1.16392173e-03],
+#  [ 2.18573540e-02, -1.94152976e-01, -7.07253617e-02],
+#  [-3.00771707e-02, -1.92915488e-01, -1.34056397e-01]
+#  ]
+
 def import_data (path:str):
     with open(path, newline='') as csvfile:
         top_100 = csv.reader(csvfile, delimiter=',')
@@ -140,21 +153,32 @@ def dim_red_computation (dictionary, dim_reduction_alg='PCA'):
 
         standard_input_list.append(node_values)
 
-    #data standardization
+    # data standardization
     std_scale = preprocessing.StandardScaler().fit(standard_input_list)
     standard_input_list= std_scale.transform(standard_input_list)
+    #print(standard_input_list)
 
     # MDS based on Euclidean distance
     if (dim_reduction_alg == 'mds'):
         mds = manifold.MDS(n_components=2, dissimilarity="euclidean",random_state=13)
-        pos = mds.fit(standard_input_list).embedding_
+        pos = mds.fit_transform(standard_input_list)
     # PCA 
     elif (dim_reduction_alg == 'pca'):
         pca = PCA(n_components=2)
         pos = pca.fit_transform(standard_input_list)
 
+    elif (dim_reduction_alg == 'tsne'):
+        tsne = TSNE(n_components=2)
+        pos = tsne.fit_transform(standard_input_list)
+    
+    elif (dim_reduction_alg == 'umap'):
+        umap_ = umap.UMAP()
+        pos = umap_.fit_transform(standard_input_list)
+    #print(pos)
+
 
     return nodes_id,pos,standard_input_list
+
 
 def plot_dim_red(nodes_id, pos):
     # Scatter plot without labels
@@ -432,56 +456,73 @@ date_indexes_list = index_of_first_of_the_year (date_input_list)
 
 
 # dissimilarity matrix for Volume
-matrix = compute_dissimilarity_t0_for_mds(list_of_lists[0])
-pos_custom = dim_red_computation_custom(matrix)
+# matrix = compute_dissimilarity_t0_for_mds(list_of_lists[0])
+# pos_custom = dim_red_computation_custom(matrix)
 
 # PCA COMPUTATION PART: used to compute also nodes_id and plot MDS
 # It's based only on market cap, circulating supply and % change (24h)
-dim_reduction_alg = 'pca'
+dim_reduction_alg = 'umap'
 nodes_id, pos, standard_input_list = dim_red_computation(final_dict, dim_reduction_alg=dim_reduction_alg)
 #final_dict = compute_distance(pos, standard_input_list, final_dict, dim_red_flag=True) # commented, not useful
 # Plot both PCA and MDS (custom)
-plot_dim_red(nodes_id, pos)
-plot_dim_red(nodes_id, pos_custom)
+#plot_dim_red(nodes_id, pos)
+#plot_dim_red(nodes_id, pos_custom)
 
-# Save MDS positions 
+# # Save MDS positions 
+# pos_dict = {}
+# for i,node in enumerate(final_dict['nodes']):
+#     pos_dict[i] = [pos_custom[i][0], pos_custom[i][1]]
+# with open('mds_positions.json', 'w') as f:
+#     json.dump(pos_dict,f)
+
+# # Save PCA positions 
+# pos_dict = {}
+# for i,node in enumerate(final_dict['nodes']):
+#     pos_dict[i] = [pos[i][0], pos[i][1]]
+# with open('pca_positions.json', 'w') as f:
+#     json.dump(pos_dict,f)
+
+# # Save TSNE positions 
+# pos_dict = {}
+# for i,node in enumerate(final_dict['nodes']):
+#     pos_dict[str(i)] = [float(pos[i][0]), float(pos[i][1])]
+
+# print(pos_dict)
+# with open('tsne_positions.json', 'w') as f:
+#     json.dump(pos_dict,f)
+
+# Save UMAP positions 
 pos_dict = {}
 for i,node in enumerate(final_dict['nodes']):
-    pos_dict[i] = [pos_custom[i][0], pos_custom[i][1]]
-with open('mds_positions.json', 'w') as f:
+    pos_dict[str(i)] = [float(pos[i][0]), float(pos[i][1])]
+print(pos_dict)
+with open('umap_positions.json', 'w') as f:
     json.dump(pos_dict,f)
 
-# Save PCA positions 
-pos_dict = {}
-for i,node in enumerate(final_dict['nodes']):
-    pos_dict[i] = [pos[i][0], pos[i][1]]
-with open('pca_positions.json', 'w') as f:
-    json.dump(pos_dict,f)
-
-# All attributes (except Name) are not used anymore: remove them from dictionary
-for i, node in enumerate(final_dict['nodes']):
-    final_dict['nodes'][i].pop('Market Cap', None)
-    final_dict['nodes'][i].pop('Price', None)
-    final_dict['nodes'][i].pop('Circulating Supply', None)
-    final_dict['nodes'][i].pop('Volume (24h)', None)
-    final_dict['nodes'][i].pop('% Change (24h)', None)
+# # All attributes (except Name) are not used anymore: remove them from dictionary
+# for i, node in enumerate(final_dict['nodes']):
+#     final_dict['nodes'][i].pop('Market Cap', None)
+#     final_dict['nodes'][i].pop('Price', None)
+#     final_dict['nodes'][i].pop('Circulating Supply', None)
+#     final_dict['nodes'][i].pop('Volume (24h)', None)
+#     final_dict['nodes'][i].pop('% Change (24h)', None)
 
 
     
-threshold_array = []
-# Save similarities w.r.t. t0
-for i,list_ in enumerate(list_of_lists):
-    final_dict_ = compute_similarity_t0(list_, final_dict)
-    threshold_array.append(slider_threshold(final_dict_))
-    with open('similarities/data_'+names[i]+'.json', 'w') as f:
-        json.dump(final_dict_,f)
+# threshold_array = []
+# # Save similarities w.r.t. t0
+# for i,list_ in enumerate(list_of_lists):
+#     final_dict_ = compute_similarity_t0(list_, final_dict)
+#     threshold_array.append(slider_threshold(final_dict_))
+#     with open('similarities/data_'+names[i]+'.json', 'w') as f:
+#         json.dump(final_dict_,f)
 
-# Save similarities w.r.t. year
-for i,list_ in enumerate(list_of_lists):
-    for year in years:
-        final_dict_ = compute_similarity_year(list_, final_dict, date_indexes_list, year)
-        threshold_array.append(slider_threshold(final_dict_))
-        with open('similarities/data_'+names[i]+'_'+year+'.json', 'w') as f:
-            json.dump(final_dict_,f)
+# # Save similarities w.r.t. year
+# for i,list_ in enumerate(list_of_lists):
+#     for year in years:
+#         final_dict_ = compute_similarity_year(list_, final_dict, date_indexes_list, year)
+#         threshold_array.append(slider_threshold(final_dict_))
+#         with open('similarities/data_'+names[i]+'_'+year+'.json', 'w') as f:
+#             json.dump(final_dict_,f)
 
-print (threshold_array)
+# print (threshold_array)

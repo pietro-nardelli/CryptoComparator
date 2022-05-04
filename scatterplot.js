@@ -60,8 +60,11 @@ function create_scatterplot(name1=null,name2=null,dim_red=kind_dim) {
       .attr("opacity", 0.1);
       global_arr_names = []
 
-      if(dim_red=="mds") var path="mds_positions.json"
-      else if(dim_red="pca") var path="pca_positions.json"
+      if(dim_red=="mds"){ var path="mds_positions.json"}
+      else if(dim_red=="pca") {var path="pca_positions.json"}
+      else if(dim_red=="tsne") {var path="tsne_positions.json"}
+      else if(dim_red=="umap") {var path="umap_positions.json"}
+      //var path ="tsne_positions.json"
 
 
 
@@ -101,6 +104,37 @@ function create_scatterplot(name1=null,name2=null,dim_red=kind_dim) {
                   .call(d3.axisLeft(y).ticks(10)).selectAll("text").attr('fill', 'white');
             }
 
+            else if(dim_red=="tsne"){
+                  var x = d3.scaleLinear()
+                  .domain([-8, 10]) //da modificare
+                  .range([0, width_s]);
+
+            svgg.append("g")
+                  .attr("transform", "translate(0," + height_s + ")")
+                  .call(d3.axisBottom(x).ticks(10)).selectAll("text").attr('fill', 'white');
+
+                  var y = d3.scaleLinear()
+                  .domain([-10, 10])
+                  .range([height_s, 0]);
+            svgg.append("g")
+                  .call(d3.axisLeft(y).ticks(10)).selectAll("text").attr('fill', 'white');
+            }
+
+            else if(dim_red=="umap"){
+                  var x = d3.scaleLinear()
+                  .domain([0, 15]) //da modificare
+                  .range([0, width_s]);
+
+            svgg.append("g")
+                  .attr("transform", "translate(0," + height_s + ")")
+                  .call(d3.axisBottom(x).ticks(10)).selectAll("text").attr('fill', 'white');
+
+                  var y = d3.scaleLinear()
+                  .domain([4, 20]) //svndlkjfnl
+                  .range([height_s, 0]);
+            svgg.append("g")
+                  .call(d3.axisLeft(y).ticks(10)).selectAll("text").attr('fill', 'white');
+            }
 
             if(name1 == null && name2 == null){
 
@@ -254,7 +288,9 @@ var Box = svgg.append("rect")
 .attr("fill", window_color)
 .attr("opacity", 0.1);
 if(dim_red=="mds") var path="mds_positions.json"
-else if(dim_red="pca") var path="pca_positions.json"
+else if(dim_red=="pca") var path="pca_positions.json"
+else if(dim_red=="tsne") var path="tsne_positions.json"
+else if(dim_red=="umap") var path="umap_positions.json"
 
 
 
@@ -294,6 +330,38 @@ d3v3.json(path, function (data) {
       svgg.append("g")
             .call(d3.axisLeft(y).ticks(10)).selectAll("text").attr('fill', 'white');
       }
+      else if(dim_red=="tsne"){
+            var x = d3.scaleLinear()
+            .domain([-8, 10]) //da cambiare
+            .range([0, width_s]);
+
+      svgg.append("g")
+            .attr("transform", "translate(0," + height_s + ")")
+            .call(d3.axisBottom(x).ticks(10)).selectAll("text").attr('fill', 'white');
+
+            var y = d3.scaleLinear()
+            .domain([-10, 10])
+            .range([height_s, 0]);
+      svgg.append("g")
+            .call(d3.axisLeft(y).ticks(10)).selectAll("text").attr('fill', 'white');
+      }
+
+      else if(dim_red=="umap"){
+            var x = d3.scaleLinear()
+            .domain([0, 15]) //da cambiare
+            .range([0, width_s]);
+
+      svgg.append("g")
+            .attr("transform", "translate(0," + height_s + ")")
+            .call(d3.axisBottom(x).ticks(10)).selectAll("text").attr('fill', 'white');
+
+            var y = d3.scaleLinear()
+            .domain([4, 20]) //cambiare
+            .range([height_s, 0]);
+      svgg.append("g")
+            .call(d3.axisLeft(y).ticks(10)).selectAll("text").attr('fill', 'white');
+      }
+
 
       var index_array = []
 
@@ -396,6 +464,7 @@ d3v3.json(path, function (data) {
             .on("click", function(d,i){
                   last_x = 999
                   clicked_graph = false
+                  //here lies the dragon
                   createSingleGraphsOfMyCrypto(crypto_name)
                   highlight_subgraph_from_scatterplot(crypto_name)
                   last_clicked_scatterplot = crypto_name
