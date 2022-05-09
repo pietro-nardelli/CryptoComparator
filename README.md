@@ -7,6 +7,8 @@ The project is developed by [Pietro Manganelli Conforti](manganelliconforti.1754
 
 The data visualization tool is accessible from this [link](https://pietro-nardelli.github.io/CryptoComparator/).
 
+The supplemental material can be found [here](https://pietro-nardelli.github.io/CryptoComparator/Supplemental%20material.pdf).
+
 ### Tips and suggestions 
 Tested on Google Chrome (version 97.0.4692.99 or 98.0.4758.82, official build 64-bit) and Opera (83.0.4254.27 64-bit) browsers.
 
