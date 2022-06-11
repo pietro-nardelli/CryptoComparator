@@ -5,7 +5,7 @@ Dataset: [top-100-cryptocurrency-historical-data](https://www.kaggle.com/natehen
 
 The project is developed by [Pietro Manganelli Conforti](manganelliconforti.1754825@studenti.uniroma1.it), [Matteo Emanuele](emanuele.1912588@studenti.uniroma1.it) and [Pietro Nardelli](pietro.nardelli@outlook.com).
 
-The data visualization tool is accessible from this [link](https://pietro-nardelli.github.io/CryptoComparator/).
+The data visualization tool is accessible from this [link](https://pietro-nardelli.github.io/CryptoComparator/) (PC version only).
 
 The supplemental material can be found [here](https://pietro-nardelli.github.io/CryptoComparator/Supplemental%20material.pdf).
 
