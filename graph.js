@@ -28,6 +28,9 @@ var T_ARR_high =
 var index_of_similarity_in_use = 0 //initial graph index used
 //var old_index_of_similarity = 0
 
+//INTERVAL IN USE ONCLICK 1%, 5%, 10%
+interval_arr=[1,1,1]
+
 ///DATABASE
 var data_reg = {}  //REG NAME ID ECC
 var name_arr = []  //ARR with names only
@@ -578,9 +581,36 @@ function create_graph(new_graph_index) {
     // .attr("cx",70).attr("cy",140).attr("r", 12)
     // .style("fill", color_links)
 
-    svg.append("text").attr("x", x_rows).attr("y", y_first_row).text("Correlation link:\xa0\xa0\xa0\xa0 top1%,\xa0\xa0\xa0\xa0top5%,\xa0\xa0\xa0\xa0top10%")
+    svg.append("text").attr("x", x_rows).attr("y", y_first_row).text("Correlation link:")
       .style("font-size", "35px").attr("alignment-baseline", "middle")
       .attr("fill", fill_node_text)
+      
+    svg.append("text").attr("x", x_rows+278).attr("y", y_first_row).text("top1%")
+      .style("font-size", "35px").attr("alignment-baseline", "middle")
+      .attr("fill", fill_node_text).on("click", function () { 
+
+        interval_arr[2] = (interval_arr[2]+1)%2
+        filter_links_intervals_with_arr(interval_arr)
+
+      }).style("cursor" , "pointer").attr("id","top1")
+    
+    svg.append("text").attr("x", x_rows+427).attr("y", y_first_row).text("top5%")
+      .style("font-size", "35px").attr("alignment-baseline", "middle")
+      .attr("fill", fill_node_text).on("click", function () { 
+
+        interval_arr[1] = (interval_arr[1]+1)%2
+        filter_links_intervals_with_arr(interval_arr)
+
+      }).style("cursor" , "pointer").attr("id","top5")
+
+    svg.append("text").attr("x", x_rows+580).attr("y", y_first_row).text("top10%")
+      .style("font-size", "35px").attr("alignment-baseline", "middle")
+      .attr("fill", fill_node_text).on("click", function () { 
+
+        interval_arr[0] = (interval_arr[0]+1)%2
+        filter_links_intervals_with_arr(interval_arr)
+
+      }).style("cursor" , "pointer").attr("id","top10")
 
     old_index_of_similarity = index_of_similarity_in_use
     index_of_similarity_in_use = new_graph_index
@@ -854,8 +884,90 @@ function setvals(baseline) {
 }
 
 
+function filter_links_intervals(interval){
+
+  if(interval == 0){
+    svg.selectAll(".link")     //ricolora i links sopra la soglia
+    .data(links)
+    .filter(function (x) { return x.k >=  T_ARR_medium[index_of_similarity_in_use]})
+    .style('display', 'none')
+  }
+
+  if(interval == 1){
+    svg.selectAll(".link")     //ricolora i links sopra la soglia
+    .data(links)
+    .filter(function (x) { return x.k <  T_ARR_medium[index_of_similarity_in_use] ||
+                                  x.k >=  T_ARR_high[index_of_similarity_in_use]})
+    .style('display', 'none')
+  }
+
+  if(interval == 2){
+    svg.selectAll(".link")     //ricolora i links sopra la soglia
+    .data(links)
+    .filter(function (x) { return x.k <=  T_ARR_high[index_of_similarity_in_use]})
+    .style('display', 'none')
+  }
+
+}
+
+function filter_links_intervals_with_arr(interval_arr){
+
+  f1 = interval_arr[0]
+  f2 = interval_arr[1]
+  f3 = interval_arr[2]
+
+  document.getElementsByClassName("brushX")[0].style.display = "none"
+  if (f1&&f2&&f3){document.getElementsByClassName("brushX")[0].style.display = "block"}
+
+      
+  top10_links = svg.selectAll(".link")     //ricolora i links sopra la soglia
+  .data(links)
+  .filter(function (x) { return x.k >=  T_ARR[index_of_similarity_in_use] &&
+                                x.k <  T_ARR_medium[index_of_similarity_in_use]})
+    
+  if(f1 == 0){
+    document.getElementById("top10").style.fill="rgb(100,100,100)"  
+    top10_links.style('display', 'none')
+  }else{
+    document.getElementById("top10").style.fill="rgb(255,255,255)"   
+    top10_links.style('display', 'block')
+  }
+
+  
+  
+  top5_links = svg.selectAll(".link")     //ricolora i links sopra la soglia
+  .data(links)
+  .filter(function (x) { return x.k >=  T_ARR_medium[index_of_similarity_in_use] &&
+                                x.k <  T_ARR_high[index_of_similarity_in_use]})
+    
+  if(f2 == 0){
+    document.getElementById("top5").style.fill="rgb(100,100,100)"  
+    top5_links.style('display', 'none')
+  }else{
+    document.getElementById("top5").style.fill="rgb(255,255,255)"   
+    top5_links.style('display', 'block')
+  }                               
 
 
+  top1_links = svg.selectAll(".link")     //ricolora i links sopra la soglia
+    .data(links)
+    .filter(function (x) { return x.k >=  T_ARR_high[index_of_similarity_in_use]})
+  if(f3 == 0){
+    document.getElementById("top1").style.fill="rgb(100,100,100)"  
+    top1_links.style('display', 'none')
+  }else{
+    document.getElementById("top1").style.fill="rgb(255,255,255)"   
+    top1_links.style('display', 'block')
+  }   
+
+}
+
+
+function reset_links_style(){
+  svg.selectAll(".link")     //ricolora i links sopra la soglia
+  .data(links)
+  .style('display', 'block')
+}
 
 //set_node_pos(a), 374375namearr
 
@@ -875,7 +987,7 @@ function blink() {
     .transition()
     .duration(500)
     .style('fill', "red")
-    .transition()
+    .transition() 
     .duration(500)
     .style('fill', fill_node_circle)
   //.on("end", blink);
